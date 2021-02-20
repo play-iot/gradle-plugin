@@ -16,7 +16,7 @@ on:
 env:
   ENABLE_TEST: true
   ENABLE_GH_MAVEN: false
-  ENABLE_GRADLE_PLUGIN: false
+  ENABLE_GRADLE_PLUGIN: true
   ENABLE_SONAR: true
 
 jobs:
@@ -193,5 +193,5 @@ jobs:
       - uses: actions/checkout@v2
       - run: |
           ./gradlew closeAndReleaseRepository \
-                            -Pnexus.username=${{ secrets.OSS_SONATYPE_USER }} \
-                            -Pnexus.password=${{ secrets.OSS_SONATYPE_PASSWORD }} || echo 'Need to promote manually'
+                            -Pnexus.username=${{ secrets.OSS_NEXUS_USER }} \
+                            -Pnexus.password=${{ secrets.OSS_NEXUS_TOKEN }} || echo 'Need to promote manually'
