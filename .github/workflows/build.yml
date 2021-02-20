@@ -95,6 +95,13 @@ jobs:
                           -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
                           -PbuildBy="GitHub Action" -PbuildHash=${{ needs.context.outputs.commitId }}
 
+      - name: Publish Gradle plugin
+        if: needs.context.outputs.isRelease == 'true'
+        run: |
+          ./gradlew publishPlugins \
+                  -Pgradle.publish.key=${{ secrets.OSS_GRADLE_KEY }} \
+                  -Pgradle.publish.secret=${{ secrets.OSS_GRADLE_SECRET }}
+
       - name: Publish GitHub Package
         if: needs.context.outputs.isRelease == 'true' && env.ENABLE_GH_MAVEN == 'true'
         run: |
@@ -102,7 +109,7 @@ jobs:
                  -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
                  -Psigning.gnupg.homeDir=/home/runner/.gnupg \
                  -Psigning.gnupg.keyName=${{ steps.import_gpg.outputs.keyid }} \
-                 -Psigning.gnupg.passphrase=${{ secrets.CI_GPG_PASSPHARSE }} \
+                 -Psigning.gnupg.passphrase=${{ secrets.OSS_GPG_PASSPHARSE }} \
                  -Pnexus.username=${{ github.repository_owner }} \
                  -Pnexus.password=${{ secrets.OSS_GITHUB_TOKEN }} )
           args+=( -Pgithub )
@@ -116,18 +123,11 @@ jobs:
                  -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
                  -Psigning.gnupg.homeDir=/home/runner/.gnupg \
                  -Psigning.gnupg.keyName=${{ steps.import_gpg.outputs.keyid }} \
-                 -Psigning.gnupg.passphrase=${{ secrets.CI_GPG_PASSPHARSE }} \
-                 -Pnexus.username=${{ secrets.OSS_SONATYPE_USER }} \
-                 -Pnexus.password=${{ secrets.OSS_SONATYPE_PASSWORD }} )
+                 -Psigning.gnupg.passphrase=${{ secrets.OSS_GPG_PASSPHARSE }} \
+                 -Pnexus.username=${{ secrets.OSS_NEXUS_USER }} \
+                 -Pnexus.password=${{ secrets.OSS_NEXUS_TOKEN }} )
           [[ "${{ needs.context.outputs.isRelease }}" == 'true' ]] && args+=( -Prelease )
           ./gradlew publish "${args[@]}"
-
-      - name: Publish Gradle plugin
-        if: needs.context.outputs.isRelease == 'true'
-        run: |
-          ./gradlew publishPlugins \
-                  -Pgradle.publish.key=${{ secrets.OSS_GRADLE_KEY }} \
-                  -Pgradle.publish.secret=${{ secrets.OSS_GRADLE_SECRET }}
 
   analysis:
     runs-on: ubuntu-latest

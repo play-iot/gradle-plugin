@@ -21,6 +21,10 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
 
 @Suppress("UnstableApiUsage") class QWEDockerPlugin : QWEDecoratorPlugin<QWEDockerExtension> {
 
+    companion object {
+        const val GROUP = "QWE Docker"
+    }
+
     override fun applyExternalPlugins(project: Project) {
         project.plugins.apply(DockerRemoteApiPlugin::class.java)
         project.plugins.apply(QWEAppPlugin::class.java)
@@ -63,7 +67,7 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
         qweDockerExt: QWEDockerExtension
     ): TaskProvider<Dockerfile> {
         return project.tasks.register<Dockerfile>("createDockerfile") {
-            group = "QWE Docker"
+            group = GROUP
             description = "Create Dockerfile"
 
             onlyIf { qweDockerExt.enabled.get() }
@@ -94,7 +98,7 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
         provider: TaskProvider<Dockerfile>
     ) {
         project.tasks.register<DefaultTask>("printDockerfile") {
-            group = "QWE Docker"
+            group = GROUP
             description = "Show Dockerfile"
 
             onlyIf { qweDockerExt.enabled.get() }
@@ -112,7 +116,7 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
         dockerFileProvider: TaskProvider<Dockerfile>
     ): TaskProvider<DockerBuildImage> {
         return project.tasks.register<DockerBuildImage>("buildDocker") {
-            group = "QWE Docker"
+            group = GROUP
             description = "Build Docker image"
 
             onlyIf { qweDockerExt.enabled.get() }
@@ -130,7 +134,7 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
         dockerBuildProvider: TaskProvider<DockerBuildImage>
     ) {
         project.tasks.register<DockerMultipleRegistriesPushTask>("pushDocker") {
-            group = "QWE Docker"
+            group = GROUP
             description = "Push Docker images to multiple remote registries"
 
             onlyIf { qweDockerExt.enabled.get() }
