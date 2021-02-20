@@ -11,6 +11,9 @@
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=topmo12_qwe-gradle-plugin&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=topmo12_qwe-gradle-plugin)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=topmo12_qwe-gradle-plugin&metric=coverage)](https://sonarcloud.io/dashboard?id=topmo12_qwe-gradle-plugin)
 
+- [x] OSS project
+    - [x] Configure `jar`, `javadoc`, `test`, `jacoco` task
+    - [x] Publish artifacts to `GitHub Package` and `Sonatype OSS repository` task
 - [x] `Generator` plugin
     - [x] Generate json config file
     - [x] Generate logging file
@@ -22,4 +25,3 @@
 - [x] `Root project` plugin
     - [x] Distribute `artifacts` to `root project`
     - [x] Distribute `test report` to `root project`
-- [x] Configure `jar`, `javadoc`, `test` task
