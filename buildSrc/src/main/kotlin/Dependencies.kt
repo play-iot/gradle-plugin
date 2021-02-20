@@ -1,3 +1,5 @@
+import org.gradle.api.Project
+
 object PluginLibs {
 
     object Version {
@@ -30,4 +32,8 @@ object TestLibs {
 
     const val junit5Api = "org.junit.jupiter:junit-jupiter-api:${Version.junit5}"
     const val junit5Engine = "org.junit.jupiter:junit-jupiter-engine:${Version.junit5}"
+}
+
+fun prop(project: Project, key: String, fallback: String = ""): String {
+    return if (project.hasProperty(key)) project.property(key) as String? ?: fallback else fallback
 }

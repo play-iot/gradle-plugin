@@ -46,8 +46,8 @@ gradlePlugin {
 }
 
 pluginBundle {
-    website = "https://github.com/zero88/qwe/blob/main/plugin/README.md"
-    vcsUrl = "https://github.com/zero88/qwe.git"
+    website = "https://github.com/topmo12/qwe-gradle-plugin/blob/main/plugin/README.md"
+    vcsUrl = "https://github.com/topmo12/qwe-gradle-plugin.git"
     tags = listOf("qwe-application", "qwe-docker", "java-oss")
 }
 
@@ -59,12 +59,114 @@ dependencies {
     testImplementation(TestLibs.junit5Engine)
 }
 
-project.tasks {
+group = "io.github.zero88.qwe"
+version = "$version${prop(project, "semanticVersion")}"
+
+sourceSets {
+    main { java.srcDirs("src/main/java", "src/main/kotlin") }
+    test { java.srcDirs("src/test/java", "src/test/kotlin") }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    withJavadocJar()
+    withSourcesJar()
+}
+
+tasks {
     test {
         useJUnitPlatform()
+        finalizedBy(jacocoTestReport)
+    }
+    jacocoTestReport {
+        dependsOn(test)
+        reports {
+            xml.isEnabled = true
+            csv.isEnabled = false
+            html.destination = file("${buildDir}/jacocoHtml")
+        }
+    }
+    named("sonarqube") {
+        group = "analysis"
+        dependsOn(assemble, jacocoTestReport)
+    }
+    withType<Sign>().configureEach {
+        onlyIf { project.hasProperty("release") }
     }
 }
 
-sourceSets.main {
-    java.srcDirs("src/main/java", "src/main/kotlin")
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = project.group as String?
+            artifactId = project.name
+            version = project.version as String?
+            from(components["java"])
+
+            versionMapping {
+                usage("java-api") {
+                    fromResolutionOf("runtimeClasspath")
+                }
+                usage("java-runtime") {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name.set(prop(project, "title"))
+                description.set(prop(project, "description"))
+                url.set("https://github.com/topmo12/qwe-gradle-plugin")
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("https://github.com/topmo12/qwe-gradle-plugin/blob/master/LICENSE")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("zero88")
+                        email.set("sontt246@gmail.com")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:git://git@github.com:topmo12/qwe-gradle-plugin.git")
+                    url.set("https://github.com/topmo12/qwe-gradle-plugin")
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            val path = if (project.hasProperty("github")) {
+                "${project.property("github.nexus.url")}/${project.property("nexus.username")}/${rootProject.name}"
+            } else {
+                val releasesRepoUrl = prop(project, "ossrh.release.url")
+                val snapshotsRepoUrl = prop(project, "ossrh.snapshot.url")
+                if (project.hasProperty("release")) releasesRepoUrl else snapshotsRepoUrl
+            }
+            url = uri(path)
+            credentials {
+                username = project.property("nexus.username") as String?
+                password = project.property("nexus.password") as String?
+            }
+        }
+    }
+}
+
+signing {
+    useGpgCmd()
+    sign(publishing.publications["maven"])
+}
+
+sonarqube {
+    properties {
+        property("jacocoHtml", "false")
+        property("sonar.sourceEncoding", "UTF-8")
+        property("sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/coverage.xml")
+    }
+}
+
+nexusStaging {
+    packageGroup = "io.github.zero88"
+    username = project.property("nexus.username") as String?
+    password = project.property("nexus.password") as String?
 }
