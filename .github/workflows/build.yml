@@ -15,8 +15,8 @@ on:
 
 env:
   ENABLE_TEST: true
-  ENABLE_GH_MAVEN: false
-  ENABLE_SONAR: false
+  ENABLE_GH_MAVEN: true
+  ENABLE_SONAR: true
 
 jobs:
   context:
@@ -159,7 +159,7 @@ jobs:
 
       - name: Test
         if: env.ENABLE_TEST == 'true'
-        run: ./gradlew jacocoRootReport -PjacocoHtml=false
+        run: ./gradlew test
 
       - name: SonarQube
         if: needs.context.outputs.shouldPublish == 'true' && env.ENABLE_SONAR == 'true'
