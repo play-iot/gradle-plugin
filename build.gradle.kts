@@ -1,7 +1,13 @@
 plugins {
-    `java-gradle-plugin`
     `kotlin-dsl`
-    id("com.gradle.plugin-publish") version "0.12.0"
+    `java-gradle-plugin`
+    `maven-publish`
+    jacoco
+    signing
+    kotlin(PluginLibs.jvm) version PluginLibs.Version.jvm
+    id(PluginLibs.sonarQube) version PluginLibs.Version.sonarQube
+    id(PluginLibs.nexusStaging) version PluginLibs.Version.nexusStaging
+    id(PluginLibs.gradlePluginPublish) version PluginLibs.Version.gradlePluginPublish
 }
 
 repositories {
@@ -46,7 +52,19 @@ pluginBundle {
 }
 
 dependencies {
-    api("com.bmuschko:gradle-docker-plugin:6.7.0")
-    api("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.1.1")
+    api(PluginLibs.Depends.docker)
+    api(PluginLibs.Depends.sonarQube)
+
+    testImplementation(TestLibs.junit5Api)
+    testImplementation(TestLibs.junit5Engine)
 }
 
+project.tasks {
+    test {
+        useJUnitPlatform()
+    }
+}
+
+sourceSets.main {
+    java.srcDirs("src/main/java", "src/main/kotlin")
+}

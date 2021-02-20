@@ -58,9 +58,7 @@ jobs:
         shell: bash
         run: |
           [[ "${{ steps.context.outputs.isTag }}" == "true" ]] && sv="" || sv=$(grep semanticVersion gradle.properties | cut -d'=' -f2)
-          disablePlugin=$(grep "gradle.plugin.publish" gradle.properties | cut -d'=' -f2)
           echo ::set-output name=semanticVersion::$sv
-          echo ::set-output name=disablePlugin::$disablePlugin
 
   build:
     runs-on: ubuntu-latest
@@ -125,7 +123,7 @@ jobs:
           ./gradlew publish "${args[@]}"
 
       - name: Publish Gradle plugin
-        if: needs.context.outputs.shouldPublish == 'true' && needs.context.outputs.disablePlugin == 'true'
+        if: needs.context.outputs.isRelease == 'true'
         run: |
           ./gradlew publishPlugins \
                   -Pgradle.publish.key=${{ secrets.OSS_GRADLE_KEY }} \
@@ -165,9 +163,10 @@ jobs:
 
       - name: SonarQube
         if: needs.context.outputs.shouldPublish == 'true' && env.ENABLE_SONAR == 'true'
-        run: ./gradlew sonarqube -x test -Dsonar.login=${{ secrets.OSS_SONARQUBE_TOKEN }} -Dsonar.branch.name=${{ needs.context.outputs.branch }}
+        run: ./gradlew sonarqube --info -x test -Dsonar.branch.name=${{ needs.context.outputs.branch }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.OSS_SONARQUBE_TOKEN }}
 
   release:
     runs-on: ubuntu-latest
