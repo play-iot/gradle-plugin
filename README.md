@@ -1,6 +1,7 @@
 # QWE Gradle plugin
 
 ![build](https://github.com/topmo12/qwe-gradle-plugin/workflows/build-release/badge.svg?branch=main)
+[![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/io/github/zero88/qwe/qwe-gradle-plugin/maven-metadata.xml.svg?colorB=007ec6&label=gradle)](https://plugins.gradle.org/plugin/io.github.zero88.qwe.gradle.oss)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/topmo12/qwe-gradle-plugin?sort=semver)
 ![Sonatype Nexus (Releases)](https://img.shields.io/nexus/r/io.github.zero88.qwe/qwe-gradle-plugin?server=https%3A%2F%2Foss.sonatype.org%2F)
 ![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/io.github.zero88.qwe/qwe-gradle-plugin?server=https%3A%2F%2Foss.sonatype.org%2F)
