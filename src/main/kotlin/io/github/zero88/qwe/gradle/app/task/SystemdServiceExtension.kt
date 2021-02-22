@@ -23,7 +23,7 @@ import org.gradle.kotlin.dsl.property
     @Input
     val workingDir = objects.property<String>()
     @Input
-    val configFile = objects.property<String>()
+    val configFile = objects.property<String>().convention("config.json")
     @Input
     val params = objects.mapProperty<String, String>().empty()
 
