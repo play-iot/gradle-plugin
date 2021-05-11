@@ -19,35 +19,35 @@ repositories {
 gradlePlugin {
     plugins {
         create("OSS project plugin") {
-            id = "io.github.zero88.qwe.gradle.oss"
+            id = "io.zero88.qwe.gradle.oss"
             displayName = "QWE OSS Project plugin"
             description = "This plugin adds some utilities in project for build/maven distribution"
-            implementationClass = "io.github.zero88.qwe.gradle.QWEOSSProjectPlugin"
+            implementationClass = "io.zero88.qwe.gradle.QWEOSSProjectPlugin"
         }
         create("OSS Root project plugin") {
-            id = "io.github.zero88.qwe.gradle.root"
+            id = "io.zero88.qwe.gradle.root"
             displayName = "QWE Root Project plugin"
             description = "This plugin adds some utilities in root project in a multi-project build"
-            implementationClass = "io.github.zero88.qwe.gradle.QWERootProjectPlugin"
+            implementationClass = "io.zero88.qwe.gradle.QWERootProjectPlugin"
         }
         create("QWE Application plugin") {
-            id = "io.github.zero88.qwe.gradle.app"
+            id = "io.zero88.qwe.gradle.app"
             displayName = "QWE Application plugin"
             description = "This plugin adds Generator/Bundle capabilities to QWE Application"
-            implementationClass = "io.github.zero88.qwe.gradle.app.QWEAppPlugin"
+            implementationClass = "io.zero88.qwe.gradle.app.QWEAppPlugin"
         }
         create("QWE Docker plugin") {
-            id = "io.github.zero88.qwe.gradle.docker"
+            id = "io.zero88.qwe.gradle.docker"
             displayName = "QWE Docker plugin"
             description = "This plugin adds Docker capabilities to build/push Docker image for QWE application"
-            implementationClass = "io.github.zero88.qwe.gradle.docker.QWEDockerPlugin"
+            implementationClass = "io.zero88.qwe.gradle.docker.QWEDockerPlugin"
         }
     }
 }
 
 pluginBundle {
-    website = "https://github.com/topmo12/qwe-gradle-plugin/blob/main/plugin/README.md"
-    vcsUrl = "https://github.com/topmo12/qwe-gradle-plugin.git"
+    website = "https://github.com/play-iot/gradle-plugin/blob/main/plugin/README.md"
+    vcsUrl = "https://github.com/play-iot/gradle-plugin.git"
     tags = listOf("qwe-application", "qwe-docker", "java-oss")
 }
 
@@ -59,7 +59,7 @@ dependencies {
     testImplementation(TestLibs.junit5Engine)
 }
 
-group = "io.github.zero88.qwe"
+group = "io.github.zero88"
 version = "$version${prop(project, "semanticVersion")}"
 
 sourceSets {
@@ -114,11 +114,11 @@ publishing {
             pom {
                 name.set(prop(project, "title"))
                 description.set(prop(project, "description"))
-                url.set("https://github.com/topmo12/qwe-gradle-plugin")
+                url.set("https://github.com/play-iot/gradle-plugin")
                 licenses {
                     license {
                         name.set("The Apache License, Version 2.0")
-                        url.set("https://github.com/topmo12/qwe-gradle-plugin/blob/master/LICENSE")
+                        url.set("https://github.com/play-iot/gradle-plugin/blob/master/LICENSE")
                     }
                 }
                 developers {
@@ -128,8 +128,8 @@ publishing {
                     }
                 }
                 scm {
-                    connection.set("scm:git:git://git@github.com:topmo12/qwe-gradle-plugin.git")
-                    url.set("https://github.com/topmo12/qwe-gradle-plugin")
+                    connection.set("scm:git:git://git@github.com:play-iot/gradle-plugin.git")
+                    url.set("https://github.com/play-iot/gradle-plugin")
                 }
             }
         }
