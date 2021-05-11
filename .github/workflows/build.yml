@@ -113,6 +113,8 @@ jobs:
         if: needs.context.outputs.isRelease == 'true' && env.ENABLE_GRADLE_PLUGIN == 'true'
         run: |
           ./gradlew publishPlugins \
+                  -Pversion=${{ needs.context.outputs.version }} \
+                  -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
                   -Pgradle.publish.key=${{ secrets.OSS_GRADLE_KEY }} \
                   -Pgradle.publish.secret=${{ secrets.OSS_GRADLE_SECRET }}
 
