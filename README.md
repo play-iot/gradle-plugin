@@ -2,8 +2,8 @@
 
 ![build](https://github.com/play-iot/gradle-plugin/workflows/build-release/badge.svg?branch=main)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/play-iot/gradle-plugin?sort=semver)
-![Sonatype Nexus (Releases)](https://img.shields.io/nexus/r/io.github.zero88.qwe/qwe-gradle-plugin?server=https%3A%2F%2Foss.sonatype.org%2F)
-![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/io.github.zero88.qwe/qwe-gradle-plugin?server=https%3A%2F%2Foss.sonatype.org%2F)
+![Sonatype Nexus (Releases)](https://img.shields.io/nexus/r/io.github.zero88/gradle-plugin?server=https%3A%2F%2Foss.sonatype.org%2F)
+![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/io.github.zero88/gradle-plugin?server=https%3A%2F%2Foss.sonatype.org%2F)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=play-iot_gradle-plugin&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=play-iot_gradle-plugin)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=play-iot_gradle-plugin&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=play-iot_gradle-plugin)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=play-iot_gradle-plugin&metric=security_rating)](https://sonarcloud.io/dashboard?id=play-iot_gradle-plugin)
