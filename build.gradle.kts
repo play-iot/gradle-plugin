@@ -19,25 +19,25 @@ repositories {
 gradlePlugin {
     plugins {
         create("OSS project plugin") {
-            id = "io.zero88.qwe.gradle.oss"
+            id = "io.github.zero88.qwe.gradle.oss"
             displayName = "QWE OSS Project plugin"
             description = "This plugin adds some utilities in project for build/maven distribution"
             implementationClass = "io.zero88.qwe.gradle.QWEOSSProjectPlugin"
         }
         create("OSS Root project plugin") {
-            id = "io.zero88.qwe.gradle.root"
+            id = "io.github.zero88.qwe.gradle.root"
             displayName = "QWE Root Project plugin"
             description = "This plugin adds some utilities in root project in a multi-project build"
             implementationClass = "io.zero88.qwe.gradle.QWERootProjectPlugin"
         }
         create("QWE Application plugin") {
-            id = "io.zero88.qwe.gradle.app"
+            id = "io.github.zero88.qwe.gradle.app"
             displayName = "QWE Application plugin"
             description = "This plugin adds Generator/Bundle capabilities to QWE Application"
             implementationClass = "io.zero88.qwe.gradle.app.QWEAppPlugin"
         }
         create("QWE Docker plugin") {
-            id = "io.zero88.qwe.gradle.docker"
+            id = "io.github.zero88.qwe.gradle.docker"
             displayName = "QWE Docker plugin"
             description = "This plugin adds Docker capabilities to build/push Docker image for QWE application"
             implementationClass = "io.zero88.qwe.gradle.docker.QWEDockerPlugin"
