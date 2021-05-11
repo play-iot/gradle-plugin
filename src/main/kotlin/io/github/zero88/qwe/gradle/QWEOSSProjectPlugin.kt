@@ -187,6 +187,7 @@ class QWEOSSProjectPlugin : Plugin<Project> {
             options {
                 encoding = StandardCharsets.UTF_8.name()
                 this as StandardJavadocDocletOptions
+                this.addBooleanOption("Xdoclint:none", true)
                 tags = mutableListOf(
                     "apiNote:a:API Note:", "implSpec:a:Implementation Requirements:",
                     "implNote:a:Implementation Note:"
