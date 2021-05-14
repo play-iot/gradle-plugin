@@ -1,24 +1,23 @@
 package io.zero88.gradle.qwe.app.task
 
-import io.zero88.gradle.helper.prop
-import io.zero88.gradle.qwe.app.QWEAppPlugin
-import org.gradle.api.DefaultTask
 import org.gradle.api.java.archives.ManifestException
 import org.gradle.api.plugins.JavaPlugin
-import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.named
+import org.gradle.kotlin.dsl.property
 
-open class ManifestGeneratorTask : DefaultTask() {
-    init {
-        group = "QWE Generator"
-        description = "Generate Java manifest"
-    }
+open class ManifestGeneratorTask : QWEGeneratorTask("Generates manifest") {
 
-    @TaskAction
-    fun generate() {
-        val mainClass = prop(project, "mainClass", QWEAppPlugin.MAIN_CLASS)
-        val mainVerticle = prop(project, "mainVerticle", "")
+    @Input
+    val launcher = project.objects.property<String>()
+
+    @Input
+    val appVerticle = project.objects.property<String>()
+
+    override fun generate() {
+        val mainClass = launcher.get()
+        val mainVerticle = appVerticle.get()
         if (mainClass.trim() == "" || mainVerticle.trim() == "") {
             throw ManifestException("Missing Vertx mainClass or mainVerticle")
         }

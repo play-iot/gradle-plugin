@@ -45,7 +45,6 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
             val labelParams = prop(project, "dockerLabels", true)?.split(",")?.filter { s -> s.isNotEmpty() }
             val dl = listOf("version=${project.version}", "maintainer=${ext.maintainer.get()}")
             val labels = dl + (labelParams ?: listOf())
-            ext.enabled.set(qweExt.application.get() && ext.enabled.get())
             ext.dockerImage.imageRegistries.addAll(registryParams ?: listOf(name))
             ext.dockerImage.tags.addAll(tagParams ?: listOf(project.version.toString()))
             ext.dockerImage.labels.putAll(labels.map { s -> s.split("=") }.associate { it[0] to it[1] })

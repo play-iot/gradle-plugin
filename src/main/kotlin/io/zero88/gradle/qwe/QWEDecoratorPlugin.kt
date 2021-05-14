@@ -15,7 +15,6 @@ interface QWEDecoratorPlugin<T> : Plugin<Project> {
         applyExternalPlugins(project)
         val ossExt = project.extensions.getByType<OSSExtension>()
         val qweExt = project.extensions.findByType<QWEExtension>() ?: project.extensions.create(QWEExtension.NAME)
-        qweExt.application.convention(prop(project, "executable", "false").toBoolean())
         registerAndConfigureTask(project, ossExt, qweExt, configureExtension(project, ossExt, qweExt))
     }
 

@@ -35,20 +35,22 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
         qweExt: QWEExtension,
         decoratorExt: QWEAppExtension
     ) {
-        val manifestProvider = project.tasks.register<ManifestGeneratorTask>("generateManifest") {
-            onlyIf { qweExt.application.get() }
-        }
         val configProvider = project.tasks.register<ConfigGeneratorTask>("generateConfig") {
             outputDir.set(decoratorExt.layout.generatedConfigDir)
         }
+        val manifestProvider = project.tasks.register<ManifestGeneratorTask>("generateManifest") {
+            outputs.upToDateWhen { false }
+            launcher.set(decoratorExt.launcher)
+            appVerticle.set(decoratorExt.verticle)
+            outputDir.set(temporaryDir)
+        }
         val loggingProvider = project.tasks.register<LoggingGeneratorTask>("generateLogging") {
-            onlyIf { qweExt.application.get() }
             projectName.set(ossExt.baseName)
             ext.set(decoratorExt.logging)
             outputDir.set(decoratorExt.layout.generatedConfigDir)
         }
         val systemdProvider = project.tasks.register<SystemdServiceGeneratorTask>("generateSystemdService") {
-            onlyIf { qweExt.application.get() && decoratorExt.systemd.enabled.get() }
+            onlyIf { decoratorExt.systemd.enabled.get() }
             baseName.set(ossExt.baseName)
             projectDes.set(ossExt.description.convention(ossExt.title))
             systemdProp.set(decoratorExt.systemd)
@@ -56,13 +58,13 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
         }
         project.tasks {
             withType<ProcessResources>()
-                .configureEach { dependsOn(manifestProvider, configProvider, loggingProvider, systemdProvider) }
+                .configureEach { dependsOn(configProvider, manifestProvider, loggingProvider, systemdProvider) }
 
             named<AbstractArchiveTask>("distZip") {
-                bundleArchive(ossExt, qweExt, decoratorExt)
+                bundleArchive(ossExt, decoratorExt)
             }
             named<AbstractArchiveTask>("distTar") {
-                bundleArchive(ossExt, qweExt, decoratorExt)
+                bundleArchive(ossExt, decoratorExt)
             }
         }
         configureSourceSet(project, decoratorExt.layout)
@@ -70,10 +72,8 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
 
     private fun AbstractArchiveTask.bundleArchive(
         ossExt: OSSExtension,
-        qweExt: QWEExtension,
         decoratorExt: QWEAppExtension
     ) {
-        onlyIf { qweExt.application.get() }
         into("${ossExt.baseName.get()}-${project.version}/conf") {
             from(decoratorExt.layout.generatedConfigDir.get())
         }
@@ -89,11 +89,6 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
 
         sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME).java.srcDirs.add(layout.generatedJavaSrcTestDir.get().asFile)
         sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME).resources.srcDirs.add(layout.generatedResourceTestDir.get().asFile)
-    }
-
-    companion object {
-
-        const val MAIN_CLASS = "io.zero88.qwe.QWELauncher"
     }
 
 }

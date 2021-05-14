@@ -5,13 +5,28 @@ import io.zero88.gradle.qwe.app.task.SystemdServiceExtension
 import org.gradle.api.Action
 import org.gradle.api.file.ProjectLayout
 import org.gradle.api.model.ObjectFactory
+import org.gradle.api.tasks.Input
+import org.gradle.kotlin.dsl.property
 
+@Suppress("UnstableApiUsage")
 open class QWEAppExtension(objects: ObjectFactory, projectLayout: ProjectLayout) {
 
     companion object {
 
         const val NAME = "app"
     }
+
+    /**
+     * Launcher class
+     */
+    @Input
+    val launcher = objects.property<String>().convention("io.zero88.qwe.QWELauncher")
+
+    /**
+     * Application verticle class
+     */
+    @Input
+    val verticle = objects.property<String>().convention("")
 
     /**
      * Generator layout
