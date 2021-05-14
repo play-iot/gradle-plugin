@@ -6,7 +6,8 @@ import io.zero88.gradle.qwe.QWEExtension
 import io.zero88.gradle.qwe.app.task.ConfigGeneratorTask
 import io.zero88.gradle.qwe.app.task.LoggingGeneratorTask
 import io.zero88.gradle.qwe.app.task.ManifestGeneratorTask
-import io.zero88.gradle.qwe.app.task.SystemdServiceGeneratorTask
+import io.zero88.gradle.qwe.systemd.QWESystemdExtension
+import io.zero88.gradle.qwe.systemd.QWESystemdGeneratorTask
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.plugins.JavaPluginConvention
@@ -26,7 +27,9 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
     }
 
     override fun configureExtension(project: Project, ossExt: OSSExtension, qweExt: QWEExtension): QWEAppExtension {
-        return (qweExt as ExtensionAware).extensions.create(QWEAppExtension.NAME)
+        val extensionAware = qweExt as ExtensionAware
+        extensionAware.extensions.create<QWESystemdExtension>(QWESystemdExtension.NAME)
+        return extensionAware.extensions.create(QWEAppExtension.NAME)
     }
 
     override fun registerAndConfigureTask(
@@ -49,14 +52,15 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
             ext.set(decoratorExt.logging)
             outputDir.set(decoratorExt.layout.generatedConfigDir)
         }
-        val systemdProvider = project.tasks.register<SystemdServiceGeneratorTask>("generateSystemdService") {
-            onlyIf { decoratorExt.systemd.enabled.get() }
+        val systemdProvider = project.tasks.register<QWESystemdGeneratorTask>("generateSystemdService") {
+            val systemd = (qweExt as ExtensionAware).extensions.getByType<QWESystemdExtension>()
+            onlyIf { systemd.enabled.get() }
             baseName.set(ossExt.baseName)
             projectDes.set(ossExt.description.convention(ossExt.title))
             configFile.set(decoratorExt.configFile)
             workingDir.set(decoratorExt.workingDir)
             dataDir.set(decoratorExt.dataDir)
-            systemdProp.set(decoratorExt.systemd)
+            systemdProp.set(systemd)
             outputDir.set(decoratorExt.layout.generatedServiceDir)
         }
         project.tasks {

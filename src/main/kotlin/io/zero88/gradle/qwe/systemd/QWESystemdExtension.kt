@@ -1,4 +1,4 @@
-package io.zero88.gradle.qwe.app.task
+package io.zero88.gradle.qwe.systemd
 
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.tasks.Input
@@ -6,7 +6,12 @@ import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.mapProperty
 import org.gradle.kotlin.dsl.property
 
-@Suppress("UnstableApiUsage") open class SystemdServiceExtension(objects: ObjectFactory) {
+@Suppress("UnstableApiUsage") open class QWESystemdExtension(objects: ObjectFactory) {
+
+    companion object {
+
+        const val NAME = "systemd"
+    }
 
     @Input
     val enabled = objects.property<Boolean>().convention(true)

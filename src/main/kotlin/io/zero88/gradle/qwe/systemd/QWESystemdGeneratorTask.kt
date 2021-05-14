@@ -1,14 +1,15 @@
-package io.zero88.gradle.qwe.app.task
+package io.zero88.gradle.qwe.systemd
 
 import io.zero88.gradle.helper.getPluginResource
 import io.zero88.gradle.helper.readResourceProperties
+import io.zero88.gradle.qwe.app.task.QWEGeneratorTask
 import org.gradle.api.file.RelativePath
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.property
 
-open class SystemdServiceGeneratorTask : QWEGeneratorTask("Generates Systemd Linux service file") {
+open class QWESystemdGeneratorTask : QWEGeneratorTask("Generates Systemd Linux service file") {
 
     @Input
     val baseName = project.objects.property<String>()
@@ -26,7 +27,7 @@ open class SystemdServiceGeneratorTask : QWEGeneratorTask("Generates Systemd Lin
     val dataDir = project.objects.property<String>()
 
     @Nested
-    val systemdProp = project.objects.property<SystemdServiceExtension>()
+    val systemdProp = project.objects.property<QWESystemdExtension>()
 
     @TaskAction
     override fun generate() {
