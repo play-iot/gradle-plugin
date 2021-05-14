@@ -6,7 +6,7 @@ object PluginLibs {
 
         const val sonarQube = "3.1.1"
         const val jooq = "5.2.1"
-        const val nexusStaging = "0.22.0"
+        const val nexusPublish = "1.1.0"
         const val docker = "6.7.0"
         const val gradlePluginPublish = "0.14.0"
         const val jvm = "1.3.72"
@@ -14,13 +14,14 @@ object PluginLibs {
     }
 
     const val sonarQube = "org.sonarqube"
-    const val nexusStaging = "io.codearte.nexus-staging"
+    const val nexusPublish = "io.github.gradle-nexus.publish-plugin"
     const val gradlePluginPublish = "com.gradle.plugin-publish"
     const val jvm = "jvm"
 
     object Depends {
 
         const val docker = "com.bmuschko:gradle-docker-plugin:${Version.docker}"
+        const val nexusPublish = "io.github.gradle-nexus:publish-plugin:${Version.nexusPublish}"
         const val sonarQube = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${Version.sonarQube}"
         const val jooq = "nu.studer:gradle-jooq-plugin:${Version.jooq}"
         const val testcontainers =  "org.testcontainers:cassandra:${Version.testcontainers}"

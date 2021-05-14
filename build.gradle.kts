@@ -6,7 +6,7 @@ plugins {
     signing
     kotlin(PluginLibs.jvm) version PluginLibs.Version.jvm
     id(PluginLibs.sonarQube) version PluginLibs.Version.sonarQube
-    id(PluginLibs.nexusStaging) version PluginLibs.Version.nexusStaging
+    id(PluginLibs.nexusPublish) version PluginLibs.Version.nexusPublish
     id(PluginLibs.gradlePluginPublish) version PluginLibs.Version.gradlePluginPublish
 }
 
@@ -17,32 +17,33 @@ repositories {
 }
 
 group = "io.github.zero88"
+version = "$version${prop(project, "semanticVersion")}"
 
 gradlePlugin {
     plugins {
         create("oss") {
-            id = "io.github.zero88.qwe.gradle.oss"
-            displayName = "QWE OSS Project plugin"
+            id = "io.github.zero88.gradle.oss"
+            displayName = "OSS Project plugin"
             description = "This plugin adds some utilities in project for build/maven distribution"
-            implementationClass = "io.zero88.qwe.gradle.QWEOSSProjectPlugin"
+            implementationClass = "io.zero88.gradle.OSSProjectPlugin"
         }
         create("root") {
-            id = "io.github.zero88.qwe.gradle.root"
-            displayName = "QWE Root Project plugin"
+            id = "io.github.zero88.gradle.root"
+            displayName = "Root Project plugin"
             description = "This plugin adds some utilities in root project in a multi-project build"
-            implementationClass = "io.zero88.qwe.gradle.QWERootProjectPlugin"
+            implementationClass = "io.zero88.gradle.RootProjectPlugin"
         }
         create("app") {
-            id = "io.github.zero88.qwe.gradle.app"
+            id = "io.github.zero88.gradle.qwe.app"
             displayName = "QWE Application plugin"
             description = "This plugin adds Generator/Bundle capabilities to QWE Application"
-            implementationClass = "io.zero88.qwe.gradle.app.QWEAppPlugin"
+            implementationClass = "io.zero88.gradle.app.QWEAppPlugin"
         }
         create("docker") {
-            id = "io.github.zero88.qwe.gradle.docker"
+            id = "io.github.zero88.gradle.qwe.docker"
             displayName = "QWE Docker plugin"
             description = "This plugin adds Docker capabilities to build/push Docker image for QWE application"
-            implementationClass = "io.zero88.qwe.gradle.docker.QWEDockerPlugin"
+            implementationClass = "io.zero88.gradle.docker.QWEDockerPlugin"
         }
     }
 }
@@ -62,13 +63,11 @@ pluginBundle {
 dependencies {
     api(PluginLibs.Depends.docker)
     api(PluginLibs.Depends.sonarQube)
+    api(PluginLibs.Depends.nexusPublish)
 
     testImplementation(TestLibs.junit5Api)
     testImplementation(TestLibs.junit5Engine)
 }
-
-group = "io.github.zero88"
-version = "$version${prop(project, "semanticVersion")}"
 
 sourceSets {
     main { java.srcDirs("src/main/java", "src/main/kotlin") }
@@ -173,8 +172,12 @@ sonarqube {
     }
 }
 
-nexusStaging {
-    packageGroup = "io.github.zero88"
-    username = project.property("nexus.username") as String?
-    password = project.property("nexus.password") as String?
+nexusPublishing {
+    packageGroup.set("io.github.zero88")
+    repositories {
+        sonatype {
+            username.set(project.property("nexus.username") as String?)
+            password.set(project.property("nexus.password") as String?)
+        }
+    }
 }
