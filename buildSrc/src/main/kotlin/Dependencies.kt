@@ -8,7 +8,7 @@ object PluginLibs {
         const val jooq = "5.2.1"
         const val nexusStaging = "0.22.0"
         const val docker = "6.7.0"
-        const val gradlePluginPublish = "0.12.0"
+        const val gradlePluginPublish = "0.14.0"
         const val jvm = "1.3.72"
         const val testcontainers = "1.15.2"
     }

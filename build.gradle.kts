@@ -16,27 +16,29 @@ repositories {
     gradlePluginPortal()
 }
 
+group = "io.github.zero88"
+
 gradlePlugin {
     plugins {
-        create("OSS project plugin") {
+        create("oss") {
             id = "io.github.zero88.qwe.gradle.oss"
             displayName = "QWE OSS Project plugin"
             description = "This plugin adds some utilities in project for build/maven distribution"
             implementationClass = "io.zero88.qwe.gradle.QWEOSSProjectPlugin"
         }
-        create("OSS Root project plugin") {
+        create("root") {
             id = "io.github.zero88.qwe.gradle.root"
             displayName = "QWE Root Project plugin"
             description = "This plugin adds some utilities in root project in a multi-project build"
             implementationClass = "io.zero88.qwe.gradle.QWERootProjectPlugin"
         }
-        create("QWE Application plugin") {
+        create("app") {
             id = "io.github.zero88.qwe.gradle.app"
             displayName = "QWE Application plugin"
             description = "This plugin adds Generator/Bundle capabilities to QWE Application"
             implementationClass = "io.zero88.qwe.gradle.app.QWEAppPlugin"
         }
-        create("QWE Docker plugin") {
+        create("docker") {
             id = "io.github.zero88.qwe.gradle.docker"
             displayName = "QWE Docker plugin"
             description = "This plugin adds Docker capabilities to build/push Docker image for QWE application"
@@ -46,9 +48,15 @@ gradlePlugin {
 }
 
 pluginBundle {
-    website = "https://github.com/play-iot/gradle-plugin/blob/main/plugin/README.md"
+    website = "https://github.com/play-iot/gradle-plugin"
     vcsUrl = "https://github.com/play-iot/gradle-plugin.git"
     tags = listOf("qwe-application", "qwe-docker", "java-oss")
+
+    mavenCoordinates {
+        groupId = "io.github.zero88"
+        artifactId = "gradle-plugin"
+        version = "${rootProject.version}"
+    }
 }
 
 dependencies {

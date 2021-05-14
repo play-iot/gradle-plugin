@@ -98,7 +98,7 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
 
     companion object {
 
-        const val MAIN_CLASS = "io.zero88.qwe.CarlLauncher"
+        const val MAIN_CLASS = "io.zero88.qwe.QWELauncher"
     }
 
 }
