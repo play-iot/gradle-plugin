@@ -37,13 +37,13 @@ gradlePlugin {
             id = "io.github.zero88.gradle.qwe.app"
             displayName = "QWE Application plugin"
             description = "This plugin adds Generator/Bundle capabilities to QWE Application"
-            implementationClass = "io.zero88.gradle.app.QWEAppPlugin"
+            implementationClass = "io.zero88.gradle.qwe.app.QWEAppPlugin"
         }
         create("docker") {
             id = "io.github.zero88.gradle.qwe.docker"
             displayName = "QWE Docker plugin"
             description = "This plugin adds Docker capabilities to build/push Docker image for QWE application"
-            implementationClass = "io.zero88.gradle.docker.QWEDockerPlugin"
+            implementationClass = "io.zero88.gradle.qwe.docker.QWEDockerPlugin"
         }
     }
 }
