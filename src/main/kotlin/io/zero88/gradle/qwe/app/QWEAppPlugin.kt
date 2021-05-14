@@ -1,14 +1,13 @@
 package io.zero88.gradle.qwe.app
 
 import io.zero88.gradle.OSSExtension
-import io.zero88.gradle.helper.prop
 import io.zero88.gradle.qwe.QWEDecoratorPlugin
 import io.zero88.gradle.qwe.QWEExtension
 import io.zero88.gradle.qwe.app.task.ConfigGeneratorTask
 import io.zero88.gradle.qwe.app.task.LoggingGeneratorTask
+import io.zero88.gradle.qwe.app.task.ManifestGeneratorTask
 import io.zero88.gradle.qwe.app.task.SystemdServiceGeneratorTask
 import org.gradle.api.Project
-import org.gradle.api.java.archives.ManifestException
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.SourceSet
@@ -27,24 +26,6 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
     }
 
     override fun configureExtension(project: Project, ossExt: OSSExtension, qweExt: QWEExtension): QWEAppExtension {
-        project.afterEvaluate {
-            if (qweExt.application.get()) {
-                val mainClass = prop(project, "mainClass", MAIN_CLASS)
-                val mainVerticle = prop(project, "mainVerticle", "")
-                if (mainClass.trim() == "" || mainVerticle.trim() == "") {
-                    throw ManifestException("Missing Vertx mainClass or mainVerticle")
-                }
-                val runtime = project.configurations.getByName("runtimeClasspath")
-                val classPath = if (runtime.isEmpty) "" else runtime.files.joinToString(" ") { "lib/${it.name}" }
-                ossExt.manifest.putAll(
-                    mapOf(
-                        "Main-Class" to mainClass,
-                        "Main-Verticle" to mainVerticle,
-                        "Class-Path" to "$classPath conf/"
-                    )
-                )
-            }
-        }
         return (qweExt as ExtensionAware).extensions.create(QWEAppExtension.NAME)
     }
 
@@ -54,6 +35,9 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
         qweExt: QWEExtension,
         decoratorExt: QWEAppExtension
     ) {
+        val manifestProvider = project.tasks.register<ManifestGeneratorTask>("generateManifest") {
+            onlyIf { qweExt.application.get() }
+        }
         val configProvider = project.tasks.register<ConfigGeneratorTask>("generateConfig") {
             outputDir.set(decoratorExt.layout.generatedConfigDir)
         }
@@ -72,7 +56,7 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
         }
         project.tasks {
             withType<ProcessResources>()
-                .configureEach { dependsOn(configProvider, loggingProvider, systemdProvider) }
+                .configureEach { dependsOn(manifestProvider, configProvider, loggingProvider, systemdProvider) }
 
             named<AbstractArchiveTask>("distZip") {
                 onlyIf { qweExt.application.get() }
