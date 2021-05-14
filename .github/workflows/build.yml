@@ -107,7 +107,7 @@ jobs:
                   -Pnexus.username=${{ secrets.OSS_NEXUS_USER }} \
                   -Pnexus.password=${{ secrets.OSS_NEXUS_TOKEN }} )
            [[ "${{ needs.context.outputs.isRelease }}" == 'true' ]] && args+=( -Prelease )
-           ./gradlew publish "${args[@]}"
+           ./gradlew publishMavenPublicationToMavenRepository "${args[@]}"
 
       - name: Publish Gradle plugin
         if: needs.context.outputs.isRelease == 'true' && env.ENABLE_GRADLE_PLUGIN == 'true'
@@ -130,7 +130,7 @@ jobs:
                  -Pnexus.password=${{ secrets.OSS_GITHUB_TOKEN }} )
           args+=( -Pgithub )
           [[ "${{ needs.context.outputs.isRelease }}" == 'true' ]] && args+=( -Prelease )
-          ./gradlew publish "${args[@]}"
+          ./gradlew publishMavenPublicationToMavenRepository "${args[@]}"
 
   analysis:
     runs-on: ubuntu-latest
