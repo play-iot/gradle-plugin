@@ -119,7 +119,7 @@ jobs:
                   -Pgradle.publish.secret=${{ secrets.OSS_GRADLE_SECRET }}
 
       - name: Publish GitHub Package
-        if: needs.context.outputs.isRelease == 'true' && env.ENABLE_GH_MAVEN == 'true'
+        if: env.ENABLE_GH_MAVEN == 'true'
         run: |
           args=( -Pversion=${{ needs.context.outputs.version }} \
                  -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
@@ -127,7 +127,7 @@ jobs:
                  -Psigning.gnupg.keyName=${{ steps.import_gpg.outputs.keyid }} \
                  -Psigning.gnupg.passphrase=${{ secrets.OSS_GPG_PASSPHARSE }} \
                  -Pnexus.username=${{ github.repository_owner }} \
-                 -Pnexus.password=${{ secrets.OSS_GITHUB_TOKEN }} )
+                 -Pnexus.password=${{ secrets.BEEIO_CI_TOKEN }} )
           args+=( -Pgithub )
           [[ "${{ needs.context.outputs.isRelease }}" == 'true' ]] && args+=( -Prelease )
           ./gradlew publishMavenPublicationToMavenRepository "${args[@]}"
