@@ -47,7 +47,6 @@ class OSSProjectPlugin : Plugin<Project> {
         project.pluginManager.apply(JacocoPlugin::class.java)
         project.pluginManager.apply(MavenPublishPlugin::class.java)
         project.pluginManager.apply(SigningPlugin::class.java)
-        project.pluginManager.apply(NexusPublishPlugin::class.java)
     }
 
     private fun evaluateProject(project: Project): OSSExtension {

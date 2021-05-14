@@ -1,5 +1,6 @@
 package io.zero88.gradle
 
+import io.github.gradlenexus.publishplugin.NexusPublishPlugin
 import io.zero88.gradle.helper.prop
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -62,6 +63,7 @@ class RootProjectPlugin : Plugin<Project> {
 
     private fun applyExternalPlugins(project: Project) {
         project.pluginManager.apply(SonarQubePlugin::class.java)
+        project.pluginManager.apply(NexusPublishPlugin::class.java)
     }
 
     private fun TaskContainerScope.assembleTask(project: Project) {
