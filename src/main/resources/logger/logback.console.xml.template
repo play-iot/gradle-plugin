@@ -10,7 +10,7 @@
     <root level="{{root_level}}">
         <appender-ref ref="STDOUT"/>
     </root>
-    <logger name="io.github.zero88" level="{{zero_lib_level}}"/>
+    <logger name="io.zero88" level="{{zero_lib_level}}"/>
     {{other_logger}}
 
 </configuration>
