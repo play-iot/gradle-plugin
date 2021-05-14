@@ -194,6 +194,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
-          ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository \
+          ./gradlew publishMavenPublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository \
                       -Pnexus.username=${{ secrets.OSS_NEXUS_USER }} \
                       -Pnexus.password=${{ secrets.OSS_NEXUS_TOKEN }} || echo "::warning Need to promote manually"
