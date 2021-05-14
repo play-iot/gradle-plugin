@@ -15,7 +15,7 @@ import org.gradle.kotlin.dsl.property
     val javaPath = objects.property<String>().convention("/usr/bin/java")
 
     @Input
-    val architectures = objects.listProperty<Arch>().convention(listOf(Arch.X86_64))
+    val architectures = objects.listProperty<Arch>().convention(listOf(Arch.X86_64, Arch.ARM_V7))
 
     @Input
     val jvmProps = objects.listProperty<String>().empty()
@@ -24,7 +24,7 @@ import org.gradle.kotlin.dsl.property
     val systemProps = objects.listProperty<String>().empty()
 
     @Input
-    val serviceName = objects.property<String>()
+    val serviceName = objects.property<String>().convention("")
 
     @Input
     val workingDir = objects.property<String>().convention("/app")

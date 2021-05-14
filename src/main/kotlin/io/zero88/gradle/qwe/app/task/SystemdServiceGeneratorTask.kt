@@ -27,6 +27,7 @@ open class SystemdServiceGeneratorTask : QWEGeneratorTask("Generates Systemd Lin
         val configParam = input.configFile.map { "-conf $it" }.getOrElse("")
         val params = input.params.map { it.entries.map { kv -> "-${kv.key} ${kv.value}" }.joinToString { " " } }
             .getOrElse("")
+        val serviceName = input.serviceName.get().ifBlank { baseName.get() }
         input.architectures.get().forEach { arch ->
             val props = readResourceProperties("service/java.${arch.code}.properties")
             val jvmProps = if (input.jvmProps.get().isNotEmpty())
@@ -37,7 +38,7 @@ open class SystemdServiceGeneratorTask : QWEGeneratorTask("Generates Systemd Lin
                 into(outputDir.get())
                 from(resource.first) {
                     include("service/systemd.service.template")
-                    rename { input.serviceName.getOrElse(baseName.get()).plus(arch.code).plus(".service") }
+                    rename { serviceName.plus("-").plus(arch.code).plus(".service") }
                     eachFile {
                         relativePath = RelativePath(true, *relativePath.segments.drop(1).toTypedArray())
                     }
