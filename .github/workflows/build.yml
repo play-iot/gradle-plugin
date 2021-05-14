@@ -15,7 +15,7 @@ on:
 
 env:
   ENABLE_TEST: true
-  ENABLE_GH_MAVEN: false
+  ENABLE_GH_MAVEN: true
   ENABLE_GRADLE_PLUGIN: true
   ENABLE_SONAR: true
 
