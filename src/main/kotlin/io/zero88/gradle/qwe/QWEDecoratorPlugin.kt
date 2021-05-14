@@ -5,6 +5,7 @@ import io.zero88.gradle.helper.prop
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.getByType
 
 @Suppress("UnstableApiUsage")
@@ -13,7 +14,7 @@ interface QWEDecoratorPlugin<T> : Plugin<Project> {
     override fun apply(project: Project) {
         applyExternalPlugins(project)
         val ossExt = project.extensions.getByType<OSSExtension>()
-        val qweExt = project.extensions.create<QWEExtension>(QWEExtension.NAME)
+        val qweExt = project.extensions.findByType<QWEExtension>() ?: project.extensions.create(QWEExtension.NAME)
         qweExt.application.convention(prop(project, "executable", "false").toBoolean())
         registerAndConfigureTask(project, ossExt, qweExt, configureExtension(project, ossExt, qweExt))
     }

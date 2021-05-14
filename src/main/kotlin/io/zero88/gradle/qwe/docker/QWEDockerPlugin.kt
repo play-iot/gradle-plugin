@@ -48,7 +48,7 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
             ext.enabled.set(qweExt.application.get() && ext.enabled.get())
             ext.dockerImage.imageRegistries.addAll(registryParams ?: listOf(name))
             ext.dockerImage.tags.addAll(tagParams ?: listOf(project.version.toString()))
-            ext.dockerImage.labels.putAll(labels.map { s -> s.split("=") }.map { it[0] to it[1] }.toMap())
+            ext.dockerImage.labels.putAll(labels.map { s -> s.split("=") }.associate { it[0] to it[1] })
         }
         return ext
     }
