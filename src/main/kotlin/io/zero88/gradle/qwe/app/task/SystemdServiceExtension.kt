@@ -27,12 +27,6 @@ import org.gradle.kotlin.dsl.property
     val serviceName = objects.property<String>().convention("")
 
     @Input
-    val workingDir = objects.property<String>().convention("/app")
-
-    @Input
-    val configFile = objects.property<String>().convention("config.json")
-
-    @Input
     val params = objects.mapProperty<String, String>().empty()
 
     enum class Arch(val code: String) {

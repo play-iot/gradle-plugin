@@ -1,6 +1,5 @@
 package io.zero88.gradle.qwe.docker
 
-import com.bmuschko.gradle.docker.DockerExtension
 import com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile
@@ -8,6 +7,7 @@ import io.zero88.gradle.OSSExtension
 import io.zero88.gradle.helper.prop
 import io.zero88.gradle.qwe.QWEDecoratorPlugin
 import io.zero88.gradle.qwe.QWEExtension
+import io.zero88.gradle.qwe.app.QWEAppExtension
 import io.zero88.gradle.qwe.app.QWEAppPlugin
 import io.zero88.gradle.qwe.docker.task.DockerMultipleRegistriesPushTask
 import org.gradle.api.DefaultTask
@@ -33,8 +33,7 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
     }
 
     override fun configureExtension(project: Project, ossExt: OSSExtension, qweExt: QWEExtension): QWEDockerExtension {
-        val dockerExt = project.extensions.getByType<DockerExtension>()
-        val ext = (dockerExt as ExtensionAware).extensions.create<QWEDockerExtension>(QWEDockerExtension.NAME)
+        val ext = (qweExt as ExtensionAware).extensions.create<QWEDockerExtension>(QWEDockerExtension.NAME)
         project.afterEvaluate {
             val name = ossExt.baseName.get()
             if (ossExt.zero88.get()) {
@@ -58,7 +57,8 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
         qweExt: QWEExtension,
         decoratorExt: QWEDockerExtension
     ) {
-        val dockerFileProvider = registerCreateDockerfileTask(project, ossExt.baseName, decoratorExt)
+        val appExt = (qweExt as ExtensionAware).extensions.getByType<QWEAppExtension>()
+        val dockerFileProvider = registerCreateDockerfileTask(project, ossExt.baseName, appExt, decoratorExt)
         registerPrintDockerfileTask(project, decoratorExt, dockerFileProvider)
         registerDockerPushTask(
             project,
@@ -70,6 +70,7 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
     private fun registerCreateDockerfileTask(
         project: Project,
         baseName: Property<String>,
+        appExt: QWEAppExtension,
         qweDockerExt: QWEDockerExtension
     ): TaskProvider<Dockerfile> {
         return project.tasks.register<Dockerfile>("createDockerfile") {
@@ -82,17 +83,17 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
             destFile.set(qweDockerExt.outputDirectory.file(baseName))
 
             from(df.image.get())
-            workingDir(df.appDir)
+            workingDir(appExt.workingDir)
             addFile("distributions/${fqn}.tar", "./")
-            runCommand("cp -rf $fqn/* ./ && rm -rf $fqn && mkdir -p ${df.dataDir.get()}")
-            runCommand(df.userGroupCmd.orElse(df.generateUserGroupCmd()))
+            runCommand("cp -rf $fqn/* ./ && rm -rf $fqn && mkdir -p ${appExt.dataDir.get()}")
+            runCommand(df.userGroupCmd.orElse(df.generateUserGroupCmd(appExt.dataDir.get())))
             if (df.otherCmd.isPresent) {
                 runCommand(df.otherCmd)
             }
-            volume(df.dataDir.get())
+            volume(appExt.dataDir.get())
             user(df.user)
             entryPoint("java")
-            defaultCommand("-jar", "${fqn}.jar", "-conf", "conf/${df.configFile.get()}")
+            defaultCommand("-jar", "${fqn}.jar", "-conf", "conf/${appExt.configFile.get()}")
             label(qweDockerExt.dockerImage.labels)
             exposePort(df.ports)
         }

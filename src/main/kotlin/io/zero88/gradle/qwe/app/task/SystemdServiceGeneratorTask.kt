@@ -16,6 +16,15 @@ open class SystemdServiceGeneratorTask : QWEGeneratorTask("Generates Systemd Lin
     @Input
     val projectDes = project.objects.property<String>()
 
+    @Input
+    val configFile = project.objects.property<String>()
+
+    @Input
+    val workingDir = project.objects.property<String>()
+
+    @Input
+    val dataDir = project.objects.property<String>()
+
     @Nested
     val systemdProp = project.objects.property<SystemdServiceExtension>()
 
@@ -23,17 +32,17 @@ open class SystemdServiceGeneratorTask : QWEGeneratorTask("Generates Systemd Lin
     override fun generate() {
         val jarFile = baseName.get() + "-" + project.version
         val resource = getPluginResource(project, "service")
-        val input = systemdProp.get()
-        val configParam = input.configFile.map { "-conf $it" }.getOrElse("")
-        val params = input.params.map { it.entries.map { kv -> "-${kv.key} ${kv.value}" }.joinToString { " " } }
+        val systemd = systemdProp.get()
+        val configParam = configFile.map { "-conf $it" }.getOrElse("")
+        val params = systemd.params.map { it.entries.map { kv -> "-${kv.key} ${kv.value}" }.joinToString { " " } }
             .getOrElse("")
-        val serviceName = input.serviceName.get().ifBlank { baseName.get() }
-        input.architectures.get().forEach { arch ->
+        val serviceName = systemd.serviceName.get().ifBlank { baseName.get() }
+        systemd.architectures.get().forEach { arch ->
             val props = readResourceProperties("service/java.${arch.code}.properties")
-            val jvmProps = if (input.jvmProps.get().isNotEmpty())
-                input.jvmProps.map { it.joinToString { " " } }.get() else props?.getProperty("jvm") ?: ""
-            val systemProps = if (input.systemProps.get().isNotEmpty())
-                input.systemProps.map { it.joinToString(" ", "-D") }.get() else props?.getProperty("system") ?: ""
+            val jvmProps = if (systemd.jvmProps.get().isNotEmpty())
+                systemd.jvmProps.map { it.joinToString { " " } }.get() else props?.getProperty("jvm") ?: ""
+            val systemProps = if (systemd.systemProps.get().isNotEmpty())
+                systemd.systemProps.map { it.joinToString(" ", "-D") }.get() else props?.getProperty("system") ?: ""
             project.copy {
                 into(outputDir.get())
                 from(resource.first) {
@@ -44,11 +53,11 @@ open class SystemdServiceGeneratorTask : QWEGeneratorTask("Generates Systemd Lin
                     }
                     includeEmptyDirs = false
                     filter {
-                        it.replace("{{java_path}}", input.javaPath.get())
+                        it.replace("{{java_path}}", systemd.javaPath.get())
                             .replace("{{description}}", projectDes.get())
                             .replace("{{jvm}}", jvmProps)
                             .replace("{{system}}", systemProps)
-                            .replace("{{working_dir}}", input.workingDir.get())
+                            .replace("{{working_dir}}", workingDir.get())
                             .replace("{{jar_file}}", jarFile)
                             .replace("{{params}}", configParam + params)
                     }

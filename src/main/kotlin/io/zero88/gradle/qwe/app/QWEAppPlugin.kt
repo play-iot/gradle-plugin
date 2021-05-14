@@ -53,6 +53,9 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
             onlyIf { decoratorExt.systemd.enabled.get() }
             baseName.set(ossExt.baseName)
             projectDes.set(ossExt.description.convention(ossExt.title))
+            configFile.set(decoratorExt.configFile)
+            workingDir.set(decoratorExt.workingDir)
+            dataDir.set(decoratorExt.dataDir)
             systemdProp.set(decoratorExt.systemd)
             outputDir.set(decoratorExt.layout.generatedServiceDir)
         }

@@ -29,6 +29,24 @@ open class QWEAppExtension(objects: ObjectFactory, projectLayout: ProjectLayout)
     val verticle = objects.property<String>().convention("")
 
     /**
+     * Application config file
+     */
+    @Input
+    val configFile = objects.property<String>().convention("config.json")
+
+    /**
+     * Application working dir
+     */
+    @Input
+    val workingDir = objects.property<String>().convention("/app")
+
+    /**
+     * Application data dir
+     */
+    @Input
+    val dataDir = objects.property<String>().convention("/data")
+
+    /**
      * Generator layout
      */
     val layout = GeneratedLayoutExtension(objects, projectLayout)
