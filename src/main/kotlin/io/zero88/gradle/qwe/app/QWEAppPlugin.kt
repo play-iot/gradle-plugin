@@ -59,19 +59,27 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
                 .configureEach { dependsOn(manifestProvider, configProvider, loggingProvider, systemdProvider) }
 
             named<AbstractArchiveTask>("distZip") {
-                onlyIf { qweExt.application.get() }
-                into("${ossExt.baseName.get()}-${project.version}/conf") {
-                    from(decoratorExt.layout.generatedConfigDir.get())
-                }
+                bundleArchive(ossExt, qweExt, decoratorExt)
             }
             named<AbstractArchiveTask>("distTar") {
-                onlyIf { qweExt.application.get() }
-                into("${ossExt.baseName.get()}-${project.version}/conf") {
-                    from(decoratorExt.layout.generatedConfigDir.get())
-                }
+                bundleArchive(ossExt, qweExt, decoratorExt)
             }
         }
         configureSourceSet(project, decoratorExt.layout)
+    }
+
+    private fun AbstractArchiveTask.bundleArchive(
+        ossExt: OSSExtension,
+        qweExt: QWEExtension,
+        decoratorExt: QWEAppExtension
+    ) {
+        onlyIf { qweExt.application.get() }
+        into("${ossExt.baseName.get()}-${project.version}/conf") {
+            from(decoratorExt.layout.generatedConfigDir.get())
+        }
+        into("${ossExt.baseName.get()}-${project.version}/service") {
+            from(decoratorExt.layout.generatedServiceDir.get())
+        }
     }
 
     private fun configureSourceSet(project: Project, layout: GeneratedLayoutExtension) {
