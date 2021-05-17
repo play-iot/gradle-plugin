@@ -20,6 +20,7 @@ import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.bundling.Tar
 import org.gradle.api.tasks.bundling.Zip
 import org.gradle.kotlin.dsl.*
+import org.gradle.language.base.plugins.LifecycleBasePlugin
 import org.gradle.language.jvm.tasks.ProcessResources
 
 /**
@@ -87,7 +88,7 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
             }
             register<Zip>("distFatZip") { distFat(ossExt, decoratorExt) }
             register<Tar>("distFatTar") { distFat(ossExt, decoratorExt) }
-            named("assemble").configure {
+            named(LifecycleBasePlugin.ASSEMBLE_TASK_NAME).configure {
                 if (decoratorExt.fatJar.get()) {
                     dependsOn(withType<ShadowJar>(), "distZipFat", "distTarFat")
                 }

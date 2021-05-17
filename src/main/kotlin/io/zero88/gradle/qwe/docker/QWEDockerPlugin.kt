@@ -15,9 +15,7 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.TaskProvider
-import org.gradle.kotlin.dsl.create
-import org.gradle.kotlin.dsl.getByType
-import org.gradle.kotlin.dsl.register
+import org.gradle.kotlin.dsl.*
 import org.gradle.language.base.plugins.LifecycleBasePlugin
 
 @Suppress("UnstableApiUsage") class QWEDockerPlugin : QWEDecoratorPlugin<QWEDockerExtension> {
@@ -25,6 +23,9 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
     companion object {
 
         const val GROUP = "QWE Docker"
+        const val ARG_DOCKER_REGISTRY = "dockerRegistries"
+        const val ARG_DOCKER_TAGS = "dockerTags"
+        const val ARG_DOCKER_LABELS = "dockerLabels"
     }
 
     override fun applyExternalPlugins(project: Project) {
@@ -39,13 +40,13 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
             if (ossExt.zero88.get()) {
                 ext.maintainer.set("${OSSExtension.DEV_ID} <${OSSExtension.DEV_EMAIL}>")
             }
-            val registryParams = prop(project, "dockerRegistries", true)?.split(",")?.map { "${it}/${name}" }
-            val tagParams = prop(project, "dockerTags")?.split(",")?.filter { s -> s.isNotEmpty() }
-            val labelParams = prop(project, "dockerLabels", true)?.split(",")?.filter { s -> s.isNotEmpty() }
+            val registryParams = prop(project, ARG_DOCKER_REGISTRY, true)?.split(",")?.map { "${it}/${name}" }
+            val tagParams = prop(project, ARG_DOCKER_TAGS)?.split(",")?.filter { s -> s.isNotEmpty() }
+            val labelParams = prop(project, ARG_DOCKER_LABELS, true)?.split(",")?.filter { s -> s.isNotEmpty() }
             val dl = listOf("version=${project.version}", "maintainer=${ext.maintainer.get()}")
-            val labels = dl + (labelParams ?: listOf())
+            val labels = dl + (if (labelParams.isNullOrEmpty()) listOf() else labelParams)
             ext.dockerImage.imageRegistries.addAll(registryParams ?: listOf(name))
-            ext.dockerImage.tags.addAll(tagParams ?: listOf(project.version.toString()))
+            ext.dockerImage.tags.addAll(if (tagParams.isNullOrEmpty()) listOf(project.version.toString()) else tagParams)
             ext.dockerImage.labels.putAll(labels.map { s -> s.split("=") }.associate { it[0] to it[1] })
         }
         return ext
@@ -58,29 +59,28 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
         decoratorExt: QWEDockerExtension
     ) {
         val appExt = (qweExt as ExtensionAware).extensions.getByType<QWEAppExtension>()
-        val dockerFileProvider = registerCreateDockerfileTask(project, ossExt.baseName, appExt, decoratorExt)
-        registerPrintDockerfileTask(project, decoratorExt, dockerFileProvider)
-        registerDockerPushTask(
-            project,
-            decoratorExt,
-            registerDockerBuildTask(project, ossExt.baseName, decoratorExt, dockerFileProvider)
-        )
+        project.tasks {
+            val dockerFileProvider = registerCreateDockerfileTask(ossExt.baseName, appExt, decoratorExt)
+            val dockerBuildTask = registerDockerBuild(ossExt.baseName, decoratorExt, dockerFileProvider)
+            named(LifecycleBasePlugin.BUILD_TASK_NAME).get().dependsOn(dockerBuildTask)
+            registerPrintDockerfile(decoratorExt, dockerFileProvider)
+            registerDockerPushTask(decoratorExt, dockerBuildTask)
+        }
+
     }
 
-    private fun registerCreateDockerfileTask(
-        project: Project,
+    private fun TaskContainerScope.registerCreateDockerfileTask(
         baseName: Property<String>,
         appExt: QWEAppExtension,
-        qweDockerExt: QWEDockerExtension
+        dockerExt: QWEDockerExtension
     ): TaskProvider<Dockerfile> {
-        return project.tasks.register<Dockerfile>("createDockerfile") {
+        return register<Dockerfile>("createDockerfile") {
             group = GROUP
             description = "Create Dockerfile"
-
-            onlyIf { qweDockerExt.enabled.get() }
+            onlyIf { dockerExt.enabled.get() }
             val fqn = baseName.get() + "-" + project.version
-            val df = qweDockerExt.dockerfile
-            destFile.set(qweDockerExt.outputDirectory.file(baseName))
+            val df = dockerExt.dockerfile
+            destFile.set(dockerExt.outputDirectory.file(baseName))
 
             from(df.image.get())
             workingDir(appExt.workingDir)
@@ -94,21 +94,20 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
             user(df.user)
             entryPoint("java")
             defaultCommand("-jar", "${fqn}.jar", "-conf", "conf/${appExt.configFile.get()}")
-            label(qweDockerExt.dockerImage.labels)
             exposePort(df.ports)
+            label(dockerExt.dockerImage.labels)
         }
     }
 
-    private fun registerPrintDockerfileTask(
-        project: Project,
-        qweDockerExt: QWEDockerExtension,
+    private fun TaskContainerScope.registerPrintDockerfile(
+        dockerExt: QWEDockerExtension,
         provider: TaskProvider<Dockerfile>
     ) {
-        project.tasks.register<DefaultTask>("printDockerfile") {
+        register<DefaultTask>("printDockerfile") {
             group = GROUP
             description = "Show Dockerfile"
 
-            onlyIf { qweDockerExt.enabled.get() }
+            onlyIf { dockerExt.enabled.get() }
             doLast {
                 val instructions = provider.get().instructions.get()
                 println(instructions.joinToString(System.lineSeparator()) { it.text })
@@ -116,13 +115,12 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
         }
     }
 
-    private fun registerDockerBuildTask(
-        project: Project,
+    private fun TaskContainerScope.registerDockerBuild(
         baseName: Property<String>,
         qweDockerExt: QWEDockerExtension,
         dockerFileProvider: TaskProvider<Dockerfile>
     ): TaskProvider<DockerBuildImage> {
-        return project.tasks.register<DockerBuildImage>("buildDocker") {
+        return register<DockerBuildImage>("buildDocker") {
             group = GROUP
             description = "Build Docker image"
 
@@ -135,18 +133,17 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
         }
     }
 
-    private fun registerDockerPushTask(
-        project: Project,
-        qweDockerExt: QWEDockerExtension,
+    private fun TaskContainerScope.registerDockerPushTask(
+        dockerExt: QWEDockerExtension,
         dockerBuildProvider: TaskProvider<DockerBuildImage>
     ) {
-        project.tasks.register<DockerMultipleRegistriesPushTask>("pushDocker") {
+        register<DockerMultipleRegistriesPushTask>("pushDocker") {
             group = GROUP
             description = "Push Docker images to multiple remote registries"
 
-            onlyIf { qweDockerExt.enabled.get() }
+            onlyIf { dockerExt.enabled.get() }
             dependsOn(dockerBuildProvider)
-            images.set(qweDockerExt.dockerImage.toFQNImages())
+            images.set(dockerExt.dockerImage.toFQNImages())
         }
     }
 
