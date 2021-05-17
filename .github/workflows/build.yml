@@ -97,41 +97,13 @@ jobs:
                           -PbuildBy="GitHub Action" -PbuildHash=${{ needs.context.outputs.commitId }}
 
       - name: Publish Sonatype OSSRH
-        if: needs.context.outputs.shouldPublish == 'true'
+        if: needs.context.outputs.shouldPublish == 'true' && needs.context.outputs.isRelease != 'true'
         run: |
           args=( -Pversion=${{ needs.context.outputs.version }} \
                  -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
-                 -Psigning.gnupg.homeDir=/home/runner/.gnupg \
-                 -Psigning.gnupg.keyName=${{ steps.import_gpg.outputs.keyid }} \
-                 -Psigning.gnupg.passphrase=${{ secrets.OSS_GPG_PASSPHARSE }} \
                  -Pnexus.username=${{ secrets.OSS_NEXUS_USER }} \
                  -Pnexus.password=${{ secrets.OSS_NEXUS_TOKEN }} )
-          [[ "${{ needs.context.outputs.isRelease }}" == 'true' ]] && args+=( -Prelease )
-          [[ "${{ needs.context.outputs.isRelease }}" == 'true' ]] && command=publishMavenPublicationToMavenRepository || command=publish
-          ./gradlew $command "${args[@]}"
-
-      - name: Publish Gradle plugin
-        if: needs.context.outputs.isRelease == 'true' && env.ENABLE_GRADLE_PLUGIN == 'true'
-        run: |
-          ./gradlew publishPlugins \
-                  -Pversion=${{ needs.context.outputs.version }} \
-                  -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
-                  -Pgradle.publish.key=${{ secrets.OSS_GRADLE_KEY }} \
-                  -Pgradle.publish.secret=${{ secrets.OSS_GRADLE_SECRET }}
-
-      - name: Publish GitHub Package
-        if: needs.context.outputs.isRelease == 'true' && env.ENABLE_GH_MAVEN == 'true'
-        run: |
-          args=( -Pversion=${{ needs.context.outputs.version }} \
-                 -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
-                 -Psigning.gnupg.homeDir=/home/runner/.gnupg \
-                 -Psigning.gnupg.keyName=${{ steps.import_gpg.outputs.keyid }} \
-                 -Psigning.gnupg.passphrase=${{ secrets.OSS_GPG_PASSPHARSE }} \
-                 -Pnexus.username=${{ github.repository_owner }} \
-                 -Pnexus.password=${{ secrets.BEEIO_CI_TOKEN }} )
-          args+=( -Pgithub )
-          [[ "${{ needs.context.outputs.isRelease }}" == 'true' ]] && args+=( -Prelease )
-          ./gradlew publishMavenPublicationToMavenRepository "${args[@]}"
+          ./gradlew publish "${args[@]}"
 
   analysis:
     runs-on: ubuntu-latest
@@ -194,7 +166,36 @@ jobs:
     if: needs.context.outputs.isRelease == 'true'
     steps:
       - uses: actions/checkout@v2
-      - run: |
-          ./gradlew publishMavenPublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository \
-                      -Pnexus.username=${{ secrets.OSS_NEXUS_USER }} \
-                      -Pnexus.password=${{ secrets.OSS_NEXUS_TOKEN }} || echo "::warning Need to promote manually"
+
+      - name: Publish Sonatype OSSRH
+        run: |
+          args=( -Pversion=${{ needs.context.outputs.version }} \
+                 -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
+                 -Psigning.gnupg.homeDir=/home/runner/.gnupg \
+                 -Psigning.gnupg.keyName=${{ steps.import_gpg.outputs.keyid }} \
+                 -Psigning.gnupg.passphrase=${{ secrets.OSS_GPG_PASSPHARSE }} \
+                 -Pnexus.username=${{ secrets.OSS_NEXUS_USER }} \
+                 -Pnexus.password=${{ secrets.OSS_NEXUS_TOKEN }} )
+          ./gradlew publishMavenPublicationToMavenRepository closeAndReleaseStagingRepository -Prelease "${args[@]}"
+
+      - name: Publish Gradle plugin
+        if: env.ENABLE_GRADLE_PLUGIN == 'true'
+        run: |
+          ./gradlew publishPlugins \
+                  -Pversion=${{ needs.context.outputs.version }} \
+                  -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
+                  -Pgradle.publish.key=${{ secrets.OSS_GRADLE_KEY }} \
+                  -Pgradle.publish.secret=${{ secrets.OSS_GRADLE_SECRET }}
+
+      - name: Publish GitHub Package
+        if: env.ENABLE_GH_MAVEN == 'true'
+        run: |
+          args=( -Pversion=${{ needs.context.outputs.version }} \
+                 -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
+                 -Psigning.gnupg.homeDir=/home/runner/.gnupg \
+                 -Psigning.gnupg.keyName=${{ steps.import_gpg.outputs.keyid }} \
+                 -Psigning.gnupg.passphrase=${{ secrets.OSS_GPG_PASSPHARSE }} \
+                 -Pnexus.username=${{ github.repository_owner }} \
+                 -Pnexus.password=${{ secrets.BEEIO_CI_TOKEN }} )
+          args+=( -Pgithub )
+          ./gradlew publishMavenPublicationToMavenRepository -Prelease "${args[@]}"
