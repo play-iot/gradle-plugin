@@ -9,6 +9,11 @@ import org.gradle.kotlin.dsl.property
 
 open class ManifestGeneratorTask : QWEGeneratorTask("Generates manifest") {
 
+    companion object {
+
+        const val NAME = "genManifest"
+    }
+
     @Input
     val launcher = project.objects.property<String>()
 

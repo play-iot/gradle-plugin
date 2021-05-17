@@ -28,6 +28,12 @@ open class QWEAppExtension(objects: ObjectFactory, projectLayout: ProjectLayout)
     val verticle = objects.property<String>().convention("")
 
     /**
+     * Bundle application as fat-jar
+     */
+    @Input
+    val fatJar = objects.property<Boolean>().convention(false)
+
+    /**
      * Application config file
      */
     @Input

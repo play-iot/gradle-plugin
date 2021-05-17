@@ -4,13 +4,18 @@ import org.gradle.api.tasks.TaskAction
 
 open class ConfigGeneratorTask : QWEGeneratorTask("Generates application configuration") {
 
+    companion object {
+
+        const val NAME = "genConfig"
+    }
+
     @TaskAction
     override fun generate() {
-        project.copy {
-            into(outputDir.get())
+        doCopy {
             from("src/main/resources") {
                 include("*.json")
             }
         }
     }
+
 }

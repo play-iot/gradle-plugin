@@ -10,8 +10,16 @@ import org.gradle.kotlin.dsl.property
 @Suppress("UnstableApiUsage")
 open class LoggingGeneratorTask : QWEGeneratorTask("Generates logging configuration") {
 
+    companion object {
+
+        const val NAME = "genLogConfig"
+    }
+
     @Input
     val projectName = project.objects.property<String>().convention(project.name)
+
+    @Input
+    val fatJar = project.objects.property<Boolean>().convention(false)
 
     @Nested
     val ext = project.objects.property<LoggingExtension>().convention(LoggingExtension(project.objects))
@@ -21,8 +29,7 @@ open class LoggingGeneratorTask : QWEGeneratorTask("Generates logging configurat
         val loggers = ext.get().otherLoggers.get()
             .map { "<logger name=\"${it.key}\" level=\"${it.value}\"/>" }.joinToString("\r\n")
         val resource = getPluginResource(project, "logger")
-        project.copy {
-            into(outputDir.get())
+        doCopy {
             from(resource.first) {
                 include(if (resource.second) "logger/*.xml.template" else "*.xml.template")
                 eachFile {
@@ -39,4 +46,5 @@ open class LoggingGeneratorTask : QWEGeneratorTask("Generates logging configurat
             }
         }
     }
+
 }

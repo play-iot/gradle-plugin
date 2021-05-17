@@ -2,6 +2,7 @@ package io.zero88.gradle.qwe.systemd
 
 import io.zero88.gradle.helper.getPluginResource
 import io.zero88.gradle.helper.readResourceProperties
+import io.zero88.gradle.qwe.app.GeneratedLayoutExtension
 import io.zero88.gradle.qwe.app.task.QWEGeneratorTask
 import org.gradle.api.file.RelativePath
 import org.gradle.api.tasks.Input
@@ -10,6 +11,11 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.property
 
 open class QWESystemdGeneratorTask : QWEGeneratorTask("Generates Systemd Linux service file") {
+
+    companion object {
+
+        const val NAME = "genSystemd"
+    }
 
     @Input
     val baseName = project.objects.property<String>()
@@ -32,7 +38,7 @@ open class QWESystemdGeneratorTask : QWEGeneratorTask("Generates Systemd Linux s
     @TaskAction
     override fun generate() {
         val jarFile = baseName.get() + "-" + project.version
-        val resource = getPluginResource(project, "service")
+        val resource = getPluginResource(project, GeneratedLayoutExtension.SERVICE)
         val systemd = systemdProp.get()
         val configParam = configFile.map { "-conf $it" }.getOrElse("")
         val params = systemd.params.map { it.entries.map { kv -> "-${kv.key} ${kv.value}" }.joinToString { " " } }
@@ -44,8 +50,7 @@ open class QWESystemdGeneratorTask : QWEGeneratorTask("Generates Systemd Linux s
                 systemd.jvmProps.map { it.joinToString { " " } }.get() else props?.getProperty("jvm") ?: ""
             val systemProps = if (systemd.systemProps.get().isNotEmpty())
                 systemd.systemProps.map { it.joinToString(" ", "-D") }.get() else props?.getProperty("system") ?: ""
-            project.copy {
-                into(outputDir.get())
+            doCopy {
                 from(resource.first) {
                     include("service/systemd.service.template")
                     rename { serviceName.plus("-").plus(arch.code).plus(".service") }
@@ -65,6 +70,6 @@ open class QWESystemdGeneratorTask : QWEGeneratorTask("Generates Systemd Linux s
                 }
             }
         }
-
     }
+
 }

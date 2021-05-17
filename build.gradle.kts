@@ -64,6 +64,7 @@ dependencies {
     api(PluginLibs.Depends.docker)
     api(PluginLibs.Depends.sonarQube)
     api(PluginLibs.Depends.nexusPublish)
+    api(PluginLibs.Depends.shadow)
 
     testImplementation(TestLibs.junit5Api)
     testImplementation(TestLibs.junit5Engine)

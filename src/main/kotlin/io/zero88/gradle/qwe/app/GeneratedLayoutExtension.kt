@@ -1,23 +1,48 @@
 package io.zero88.gradle.qwe.app
 
+import org.gradle.api.file.Directory
 import org.gradle.api.file.ProjectLayout
 import org.gradle.api.model.ObjectFactory
+import org.gradle.api.provider.Provider
+import org.gradle.kotlin.dsl.mapProperty
 
 @Suppress("UnstableApiUsage")
 open class GeneratedLayoutExtension(objects: ObjectFactory, layout: ProjectLayout) {
 
+    companion object {
+
+        const val CONF = "conf"
+        const val SERVICE = "service"
+        const val JAVA = "java"
+        const val KOTLIN = "kotlin"
+        const val RESOURCES = "resources"
+        const val TEST_JAVA = "testJava"
+        const val TEST_KOTLIN = "testKotlin"
+        const val TEST_RESOURCES = "testResources"
+    }
+
     private val generatedDir = objects.directoryProperty().convention(layout.buildDirectory.dir("generated"))
     private val generatedSrcDir = objects.directoryProperty().convention(generatedDir.dir("main"))
     private val generatedTestDir = objects.directoryProperty().convention(generatedDir.dir("test"))
+    private val defaultLayout = mapOf(
+        CONF to Layout(LayoutMode.ARTIFACT, generatedDir.dir(CONF)),
+        SERVICE to Layout(LayoutMode.ARTIFACT, generatedDir.dir(SERVICE)),
+        JAVA to Layout(LayoutMode.SOURCE, generatedSrcDir.dir(JAVA)),
+        KOTLIN to Layout(LayoutMode.SOURCE, generatedSrcDir.dir(KOTLIN)),
+        RESOURCES to Layout(LayoutMode.RESOURCES, generatedSrcDir.dir(RESOURCES)),
+        TEST_JAVA to Layout(LayoutMode.TEST_SOURCE, generatedTestDir.dir(JAVA)),
+        TEST_KOTLIN to Layout(LayoutMode.TEST_SOURCE, generatedTestDir.dir(KOTLIN)),
+        TEST_RESOURCES to Layout(LayoutMode.TEST_RESOURCES, generatedTestDir.dir(RESOURCES))
+    )
+    val generatedLayout = objects.mapProperty<String, Layout>().convention(defaultLayout)
 
-    val generatedConfigDir = objects.directoryProperty().convention(generatedDir.dir("conf"))
-    val generatedServiceDir = objects.directoryProperty().convention(generatedDir.dir("service"))
+    fun find(key: String): Layout? {
+        return generatedLayout.get()[key] ?: defaultLayout[key]
+    }
 
-    val generatedJavaSrcDir = objects.directoryProperty().convention(generatedSrcDir.dir("java"))
-    val generatedKotlinSrcDir = objects.directoryProperty().convention(generatedSrcDir.dir("kotlin"))
-    val generatedResourceDir = objects.directoryProperty().convention(generatedSrcDir.dir("resources"))
+    enum class LayoutMode {
+        SOURCE, RESOURCES, ARTIFACT, TEST_SOURCE, TEST_RESOURCES, TMP
+    }
 
-    val generatedJavaSrcTestDir = objects.directoryProperty().convention(generatedTestDir.dir("java"))
-    val generatedKotlinSrcTestDir = objects.directoryProperty().convention(generatedTestDir.dir("kotlin"))
-    val generatedResourceTestDir = objects.directoryProperty().convention(generatedTestDir.dir("resources"))
+    class Layout(val mode: LayoutMode, val directory: Provider<Directory>)
 }
