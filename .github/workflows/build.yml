@@ -99,15 +99,16 @@ jobs:
       - name: Publish Sonatype OSSRH
         if: needs.context.outputs.shouldPublish == 'true'
         run: |
-           args=( -Pversion=${{ needs.context.outputs.version }} \
-                  -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
-                  -Psigning.gnupg.homeDir=/home/runner/.gnupg \
-                  -Psigning.gnupg.keyName=${{ steps.import_gpg.outputs.keyid }} \
-                  -Psigning.gnupg.passphrase=${{ secrets.OSS_GPG_PASSPHARSE }} \
-                  -Pnexus.username=${{ secrets.OSS_NEXUS_USER }} \
-                  -Pnexus.password=${{ secrets.OSS_NEXUS_TOKEN }} )
-           [[ "${{ needs.context.outputs.isRelease }}" == 'true' ]] && args+=( -Prelease )
-           ./gradlew publishMavenPublicationToMavenRepository "${args[@]}"
+          args=( -Pversion=${{ needs.context.outputs.version }} \
+                 -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
+                 -Psigning.gnupg.homeDir=/home/runner/.gnupg \
+                 -Psigning.gnupg.keyName=${{ steps.import_gpg.outputs.keyid }} \
+                 -Psigning.gnupg.passphrase=${{ secrets.OSS_GPG_PASSPHARSE }} \
+                 -Pnexus.username=${{ secrets.OSS_NEXUS_USER }} \
+                 -Pnexus.password=${{ secrets.OSS_NEXUS_TOKEN }} )
+          [[ "${{ needs.context.outputs.isRelease }}" == 'true' ]] && args+=( -Prelease )
+          [[ "${{ needs.context.outputs.isRelease }}" == 'true' ]] && command=publishMavenPublicationToMavenRepository || command=publish
+          ./gradlew $command "${args[@]}"
 
       - name: Publish Gradle plugin
         if: needs.context.outputs.isRelease == 'true' && env.ENABLE_GRADLE_PLUGIN == 'true'

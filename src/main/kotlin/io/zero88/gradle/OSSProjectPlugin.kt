@@ -1,6 +1,5 @@
 package io.zero88.gradle
 
-import io.github.gradlenexus.publishplugin.NexusPublishPlugin
 import io.zero88.gradle.helper.computeBaseName
 import io.zero88.gradle.helper.prop
 import org.gradle.api.Plugin
