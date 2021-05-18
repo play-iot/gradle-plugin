@@ -29,6 +29,12 @@ import org.gradle.language.jvm.tasks.ProcessResources
 @Suppress("UnstableApiUsage")
 class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
 
+    companion object {
+
+        const val DIST_ZIP_FAT_TASK_NAME = "distZipFat"
+        const val DIST_TAR_FAT_TASK_NAME = "distTarFat"
+    }
+
     override fun applyExternalPlugins(project: Project) {
         project.plugins.apply(io.zero88.gradle.OSSProjectPlugin::class.java)
         project.plugins.apply(ShadowPlugin::class.java)
@@ -86,11 +92,11 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
                 archiveClassifier.set("all")
                 from(decoratorExt.layout.find(GeneratedLayoutExtension.RESOURCES)!!.directory)
             }
-            register<Zip>("distFatZip") { distFat(ossExt, decoratorExt) }
-            register<Tar>("distFatTar") { distFat(ossExt, decoratorExt) }
+            register<Zip>(DIST_ZIP_FAT_TASK_NAME) { distFat(ossExt, decoratorExt) }
+            register<Tar>(DIST_TAR_FAT_TASK_NAME) { distFat(ossExt, decoratorExt) }
             named(LifecycleBasePlugin.ASSEMBLE_TASK_NAME).configure {
                 if (decoratorExt.fatJar.get()) {
-                    dependsOn(withType<ShadowJar>(), "distZipFat", "distTarFat")
+                    dependsOn(withType<ShadowJar>(), named(DIST_ZIP_FAT_TASK_NAME), named(DIST_TAR_FAT_TASK_NAME))
                 }
             }
             named<AbstractArchiveTask>("distZip") { bundleArchive(ossExt, decoratorExt) }

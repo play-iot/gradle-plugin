@@ -35,9 +35,9 @@ class OSSProjectPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
         applyExternalPlugins(project)
-        val oss = evaluateProject(project)
+        val ossExt = evaluateProject(project)
         project.tasks {
-            configExternalTasks(project, oss)
+            configExternalTasks(project, ossExt)
         }
     }
 
@@ -107,14 +107,10 @@ class OSSProjectPlugin : Plugin<Project> {
         }
     }
 
-    private fun PublicationContainer.createMavenPublication(
-        publicationName: String,
-        project: Project,
-        ossExt: OSSExtension
-    ) {
-        create<MavenPublication>(publicationName) {
+    private fun PublicationContainer.createMavenPublication(publication: String, project: Project, ext: OSSExtension) {
+        create<MavenPublication>(publication) {
             groupId = project.group as String?
-            artifactId = ossExt.baseName.get()
+            artifactId = ext.baseName.get()
             version = project.version as String?
             from(project.components["java"])
 
@@ -127,29 +123,29 @@ class OSSProjectPlugin : Plugin<Project> {
                 }
             }
             pom {
-                name.set(ossExt.title)
-                description.set(ossExt.description)
-                url.set(ossExt.publishingInfo.homepage)
+                name.set(ext.title)
+                description.set(ext.description)
+                url.set(ext.publishingInfo.homepage)
                 licenses {
                     license {
-                        name.set(ossExt.publishingInfo.license.name)
-                        url.set(ossExt.publishingInfo.license.url)
-                        comments.set(ossExt.publishingInfo.license.comments)
-                        distribution.set(ossExt.publishingInfo.license.distribution)
+                        name.set(ext.publishingInfo.license.name)
+                        url.set(ext.publishingInfo.license.url)
+                        comments.set(ext.publishingInfo.license.comments)
+                        distribution.set(ext.publishingInfo.license.distribution)
                     }
                 }
                 developers {
                     developer {
-                        id.set(ossExt.publishingInfo.developer.id)
-                        email.set(ossExt.publishingInfo.developer.email)
-                        organization.set(ossExt.publishingInfo.developer.organization)
+                        id.set(ext.publishingInfo.developer.id)
+                        email.set(ext.publishingInfo.developer.email)
+                        organization.set(ext.publishingInfo.developer.organization)
                     }
                 }
                 scm {
-                    connection.set(ossExt.publishingInfo.scm.connection)
-                    developerConnection.set(ossExt.publishingInfo.scm.developerConnection)
-                    url.set(ossExt.publishingInfo.scm.url)
-                    tag.set(ossExt.publishingInfo.scm.tag)
+                    connection.set(ext.publishingInfo.scm.connection)
+                    developerConnection.set(ext.publishingInfo.scm.developerConnection)
+                    url.set(ext.publishingInfo.scm.url)
+                    tag.set(ext.publishingInfo.scm.tag)
                 }
             }
         }
@@ -168,9 +164,9 @@ class OSSProjectPlugin : Plugin<Project> {
                         Attributes.Name.IMPLEMENTATION_VERSION.toString() to project.version,
                         "Created-By" to GradleVersion.current(),
                         "Build-Jdk" to Jvm.current(),
+                        "Build-Date" to Instant.now(),
                         "Build-By" to prop(project, "buildBy"),
-                        "Build-Hash" to prop(project, "buildHash"),
-                        "Build-Date" to Instant.now()
+                        "Build-Hash" to prop(project, "buildHash")
                     ) + ossExt.manifest.get()
                 )
             }
