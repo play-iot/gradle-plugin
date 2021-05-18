@@ -31,13 +31,13 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
 
     companion object {
 
+        const val FAT_JAR_CLASSIFIER = "fat"
         const val DIST_ZIP_FAT_TASK_NAME = "distZipFat"
         const val DIST_TAR_FAT_TASK_NAME = "distTarFat"
     }
 
     override fun applyExternalPlugins(project: Project) {
         project.plugins.apply(io.zero88.gradle.OSSProjectPlugin::class.java)
-        project.plugins.apply(ShadowPlugin::class.java)
     }
 
     override fun configureExtension(project: Project, ossExt: OSSExtension, qweExt: QWEExtension): QWEAppExtension {
@@ -83,35 +83,38 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
                 outputDirs.add(decoratorExt.layout.find(GeneratedLayoutExtension.SERVICE)!!.directory)
             }
             withType<ProcessResources>().configureEach { dependsOn(pConfig, pManifest, pLogConfig, pSystemd) }
-            withType<ShadowJar>().configureEach {
-                onlyIf {
-                    decoratorExt.fatJar.get()
-                }
-                mustRunAfter(named<Jar>(JavaPlugin.JAR_TASK_NAME))
-                archiveBaseName.set(ossExt.baseName)
-                archiveClassifier.set("all")
-                from(decoratorExt.layout.find(GeneratedLayoutExtension.RESOURCES)!!.directory)
-            }
-            register<Zip>(DIST_ZIP_FAT_TASK_NAME) { distFat(ossExt, decoratorExt) }
-            register<Tar>(DIST_TAR_FAT_TASK_NAME) { distFat(ossExt, decoratorExt) }
-            named(LifecycleBasePlugin.ASSEMBLE_TASK_NAME).configure {
-                if (decoratorExt.fatJar.get()) {
-                    dependsOn(withType<ShadowJar>(), named(DIST_ZIP_FAT_TASK_NAME), named(DIST_TAR_FAT_TASK_NAME))
-                }
-            }
             named<AbstractArchiveTask>("distZip") { bundleArchive(ossExt, decoratorExt) }
             named<AbstractArchiveTask>("distTar") { bundleArchive(ossExt, decoratorExt) }
+            project.afterEvaluate {
+                if (decoratorExt.fatJar.get()) {
+                    register<ShadowJar>("fatJar") {
+                        group = "build"
+                        archiveBaseName.set(ossExt.baseName)
+                        archiveClassifier.set(FAT_JAR_CLASSIFIER)
+                        onlyIf {
+                            decoratorExt.fatJar.get()
+                        }
+                        mustRunAfter(named<Jar>(JavaPlugin.JAR_TASK_NAME))
+                        from(decoratorExt.layout.find(GeneratedLayoutExtension.RESOURCES)!!.directory)
+                    }
+                    register<Zip>(DIST_ZIP_FAT_TASK_NAME) { distFat(ossExt, decoratorExt) }
+                    register<Tar>(DIST_TAR_FAT_TASK_NAME) { distFat(ossExt, decoratorExt) }
+                    named(LifecycleBasePlugin.ASSEMBLE_TASK_NAME).configure {
+                        dependsOn(withType<ShadowJar>(), named(DIST_ZIP_FAT_TASK_NAME), named(DIST_TAR_FAT_TASK_NAME))
+                    }
+                }
+            }
         }
     }
 
     private fun AbstractArchiveTask.distFat(ossExt: OSSExtension, appExt: QWEAppExtension) {
         group = "distribution"
+        archiveBaseName.set(ossExt.baseName)
+        archiveClassifier.set(FAT_JAR_CLASSIFIER)
         onlyIf {
             appExt.fatJar.get()
         }
         dependsOn(project.tasks.withType<ShadowJar>())
-        archiveBaseName.set(ossExt.baseName)
-        archiveClassifier.set("all")
         from(project.tasks.withType<ShadowJar>().map { it.outputs })
     }
 

@@ -60,11 +60,13 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
     ) {
         val appExt = (qweExt as ExtensionAware).extensions.getByType<QWEAppExtension>()
         project.tasks {
-            val dockerFileProvider = registerCreateDockerfileTask(ossExt.baseName, appExt, decoratorExt)
-            val dockerBuildTask = registerDockerBuild(ossExt.baseName, decoratorExt, dockerFileProvider)
-            named(LifecycleBasePlugin.BUILD_TASK_NAME).get().dependsOn(dockerBuildTask)
-            registerPrintDockerfile(decoratorExt, dockerFileProvider)
-            registerDockerPushTask(decoratorExt, dockerBuildTask)
+            if (decoratorExt.enabled.get()) {
+                val dockerFileProvider = registerCreateDockerfileTask(ossExt.baseName, appExt, decoratorExt)
+                val dockerBuildTask = registerDockerBuild(ossExt.baseName, decoratorExt, dockerFileProvider)
+                named(LifecycleBasePlugin.BUILD_TASK_NAME).get().dependsOn(dockerBuildTask)
+                registerPrintDockerfile(decoratorExt, dockerFileProvider)
+                registerDockerPushTask(decoratorExt, dockerBuildTask)
+            }
         }
 
     }
