@@ -176,7 +176,7 @@ jobs:
                  -Psigning.gnupg.passphrase=${{ secrets.OSS_GPG_PASSPHARSE }} \
                  -Pnexus.username=${{ secrets.OSS_NEXUS_USER }} \
                  -Pnexus.password=${{ secrets.OSS_NEXUS_TOKEN }} )
-          ./gradlew publishMavenPublicationToMavenRepository closeAndReleaseStagingRepository -Prelease "${args[@]}"
+          ./gradlew publishMavenPublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository -Prelease "${args[@]}"
 
       - name: Publish Gradle plugin
         if: env.ENABLE_GRADLE_PLUGIN == 'true'
@@ -185,6 +185,7 @@ jobs:
                   -Pversion=${{ needs.context.outputs.version }} \
                   -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
                   -PbuildBy="GitHub Action" -PbuildHash=${{ needs.context.outputs.commitId }} \
+                  -Prelease \
                   -Pgradle.publish.key=${{ secrets.OSS_GRADLE_KEY }} \
                   -Pgradle.publish.secret=${{ secrets.OSS_GRADLE_SECRET }}
 
