@@ -16,17 +16,17 @@ open class LoggingGeneratorTask : QWEGeneratorTask("Generates logging configurat
     }
 
     @Input
-    val projectName = project.objects.property<String>().convention(project.name)
+    val appName = project.objects.property<String>().convention(project.name)
 
     @Input
     val fatJar = project.objects.property<Boolean>().convention(false)
 
     @Nested
-    val ext = project.objects.property<LoggingExtension>().convention(LoggingExtension(project.objects))
+    val logExt = project.objects.property<LoggingExtension>().convention(LoggingExtension(project.objects))
 
     @TaskAction
     override fun generate() {
-        val loggers = ext.get().otherLoggers.get()
+        val loggers = logExt.get().otherLoggers.get()
             .map { "<logger name=\"${it.key}\" level=\"${it.value}\"/>" }.joinToString("\r\n")
         val resource = getPluginResource(project, "logger")
         doCopy {
@@ -38,9 +38,9 @@ open class LoggingGeneratorTask : QWEGeneratorTask("Generates logging configurat
                 includeEmptyDirs = false
                 rename("((?!console))+(\\.console)?\\.xml\\.template", "$1.xml")
                 filter {
-                    it.replace("{{project}}", projectName.get())
-                        .replace("{{root_level}}", ext.get().rootLogLevel.get())
-                        .replace("{{zero_lib_level}}", ext.get().zeroLibLevel.get())
+                    it.replace("{{project}}", appName.get())
+                        .replace("{{root_level}}", logExt.get().rootLogLevel.get())
+                        .replace("{{zero_lib_level}}", logExt.get().zeroLibLevel.get())
                         .replace("{{other_logger}}", loggers)
                 }
             }

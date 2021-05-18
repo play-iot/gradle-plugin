@@ -18,7 +18,7 @@ open class QWESystemdGeneratorTask : QWEGeneratorTask("Generates Systemd Linux s
     }
 
     @Input
-    val baseName = project.objects.property<String>()
+    val appName = project.objects.property<String>()
 
     @Input
     val projectDes = project.objects.property<String>()
@@ -37,13 +37,13 @@ open class QWESystemdGeneratorTask : QWEGeneratorTask("Generates Systemd Linux s
 
     @TaskAction
     override fun generate() {
-        val jarFile = baseName.get() + "-" + project.version
+        val jarFile = appName.get() + "-" + project.version
         val resource = getPluginResource(project, GeneratedLayoutExtension.SERVICE)
         val systemd = systemdProp.get()
         val configParam = configFile.map { "-conf $it" }.getOrElse("")
         val params = systemd.params.map { it.entries.map { kv -> "-${kv.key} ${kv.value}" }.joinToString { " " } }
             .getOrElse("")
-        val serviceName = systemd.serviceName.get().ifBlank { baseName.get() }
+        val serviceName = systemd.serviceName.get().ifBlank { appName.get() }
         systemd.architectures.get().forEach { arch ->
             val props = readResourceProperties("service/java.${arch.code}.properties")
             val jvmProps = if (systemd.jvmProps.get().isNotEmpty())

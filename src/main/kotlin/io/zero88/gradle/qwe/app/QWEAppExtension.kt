@@ -16,16 +16,22 @@ open class QWEAppExtension(objects: ObjectFactory, projectLayout: ProjectLayout)
     }
 
     /**
-     * Launcher class
+     * Application name. If not defined, it will fallback to `project.baseName`
      */
     @Input
-    val launcher = objects.property<String>().convention("io.zero88.qwe.QWELauncher")
+    val appName = objects.property<String>()
+
+    /**
+     * Application launcher class
+     */
+    @Input
+    val appLauncher = objects.property<String>().convention("io.zero88.qwe.QWELauncher")
 
     /**
      * Application verticle class
      */
     @Input
-    val verticle = objects.property<String>().convention("")
+    val appVerticle = objects.property<String>().convention("")
 
     /**
      * Bundle application as fat-jar

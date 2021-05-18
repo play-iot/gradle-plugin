@@ -44,6 +44,7 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
         val extensionAware = qweExt as ExtensionAware
         extensionAware.extensions.create<QWESystemdExtension>(QWESystemdExtension.NAME)
         val appExt = extensionAware.extensions.create<QWEAppExtension>(QWEAppExtension.NAME)
+        appExt.appName.convention(ossExt.baseName)
         project.afterEvaluate {
             appExt.fatJar.set(if (appExt.fatJarPublication.get()) true else appExt.fatJar.get())
         }
@@ -62,13 +63,14 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
                 outputDirs.add(decoratorExt.layout.find(GeneratedLayoutExtension.CONF)!!.directory)
             }
             val pManifest = register<ManifestGeneratorTask>(ManifestGeneratorTask.NAME) {
+                appName.set(decoratorExt.appName)
+                appVerticle.set(decoratorExt.appVerticle)
+                appLauncher.set(decoratorExt.appLauncher)
                 outputs.upToDateWhen { false }
-                launcher.set(decoratorExt.launcher)
-                appVerticle.set(decoratorExt.verticle)
             }
             val pLogConfig = register<LoggingGeneratorTask>(LoggingGeneratorTask.NAME) {
-                projectName.set(ossExt.baseName)
-                ext.set(decoratorExt.logging)
+                appName.set(decoratorExt.appName)
+                logExt.set(decoratorExt.logging)
                 fatJar.set(decoratorExt.fatJar)
                 outputDirs.add(decoratorExt.layout.find(GeneratedLayoutExtension.CONF)!!.directory)
                 if (decoratorExt.fatJar.get()) {
@@ -78,8 +80,8 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
             val pSystemd = register<QWESystemdGeneratorTask>(QWESystemdGeneratorTask.NAME) {
                 val systemd = (qweExt as ExtensionAware).extensions.getByType<QWESystemdExtension>()
                 onlyIf { systemd.enabled.get() }
-                baseName.set(ossExt.baseName)
-                projectDes.set(ossExt.description.convention(ossExt.title))
+                appName.set(decoratorExt.appName)
+                projectDes.set(ossExt.description.orElse(ossExt.title))
                 configFile.set(decoratorExt.configFile)
                 workingDir.set(decoratorExt.workingDir)
                 dataDir.set(decoratorExt.dataDir)
@@ -128,13 +130,10 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
     }
 
     private fun AbstractArchiveTask.bundleArchive(ossExt: OSSExtension, appExt: QWEAppExtension) {
-        onlyIf {
-            appExt.verticle.get().trim() != ""
-        }
-        into("${ossExt.baseName.get()}-${project.version}/conf") {
+        into("${ossExt.baseName.get()}-${project.version}/${GeneratedLayoutExtension.CONF}") {
             from(appExt.layout.find(GeneratedLayoutExtension.CONF)!!.directory)
         }
-        into("${ossExt.baseName.get()}-${project.version}/service") {
+        into("${ossExt.baseName.get()}-${project.version}/${GeneratedLayoutExtension.SERVICE}") {
             from(appExt.layout.find(GeneratedLayoutExtension.SERVICE)!!.directory)
         }
     }
