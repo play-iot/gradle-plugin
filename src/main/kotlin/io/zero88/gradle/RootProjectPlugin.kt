@@ -78,7 +78,6 @@ class RootProjectPlugin : Plugin<Project> {
 
     private fun applyExternalPlugins(project: Project) {
         project.pluginManager.apply(SonarQubePlugin::class.java)
-//        project.pluginManager.apply(NexusPublishPlugin::class.java)
     }
 
     private fun TaskContainerScope.assembleTask(project: Project) {
