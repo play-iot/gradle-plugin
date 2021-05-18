@@ -68,15 +68,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Import GPG key
-        id: import_gpg
-        uses: crazy-max/ghaction-import-gpg@v3
-        if: needs.context.outputs.shouldPublish == 'true'
-        with:
-          git-user-signingkey: true
-          gpg-private-key: ${{ secrets.OSS_GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.OSS_GPG_PASSPHARSE }}
-
       - name: Set up JDK 1.8
         uses: actions/setup-java@v1
         with:
@@ -167,10 +158,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v3
+        with:
+          git-user-signingkey: true
+          gpg-private-key: ${{ secrets.OSS_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.OSS_GPG_PASSPHARSE }}
+
       - name: Publish Sonatype OSSRH
         run: |
           args=( -Pversion=${{ needs.context.outputs.version }} \
                  -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
+                 -PbuildBy="GitHub Action" -PbuildHash=${{ needs.context.outputs.commitId }} \
                  -Psigning.gnupg.homeDir=/home/runner/.gnupg \
                  -Psigning.gnupg.keyName=${{ steps.import_gpg.outputs.keyid }} \
                  -Psigning.gnupg.passphrase=${{ secrets.OSS_GPG_PASSPHARSE }} \
@@ -184,6 +184,7 @@ jobs:
           ./gradlew publishPlugins \
                   -Pversion=${{ needs.context.outputs.version }} \
                   -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
+                  -PbuildBy="GitHub Action" -PbuildHash=${{ needs.context.outputs.commitId }} \
                   -Pgradle.publish.key=${{ secrets.OSS_GRADLE_KEY }} \
                   -Pgradle.publish.secret=${{ secrets.OSS_GRADLE_SECRET }}
 
@@ -192,6 +193,7 @@ jobs:
         run: |
           args=( -Pversion=${{ needs.context.outputs.version }} \
                  -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
+                 -PbuildBy="GitHub Action" -PbuildHash=${{ needs.context.outputs.commitId }} \
                  -Psigning.gnupg.homeDir=/home/runner/.gnupg \
                  -Psigning.gnupg.keyName=${{ steps.import_gpg.outputs.keyid }} \
                  -Psigning.gnupg.passphrase=${{ secrets.OSS_GPG_PASSPHARSE }} \
