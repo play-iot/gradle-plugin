@@ -38,13 +38,28 @@ class RootProjectPlugin : Plugin<Project> {
         }
         applyExternalPlugins(project)
         configureExtension(project)
-        project.tasks {
-            assembleTask(project)
-            verificationTask(project)
-            named(SonarQubeExtension.SONARQUBE_TASK_NAME) {
-                dependsOn(ROOT_JACOCO_TASK_NAME)
+        if (isSingle(project)) {
+            project.tasks {
+                withType<JacocoReport> {
+                    dependsOn(withType<Test>())
+                }
+                named(SonarQubeExtension.SONARQUBE_TASK_NAME) {
+                    dependsOn(withType<JacocoReport>())
+                }
+            }
+        } else {
+            project.tasks {
+                assembleTask(project)
+                verificationTask(project)
+                named(SonarQubeExtension.SONARQUBE_TASK_NAME) {
+                    dependsOn(ROOT_JACOCO_TASK_NAME)
+                }
             }
         }
+    }
+
+    private fun isSingle(project: Project): Boolean {
+        return project == project.rootProject && project.subprojects.isEmpty()
     }
 
     private fun configureExtension(project: Project) {
@@ -76,10 +91,7 @@ class RootProjectPlugin : Plugin<Project> {
             group = "distribution"
             description = "Gathers sub projects artifacts"
             dependsOn(project.subprojects.mapNotNull { it.tasks.findByName(LifecycleBasePlugin.ASSEMBLE_TASK_NAME) })
-            val zips = project.subprojects.fold(
-                listOf<File>(),
-                { r, p -> r.plus(p.buildDir.resolve("distributions")) })
-            from(zips)
+            from(project.subprojects.fold(listOf<File>()) { r, p -> r.plus(p.buildDir.resolve("distributions")) })
             into(project.buildDir.resolve("distributions"))
         }
         named(LifecycleBasePlugin.ASSEMBLE_TASK_NAME) {
@@ -92,18 +104,15 @@ class RootProjectPlugin : Plugin<Project> {
         register<Copy>(COPY_SUB_PROJECT_TEST_RESULTS_TASK_NAME) {
             group = LifecycleBasePlugin.VERIFICATION_GROUP
             description = "Gathers sub projects test result"
-            dependsOn(project.subprojects.mapNotNull { it.tasks.findByName("test") })
-            val zips = project.subprojects.fold(
-                listOf<File>(),
-                { r, p -> r.plus(p.buildDir.resolve(TestingBasePlugin.TEST_RESULTS_DIR_NAME)) })
-            from(zips)
+            dependsOn(project.subprojects.mapNotNull { it.tasks.withType<Test>() })
+            from(project.subprojects.fold(listOf<File>()) { r, p -> r.plus(p.buildDir.resolve(TestingBasePlugin.TEST_RESULTS_DIR_NAME)) })
             into(project.buildDir.resolve(TestingBasePlugin.TEST_RESULTS_DIR_NAME))
         }
         register<TestReport>(ROOT_TEST_REPORT_TASK_NAME) {
             group = LifecycleBasePlugin.VERIFICATION_GROUP
             description = "Aggregates sub projects test result"
-            dependsOn(COPY_SUB_PROJECT_TEST_RESULTS_TASK_NAME)
             destinationDir = project.buildDir.resolve(TestingBasePlugin.TESTS_DIR_NAME)
+            dependsOn(COPY_SUB_PROJECT_TEST_RESULTS_TASK_NAME)
             reportOn(project.subprojects.map { it.tasks.withType<Test>() })
             doLast {
                 if (testFailures.isNotEmpty()) {
