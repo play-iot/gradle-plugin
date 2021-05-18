@@ -4,6 +4,7 @@ import io.zero88.gradle.helper.prop
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginConvention
+import org.gradle.api.publish.tasks.GenerateModuleMetadata
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.TaskExecutionException
@@ -82,14 +83,18 @@ class RootProjectPlugin : Plugin<Project> {
 
     private fun TaskContainerScope.assembleTask(project: Project) {
         withType<Jar>().configureEach {
-            onlyIf { project != project.rootProject }
+            onlyIf { !isSingle(project) }
         }
         withType<AbstractArchiveTask>().configureEach {
-            onlyIf { project != project.rootProject }
+            onlyIf { !isSingle(project) }
+        }
+        withType<GenerateModuleMetadata>().configureEach {
+            onlyIf { !isSingle(project) }
         }
         register<Copy>(COPY_SUB_PROJECT_ARTIFACTS_TASK_NAME) {
             group = "distribution"
             description = "Gathers sub projects artifacts"
+            onlyIf { !isSingle(project) }
             dependsOn(project.subprojects.mapNotNull { it.tasks.findByName(LifecycleBasePlugin.ASSEMBLE_TASK_NAME) })
             from(project.subprojects.fold(listOf<File>()) { r, p -> r.plus(p.buildDir.resolve("distributions")) })
             into(project.buildDir.resolve("distributions"))
