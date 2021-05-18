@@ -1,7 +1,9 @@
 package io.zero88.gradle.qwe.app
 
+import com.github.jengelman.gradle.plugins.shadow.ShadowPlugin
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import io.zero88.gradle.OSSExtension
+import io.zero88.gradle.OSSProjectPlugin
 import io.zero88.gradle.qwe.QWEDecoratorPlugin
 import io.zero88.gradle.qwe.QWEExtension
 import io.zero88.gradle.qwe.app.task.ConfigGeneratorTask
@@ -13,7 +15,6 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginConvention
-import org.gradle.api.publish.tasks.GenerateModuleMetadata
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.bundling.AbstractArchiveTask
 import org.gradle.api.tasks.bundling.Jar
@@ -37,7 +38,7 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
     }
 
     override fun applyExternalPlugins(project: Project) {
-        project.plugins.apply(io.zero88.gradle.OSSProjectPlugin::class.java)
+        project.plugins.apply(OSSProjectPlugin::class.java)
     }
 
     override fun configureExtension(project: Project, ossExt: OSSExtension, qweExt: QWEExtension): QWEAppExtension {
@@ -45,9 +46,6 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
         extensionAware.extensions.create<QWESystemdExtension>(QWESystemdExtension.NAME)
         val appExt = extensionAware.extensions.create<QWEAppExtension>(QWEAppExtension.NAME)
         appExt.appName.convention(ossExt.baseName)
-        project.afterEvaluate {
-            appExt.fatJar.set(if (appExt.fatJarPublication.get()) true else appExt.fatJar.get())
-        }
         return appExt
     }
 
@@ -93,7 +91,8 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
             named<AbstractArchiveTask>("distTar") { bundleArchive(ossExt, decoratorExt) }
             project.afterEvaluate {
                 if (decoratorExt.fatJar.get()) {
-                    register<ShadowJar>("fatJar") {
+                    project.plugins.apply(ShadowPlugin::class.java)
+                    withType<ShadowJar> {
                         group = "build"
                         archiveBaseName.set(ossExt.baseName)
                         archiveClassifier.set(FAT_JAR_CLASSIFIER)
@@ -107,11 +106,6 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
                     register<Tar>(DIST_TAR_FAT_TASK_NAME) { distFat(ossExt, decoratorExt) }
                     named(LifecycleBasePlugin.ASSEMBLE_TASK_NAME).configure {
                         dependsOn(withType<ShadowJar>(), named(DIST_ZIP_FAT_TASK_NAME), named(DIST_TAR_FAT_TASK_NAME))
-                    }
-                    if (decoratorExt.fatJarPublication.get()) {
-                        withType<GenerateModuleMetadata>().configureEach {
-                            dependsOn(withType<ShadowJar>())
-                        }
                     }
                 }
             }

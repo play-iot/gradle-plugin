@@ -40,12 +40,6 @@ open class QWEAppExtension(objects: ObjectFactory, projectLayout: ProjectLayout)
     val fatJar = objects.property<Boolean>().convention(false)
 
     /**
-     * Bundle application as fat-jar and publishable to maven repository
-     */
-    @Input
-    val fatJarPublication = objects.property<Boolean>().convention(false)
-
-    /**
      * Application config file
      */
     @Input
