@@ -10,17 +10,17 @@
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=play-iot_gradle-plugin&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=play-iot_gradle-plugin)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=play-iot_gradle-plugin&metric=coverage)](https://sonarcloud.io/dashboard?id=play-iot_gradle-plugin)
 
-- [x] `OSS` project [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/io/github/zero88/qwe/qwe-gradle-plugin/maven-metadata.xml.svg?colorB=007ec6&label=oss)](https://plugins.gradle.org/plugin/io.github.zero88.qwe.gradle.oss)
+- [x] `OSS` project [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/io/github/zero88/gradle-plugin/maven-metadata.xml.svg?colorB=007ec6&label=oss)](https://plugins.gradle.org/plugin/io.github.zero88.gradle.oss)
     - [x] Configure `jar`, `javadoc`, `test`, `jacoco` task
     - [x] Publish artifacts to `GitHub Package` and `Sonatype OSS repository` task
-- [x] `Root project` plugin [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/io/github/zero88/qwe/qwe-gradle-plugin/maven-metadata.xml.svg?colorB=007ec6&label=root)](https://plugins.gradle.org/plugin/io.github.zero88.qwe.gradle.root)
+- [x] `Root project` plugin [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/io/github/zero88/gradle-plugin/maven-metadata.xml.svg?colorB=007ec6&label=root)](https://plugins.gradle.org/plugin/io.github.zero88.gradle.root)
     - [x] Distribute `artifacts` to `root project`
     - [x] Distribute `test report` to `root project`
-- [x] `Application` plugin [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/io/github/zero88/qwe/qwe-gradle-plugin/maven-metadata.xml.svg?colorB=007ec6&label=app)](https://plugins.gradle.org/plugin/io.github.zero88.qwe.gradle.app)
+- [x] `Application` plugin [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/io/github/zero88/gradle-plugin/maven-metadata.xml.svg?colorB=007ec6&label=app)](https://plugins.gradle.org/plugin/io.github.zero88.gradle.qwe.app)
     - [x] Generate json config file
     - [x] Generate logging file
     - [x] Generate `*nix systemd service` file
-- [x] `Docker` plugin [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/io/github/zero88/qwe/qwe-gradle-plugin/maven-metadata.xml.svg?colorB=007ec6&label=docker)](https://plugins.gradle.org/plugin/io.github.zero88.qwe.gradle.docker)
+- [x] `Docker` plugin [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/io/github/zero88/gradle-plugin/maven-metadata.xml.svg?colorB=007ec6&label=docker)](https://plugins.gradle.org/plugin/io.github.zero88.gradle.qwe.docker)
     - [x] Create `Dockerfile`
     - [x] Build `Docker image`
     - [x] Push `Docker image` to multiple registries
