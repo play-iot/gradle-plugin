@@ -11,7 +11,7 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=play-iot_gradle-plugin&metric=coverage)](https://sonarcloud.io/dashboard?id=play-iot_gradle-plugin)
 
 - [x] `OSS` project [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/io/github/zero88/gradle-plugin/maven-metadata.xml.svg?colorB=007ec6&label=oss)](https://plugins.gradle.org/plugin/io.github.zero88.gradle.oss)
-    - [x] Configure `jar`, `javadoc`, `test`, `jacoco` task
+    - [x] Configure `jar`, `fatJar`, `source`, `javadoc`, `test`, `jacoco` task
     - [x] Publish artifacts to `GitHub Package` and `Sonatype OSS repository` task
 - [x] `Root project` plugin [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/io/github/zero88/gradle-plugin/maven-metadata.xml.svg?colorB=007ec6&label=root)](https://plugins.gradle.org/plugin/io.github.zero88.gradle.root)
     - [x] Distribute `artifacts` to `root project`
