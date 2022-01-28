@@ -4,14 +4,16 @@ object PluginLibs {
 
     object Version {
 
-        const val sonarQube = "3.1.1"
+        const val sonarQube = "3.3"
         const val jooq = "5.2.1"
         const val nexusPublish = "1.1.0"
         const val docker = "6.7.0"
         const val gradlePluginPublish = "0.14.0"
+        const val jacocoLogger = "2.0.0"
         const val jvm = "1.3.72"
         const val shadow = "6.1.0"
         const val testcontainers = "1.15.2"
+        const val testLogger = "3.1.0"
     }
 
     const val sonarQube = "org.sonarqube"
@@ -22,9 +24,12 @@ object PluginLibs {
     object Depends {
 
         const val docker = "com.bmuschko:gradle-docker-plugin:${Version.docker}"
+        const val jacocoLogger = "gradle.plugin.org.barfuin.gradle.jacocolog:gradle-jacoco-log:${Version.jacocoLogger}"
         const val nexusPublish = "io.github.gradle-nexus:publish-plugin:${Version.nexusPublish}"
         const val sonarQube = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${Version.sonarQube}"
         const val shadow = "com.github.jengelman.gradle.plugins:shadow:${Version.shadow}"
+        const val testLogger = "com.adarshr:gradle-test-logger-plugin:${Version.testLogger}"
+
         const val jooq = "nu.studer:gradle-jooq-plugin:${Version.jooq}"
         const val testcontainers =  "org.testcontainers:cassandra:${Version.testcontainers}"
     }

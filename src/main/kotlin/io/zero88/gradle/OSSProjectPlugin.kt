@@ -1,7 +1,11 @@
 package io.zero88.gradle
 
-import io.zero88.gradle.helper.computeBaseName
+import com.adarshr.gradle.testlogger.TestLoggerExtension
+import com.adarshr.gradle.testlogger.TestLoggerExtensionProperties
+import com.adarshr.gradle.testlogger.TestLoggerPlugin
+import com.adarshr.gradle.testlogger.theme.ThemeType
 import io.zero88.gradle.helper.checkMinGradleVersion
+import io.zero88.gradle.helper.computeBaseName
 import io.zero88.gradle.helper.prop
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -30,6 +34,7 @@ import java.net.URI
 import java.nio.charset.StandardCharsets
 import java.time.Instant
 import java.util.jar.Attributes
+import kotlin.reflect.full.declaredMemberProperties
 
 @Suppress("UnstableApiUsage")
 class OSSProjectPlugin : Plugin<Project> {
@@ -54,6 +59,7 @@ class OSSProjectPlugin : Plugin<Project> {
         project.pluginManager.apply(JacocoPlugin::class.java)
         project.pluginManager.apply(MavenPublishPlugin::class.java)
         project.pluginManager.apply(SigningPlugin::class.java)
+        project.pluginManager.apply(TestLoggerPlugin::class.java)
     }
 
     private fun evaluateProject(project: Project): OSSExtension {
@@ -62,6 +68,7 @@ class OSSProjectPlugin : Plugin<Project> {
         ossExt.title.convention(prop(project, "title", ossExt.baseName.get()))
         ossExt.description.convention(prop(project, "description"))
         ossExt.publishingInfo.projectName.convention(ossExt.baseName.get())
+        ossExt.testLogger.theme = ThemeType.STANDARD
         project.extra.set("baseName", ossExt.baseName.get())
         project.version = "${project.version}${prop(project, "semanticVersion")}"
         project.afterEvaluate {
@@ -111,6 +118,12 @@ class OSSProjectPlugin : Plugin<Project> {
             project.extensions.configure<SigningExtension> {
                 useGpgCmd()
                 sign(project.extensions.findByType<PublishingExtension>()?.publications?.get(publicationName))
+            }
+        }
+        project.extensions.configure<TestLoggerExtension> {
+            val temp = TestLoggerExtension(project)
+            TestLoggerExtensionProperties::class.declaredMemberProperties.forEach {
+                this.setProperty(it.name, ossExt.testLogger.getProperty(it.name) ?: temp.getProperty(it.name))
             }
         }
     }

@@ -1,14 +1,13 @@
 package io.zero88.gradle
 
 import io.zero88.gradle.helper.checkMinGradleVersion
-import io.zero88.gradle.helper.prop
+import org.barfuin.gradle.jacocolog.JacocoLogPlugin
+import org.barfuin.gradle.jacocolog.JacocoLogPlugin.JACOCO_AGG_REPORT_TASK_NAME
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.DuplicatesStrategy
-import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.publish.tasks.GenerateModuleMetadata
 import org.gradle.api.tasks.Copy
-import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.TaskExecutionException
 import org.gradle.api.tasks.bundling.AbstractArchiveTask
 import org.gradle.api.tasks.bundling.Jar
@@ -32,7 +31,6 @@ class RootProjectPlugin : Plugin<Project> {
         const val COPY_SUB_PROJECT_ARTIFACTS_TASK_NAME = "copySubProjectsArtifacts"
         const val COPY_SUB_PROJECT_TEST_RESULTS_TASK_NAME = "copySubProjectsTestResults"
         const val ROOT_TEST_REPORT_TASK_NAME = "testRootReport"
-        const val ROOT_JACOCO_TASK_NAME = "jacocoRootReport"
         const val PLUGIN_ID: String = "io.github.zero88.gradle.root"
     }
 
@@ -58,7 +56,7 @@ class RootProjectPlugin : Plugin<Project> {
                 assembleTask(project)
                 verificationTask(project)
                 named(SonarQubeExtension.SONARQUBE_TASK_NAME) {
-                    dependsOn(ROOT_JACOCO_TASK_NAME)
+                    dependsOn(JACOCO_AGG_REPORT_TASK_NAME)
                 }
             }
         }
@@ -74,7 +72,7 @@ class RootProjectPlugin : Plugin<Project> {
                 properties {
                     property("jacocoHtml", "false")
                     property("sonar.sourceEncoding", StandardCharsets.UTF_8)
-                    property("sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/coverage.xml")
+                    property("sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/jacocoAggregatedReport/jacocoAggregatedReport.xml")
                 }
             }
         }
@@ -83,6 +81,7 @@ class RootProjectPlugin : Plugin<Project> {
 
     private fun applyExternalPlugins(project: Project) {
         project.pluginManager.apply(SonarQubePlugin::class.java)
+        project.pluginManager.apply(JacocoLogPlugin::class.java)
     }
 
     private fun TaskContainerScope.assembleTask(project: Project) {
@@ -118,6 +117,7 @@ class RootProjectPlugin : Plugin<Project> {
             dependsOn(project.subprojects.mapNotNull { it.tasks.withType<Test>() })
             from(project.subprojects.fold(listOf<File>()) { r, p -> r.plus(p.buildDir.resolve(TestingBasePlugin.TEST_RESULTS_DIR_NAME)) })
             into(project.buildDir.resolve(TestingBasePlugin.TEST_RESULTS_DIR_NAME))
+            exclude("**/binary")
         }
         register<TestReport>(ROOT_TEST_REPORT_TASK_NAME) {
             group = LifecycleBasePlugin.VERIFICATION_GROUP
@@ -151,31 +151,6 @@ class RootProjectPlugin : Plugin<Project> {
                     ignoreFailures = true
                     afterTest(handler)
                 }
-            }
-        }
-        register<JacocoReport>(ROOT_JACOCO_TASK_NAME) {
-            group = LifecycleBasePlugin.VERIFICATION_GROUP
-            description = "Aggregates Jacoco test result"
-            dependsOn(project.subprojects.map { it.tasks.withType<Test>() },
-                      project.subprojects.map { it.tasks.withType<JacocoReport>() })
-            additionalSourceDirs.setFrom(project.subprojects.map {
-                it.convention.getPlugin<JavaPluginConvention>().sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME).allSource.srcDirs
-            })
-            sourceDirectories.setFrom(project.subprojects.map {
-                it.convention.getPlugin<JavaPluginConvention>().sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME).allSource.srcDirs
-            })
-            classDirectories.setFrom(project.subprojects.map {
-                it.convention.getPlugin<JavaPluginConvention>().sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME).output
-            })
-            executionData.setFrom(project.fileTree(".") {
-                include("**/build/jacoco/test.exec")
-            })
-            reports {
-                csv.isEnabled = false
-                xml.isEnabled = true
-                xml.destination = project.layout.buildDirectory.file("reports/jacoco/coverage.xml").get().asFile
-                html.isEnabled = prop(project, "jacocoHtml", "true").toBoolean()
-                html.destination = project.layout.buildDirectory.file("reports/jacoco/html").get().asFile
             }
         }
     }

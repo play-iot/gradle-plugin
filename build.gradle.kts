@@ -62,8 +62,10 @@ pluginBundle {
 
 dependencies {
     api(PluginLibs.Depends.docker)
+    api(PluginLibs.Depends.jacocoLogger)
     api(PluginLibs.Depends.sonarQube)
     api(PluginLibs.Depends.shadow)
+    api(PluginLibs.Depends.testLogger)
 //    api(PluginLibs.Depends.nexusPublish)
 
     testImplementation(TestLibs.junit5Api)
