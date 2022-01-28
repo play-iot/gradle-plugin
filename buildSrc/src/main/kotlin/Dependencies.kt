@@ -9,6 +9,7 @@ object PluginLibs {
         const val nexusPublish = "1.1.0"
         const val docker = "6.7.0"
         const val gradlePluginPublish = "0.14.0"
+        const val jacocoLogger = "2.0.0"
         const val jvm = "1.3.72"
         const val shadow = "6.1.0"
         const val testcontainers = "1.15.2"
@@ -23,6 +24,7 @@ object PluginLibs {
     object Depends {
 
         const val docker = "com.bmuschko:gradle-docker-plugin:${Version.docker}"
+        const val jacocoLogger = "gradle.plugin.org.barfuin.gradle.jacocolog:gradle-jacoco-log:${Version.jacocoLogger}"
         const val nexusPublish = "io.github.gradle-nexus:publish-plugin:${Version.nexusPublish}"
         const val sonarQube = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${Version.sonarQube}"
         const val shadow = "com.github.jengelman.gradle.plugins:shadow:${Version.shadow}"
