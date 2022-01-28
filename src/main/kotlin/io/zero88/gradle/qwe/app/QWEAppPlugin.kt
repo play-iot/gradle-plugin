@@ -35,10 +35,15 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
         const val FAT_JAR_CLASSIFIER = "fat"
         const val DIST_ZIP_FAT_TASK_NAME = "distZipFat"
         const val DIST_TAR_FAT_TASK_NAME = "distTarFat"
+        const val PLUGIN_ID = "io.github.zero88.gradle.qwe.app"
     }
 
     override fun applyExternalPlugins(project: Project) {
         project.plugins.apply(OSSProjectPlugin::class.java)
+    }
+
+    override fun pluginId(): String {
+        return PLUGIN_ID
     }
 
     override fun configureExtension(project: Project, ossExt: OSSExtension, qweExt: QWEExtension): QWEAppExtension {

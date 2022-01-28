@@ -26,11 +26,16 @@ import org.gradle.language.base.plugins.LifecycleBasePlugin
         const val ARG_DOCKER_REGISTRY = "dockerRegistries"
         const val ARG_DOCKER_TAGS = "dockerTags"
         const val ARG_DOCKER_LABELS = "dockerLabels"
+        const val PLUGIN_ID = "io.github.zero88.gradle.qwe.docker"
     }
 
     override fun applyExternalPlugins(project: Project) {
         project.plugins.apply(DockerRemoteApiPlugin::class.java)
         project.plugins.apply(QWEAppPlugin::class.java)
+    }
+
+    override fun pluginId(): String {
+        return PLUGIN_ID
     }
 
     override fun configureExtension(project: Project, ossExt: OSSExtension, qweExt: QWEExtension): QWEDockerExtension {

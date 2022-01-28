@@ -1,8 +1,10 @@
 package io.zero88.gradle
 
+import io.zero88.gradle.helper.checkMinGradleVersion
 import io.zero88.gradle.helper.prop
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.publish.tasks.GenerateModuleMetadata
 import org.gradle.api.tasks.Copy
@@ -31,12 +33,15 @@ class RootProjectPlugin : Plugin<Project> {
         const val COPY_SUB_PROJECT_TEST_RESULTS_TASK_NAME = "copySubProjectsTestResults"
         const val ROOT_TEST_REPORT_TASK_NAME = "testRootReport"
         const val ROOT_JACOCO_TASK_NAME = "jacocoRootReport"
+        const val PLUGIN_ID: String = "io.github.zero88.gradle.root"
     }
 
     override fun apply(project: Project) {
         if (project != project.rootProject) {
             return
         }
+        project.logger.info("Applying plugin '${PLUGIN_ID}'")
+        checkMinGradleVersion(PLUGIN_ID)
         applyExternalPlugins(project)
         configureExtension(project)
         if (isSingle(project)) {
@@ -93,6 +98,7 @@ class RootProjectPlugin : Plugin<Project> {
         register<Copy>(COPY_SUB_PROJECT_ARTIFACTS_TASK_NAME) {
             group = "distribution"
             description = "Gathers sub projects artifacts"
+            duplicatesStrategy = DuplicatesStrategy.FAIL
             onlyIf { !isSingle(project) }
             dependsOn(project.subprojects.mapNotNull { it.tasks.findByName(LifecycleBasePlugin.ASSEMBLE_TASK_NAME) })
             from(project.subprojects.fold(listOf<File>()) { r, p -> r.plus(p.buildDir.resolve("distributions")) })
@@ -108,6 +114,7 @@ class RootProjectPlugin : Plugin<Project> {
         register<Copy>(COPY_SUB_PROJECT_TEST_RESULTS_TASK_NAME) {
             group = LifecycleBasePlugin.VERIFICATION_GROUP
             description = "Gathers sub projects test result"
+            duplicatesStrategy = DuplicatesStrategy.WARN
             dependsOn(project.subprojects.mapNotNull { it.tasks.withType<Test>() })
             from(project.subprojects.fold(listOf<File>()) { r, p -> r.plus(p.buildDir.resolve(TestingBasePlugin.TEST_RESULTS_DIR_NAME)) })
             into(project.buildDir.resolve(TestingBasePlugin.TEST_RESULTS_DIR_NAME))

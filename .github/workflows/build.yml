@@ -30,7 +30,6 @@ jobs:
       version: ${{ steps.context.outputs.version }}
       commitId: ${{ steps.context.outputs.shortCommitId }}
       semanticVersion: ${{ steps.dynamic_prop.outputs.semanticVersion }}
-      disablePlugin: ${{ steps.dynamic_prop.outputs.disablePlugin }}
 
     steps:
       - uses: actions/checkout@v2
@@ -49,7 +48,7 @@ jobs:
 
       - name: Project context
         id: context
-        uses: zero88/gh-project-context@v1.1.0
+        uses: zero88/gh-project-context@v1.1
         with:
           mustSign: true
           nextVerMode: PATCH
