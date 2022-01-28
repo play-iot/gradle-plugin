@@ -4,16 +4,19 @@ object PluginLibs {
 
     object Version {
 
+        const val jvm = "1.5.31"
         const val sonarQube = "3.3"
-        const val jooq = "5.2.1"
+
         const val nexusPublish = "1.1.0"
-        const val docker = "6.7.0"
-        const val gradlePluginPublish = "0.14.0"
+        const val gradlePluginPublish = "0.18.0"
+
         const val jacocoLogger = "2.0.0"
-        const val jvm = "1.3.72"
+        const val testLogger = "3.1.0"
+
+        const val jooq = "5.2.1"
+        const val docker = "6.7.0"
         const val shadow = "6.1.0"
         const val testcontainers = "1.15.2"
-        const val testLogger = "3.1.0"
     }
 
     const val sonarQube = "org.sonarqube"
