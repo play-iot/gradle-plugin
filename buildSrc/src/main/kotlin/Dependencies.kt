@@ -12,6 +12,7 @@ object PluginLibs {
         const val jvm = "1.3.72"
         const val shadow = "6.1.0"
         const val testcontainers = "1.15.2"
+        const val testLogger = "3.1.0"
     }
 
     const val sonarQube = "org.sonarqube"
@@ -25,6 +26,8 @@ object PluginLibs {
         const val nexusPublish = "io.github.gradle-nexus:publish-plugin:${Version.nexusPublish}"
         const val sonarQube = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${Version.sonarQube}"
         const val shadow = "com.github.jengelman.gradle.plugins:shadow:${Version.shadow}"
+        const val testLogger = "com.adarshr:gradle-test-logger-plugin:${Version.testLogger}"
+
         const val jooq = "nu.studer:gradle-jooq-plugin:${Version.jooq}"
         const val testcontainers =  "org.testcontainers:cassandra:${Version.testcontainers}"
     }

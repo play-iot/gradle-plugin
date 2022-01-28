@@ -1,5 +1,6 @@
 package io.zero88.gradle
 
+import com.adarshr.gradle.testlogger.TestLoggerExtensionProperties
 import org.gradle.api.Action
 import org.gradle.api.model.ObjectFactory
 import org.gradle.kotlin.dsl.mapProperty
@@ -45,7 +46,16 @@ open class OSSExtension(objects: ObjectFactory) {
      */
     val zero88 = objects.property<Boolean>().convention(false)
 
+    /**
+     * Test Logger configuration
+     */
+    val testLogger = objects.newInstance(TestLoggerExtensionProperties::class.java)
+
     fun publishingInfo(configuration: Action<PublishingInfo>) {
         configuration.execute(publishingInfo)
+    }
+
+    fun testLogger(configuration: Action<TestLoggerExtensionProperties>) {
+        configuration.execute(testLogger)
     }
 }
