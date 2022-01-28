@@ -1,5 +1,6 @@
 package io.zero88.gradle
 
+import io.zero88.gradle.helper.checkMinGradleVersion
 import io.zero88.gradle.helper.prop
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -32,12 +33,15 @@ class RootProjectPlugin : Plugin<Project> {
         const val COPY_SUB_PROJECT_TEST_RESULTS_TASK_NAME = "copySubProjectsTestResults"
         const val ROOT_TEST_REPORT_TASK_NAME = "testRootReport"
         const val ROOT_JACOCO_TASK_NAME = "jacocoRootReport"
+        const val PLUGIN_ID: String = "io.github.zero88.gradle.root"
     }
 
     override fun apply(project: Project) {
         if (project != project.rootProject) {
             return
         }
+        project.logger.info("Applying plugin '${PLUGIN_ID}'")
+        checkMinGradleVersion(PLUGIN_ID)
         applyExternalPlugins(project)
         configureExtension(project)
         if (isSingle(project)) {

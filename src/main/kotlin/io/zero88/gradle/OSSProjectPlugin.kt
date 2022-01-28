@@ -1,6 +1,7 @@
 package io.zero88.gradle
 
 import io.zero88.gradle.helper.computeBaseName
+import io.zero88.gradle.helper.checkMinGradleVersion
 import io.zero88.gradle.helper.prop
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -33,7 +34,14 @@ import java.util.jar.Attributes
 @Suppress("UnstableApiUsage")
 class OSSProjectPlugin : Plugin<Project> {
 
+    companion object {
+
+        const val PLUGIN_ID = "io.github.zero88.gradle.oss"
+    }
+
     override fun apply(project: Project) {
+        project.logger.info("Applying plugin '${PLUGIN_ID}'")
+        checkMinGradleVersion(PLUGIN_ID)
         applyExternalPlugins(project)
         val ossExt = evaluateProject(project)
         project.tasks {
