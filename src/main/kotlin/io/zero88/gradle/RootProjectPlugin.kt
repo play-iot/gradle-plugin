@@ -117,6 +117,7 @@ class RootProjectPlugin : Plugin<Project> {
             dependsOn(project.subprojects.mapNotNull { it.tasks.withType<Test>() })
             from(project.subprojects.fold(listOf<File>()) { r, p -> r.plus(p.buildDir.resolve(TestingBasePlugin.TEST_RESULTS_DIR_NAME)) })
             into(project.buildDir.resolve(TestingBasePlugin.TEST_RESULTS_DIR_NAME))
+            exclude("**/binary")
         }
         register<TestReport>(ROOT_TEST_REPORT_TASK_NAME) {
             group = LifecycleBasePlugin.VERIFICATION_GROUP
