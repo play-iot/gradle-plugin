@@ -4,7 +4,7 @@ object PluginLibs {
 
     object Version {
 
-        const val sonarQube = "3.1.1"
+        const val sonarQube = "3.3"
         const val jooq = "5.2.1"
         const val nexusPublish = "1.1.0"
         const val docker = "6.7.0"
