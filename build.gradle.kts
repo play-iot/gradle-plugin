@@ -78,8 +78,8 @@ sourceSets {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
     withJavadocJar()
     withSourcesJar()
 }
@@ -92,9 +92,9 @@ tasks {
     jacocoTestReport {
         dependsOn(test)
         reports {
-            xml.isEnabled = true
-            csv.isEnabled = false
-            html.destination = file("${buildDir}/jacocoHtml")
+            csv.required.set(false)
+            xml.required.set(true)
+            html.outputLocation.set(file("${buildDir}/jacocoHtml"))
         }
     }
     named("sonarqube") {

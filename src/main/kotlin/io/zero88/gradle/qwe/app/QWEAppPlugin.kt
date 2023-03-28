@@ -14,7 +14,7 @@ import io.zero88.gradle.qwe.systemd.QWESystemdGeneratorTask
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.plugins.JavaPlugin
-import org.gradle.api.plugins.JavaPluginConvention
+import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.bundling.AbstractArchiveTask
 import org.gradle.api.tasks.bundling.Jar
@@ -138,7 +138,7 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
     }
 
     private fun configureSourceSet(project: Project, layout: GeneratedLayoutExtension) {
-        val sourceSets = project.convention.getPlugin<JavaPluginConvention>().sourceSets
+        val sourceSets = project.extensions.getByType<JavaPluginExtension>().sourceSets
         layout.generatedLayout.get().values.forEach {
             if (it.mode == GeneratedLayoutExtension.LayoutMode.SOURCE) {
                 sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME).java.srcDirs.add(it.directory.get().asFile)
