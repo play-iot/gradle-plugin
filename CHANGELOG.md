@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [v2.1.0](https://github.com/play-io/gradle-plugin/tree/v2.0.0) (2022-01-28)
+## [v2.1.0](https://github.com/play-iot/gradle-plugin/tree/v2.1.0) (2022-01-28)
 
 ### Changes
 
@@ -8,7 +8,7 @@
 - Add Junit test to console [#13](https://github.com/play-iot/gradle-plugin/issues/13)
 - Add Jacoco test to console [#13](https://github.com/play-iot/gradle-plugin/issues/13)
 
-## [v2.0.0](https://github.com/play-io/gradle-plugin/tree/v2.0.0) (2021-05-19)
+## [v2.0.0](https://github.com/play-iot/gradle-plugin/tree/v2.0.0) (2021-05-19)
 
 ### Changes
 

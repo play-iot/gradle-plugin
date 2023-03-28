@@ -24,3 +24,6 @@
     - [x] Create `Dockerfile`
     - [x] Build `Docker image`
     - [x] Push `Docker image` to multiple registries
+- [x] `Antora` plugin
+    - [x] Create `Antora` documentation component  
+    - [x] Generate `Asciidoc` based on Vertx docgen

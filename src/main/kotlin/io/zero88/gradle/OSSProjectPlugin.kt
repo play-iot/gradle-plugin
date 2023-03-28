@@ -72,9 +72,9 @@ class OSSProjectPlugin : Plugin<Project> {
         project.extra.set("baseName", ossExt.baseName.get())
         project.version = "${project.version}${prop(project, "semanticVersion")}"
         project.afterEvaluate {
+            println("- Project Group:    ${project.group}")
             println("- Project Name:     ${ossExt.baseName.get()}")
             println("- Project Title:    ${ossExt.title.get()}")
-            println("- Project Group:    ${project.group}")
             println("- Project Version:  ${project.version}")
             println("- Gradle Version:   ${GradleVersion.current()}")
             println("- Java Version:     ${Jvm.current()}")
@@ -201,9 +201,15 @@ class OSSProjectPlugin : Plugin<Project> {
         withType<Javadoc> {
             title = "${ossExt.title.get()} ${project.version} API"
             options {
-                encoding = StandardCharsets.UTF_8.name()
+                encoding(StandardCharsets.UTF_8.name())
+                charset(StandardCharsets.UTF_8.name())
                 this as StandardJavadocDocletOptions
                 this.addBooleanOption("Xdoclint:none", true)
+                if (Jvm.current().javaVersion?.isJava11Compatible == true) {
+                    // https://bugs.openjdk.java.net/browse/JDK-8215291
+                    // https://bugs.openjdk.java.net/browse/JDK-8215582
+                    this.addBooleanOption("-no-module-directories", true)
+                }
                 tags = mutableListOf(
                     "apiNote:a:API Note:", "implSpec:a:Implementation Requirements:",
                     "implNote:a:Implementation Note:"

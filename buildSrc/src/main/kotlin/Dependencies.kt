@@ -17,6 +17,8 @@ object PluginLibs {
         const val docker = "6.7.0"
         const val shadow = "6.1.0"
         const val testcontainers = "1.15.2"
+        const val yaml = "1.30"
+        const val md2adoc = "2.0"
     }
 
     const val sonarQube = "org.sonarqube"
@@ -32,6 +34,8 @@ object PluginLibs {
         const val sonarQube = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${Version.sonarQube}"
         const val shadow = "com.github.jengelman.gradle.plugins:shadow:${Version.shadow}"
         const val testLogger = "com.adarshr:gradle-test-logger-plugin:${Version.testLogger}"
+        const val yaml = "org.yaml:snakeyaml:${Version.yaml}"
+        const val md2adoc = "com.github.bodiam:markdown-to-asciidoc:${Version.md2adoc}"
 
         const val jooq = "nu.studer:gradle-jooq-plugin:${Version.jooq}"
         const val testcontainers =  "org.testcontainers:cassandra:${Version.testcontainers}"
