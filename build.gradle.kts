@@ -13,8 +13,6 @@ plugins {
 repositories {
     mavenLocal()
     maven { url = uri("https://oss.sonatype.org/content/groups/public/") }
-    //    https://github.com/bodiam/markdown-to-asciidoc/issues/26#issuecomment-954747922
-    maven { setUrl("https://jitpack.io") }
     gradlePluginPortal()
 }
 
@@ -53,6 +51,12 @@ gradlePlugin {
             description = "This plugin adds Antora capabilities to generate Asciidoc and construct Antora documentation component"
             implementationClass = "io.zero88.gradle.antora.AntoraDocComponentPlugin"
         }
+        create("pandoc") {
+            id = "io.github.zero88.gradle.pandoc"
+            displayName = "Pandoc plugin"
+            description = "This plugin adds Pandoc capabilities to convert from one markup format to another"
+            implementationClass = "io.zero88.gradle.pandoc.PandocPlugin"
+        }
     }
 }
 
@@ -69,14 +73,13 @@ pluginBundle {
 }
 
 dependencies {
-    api(PluginLibs.Depends.docker)
     api(PluginLibs.Depends.jacocoLogger)
     api(PluginLibs.Depends.sonarQube)
     api(PluginLibs.Depends.shadow)
     api(PluginLibs.Depends.testLogger)
     api(PluginLibs.Depends.yaml)
-//    api(PluginLibs.Depends.md2adoc)
-//    api(PluginLibs.Depends.nexusPublish)
+    api(PluginLibs.Depends.testcontainers)
+    api(PluginLibs.Depends.docker)
 
     testImplementation(TestLibs.junit5Api)
     testImplementation(TestLibs.junit5Engine)
@@ -88,8 +91,8 @@ sourceSets {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
     withJavadocJar()
     withSourcesJar()
 }
