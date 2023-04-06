@@ -8,7 +8,6 @@ import org.gradle.api.provider.Property;
 
 import com.bmuschko.gradle.docker.DockerExtension;
 
-@SuppressWarnings("UnstableApiUsage")
 public class QWEDockerExtension extends DockerExtension {
 
     public static final String NAME = "docker";

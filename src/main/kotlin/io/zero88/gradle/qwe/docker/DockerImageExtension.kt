@@ -4,7 +4,6 @@ import org.gradle.api.model.ObjectFactory
 import org.gradle.kotlin.dsl.mapProperty
 import org.gradle.kotlin.dsl.setProperty
 
-@Suppress("UnstableApiUsage")
 open class DockerImageExtension(objects: ObjectFactory) {
 
     val imageRegistries = objects.setProperty<String>()

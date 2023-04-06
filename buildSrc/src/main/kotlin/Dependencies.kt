@@ -14,9 +14,10 @@ object PluginLibs {
         const val testLogger = "3.1.0"
 
         const val jooq = "5.2.1"
-        const val docker = "6.7.0"
+        const val docker = "7.4.0"
         const val shadow = "6.1.0"
-        const val testcontainers = "1.15.2"
+        const val testcontainers = "1.17.3"
+        const val yaml = "1.30"
     }
 
     const val sonarQube = "org.sonarqube"
@@ -32,9 +33,10 @@ object PluginLibs {
         const val sonarQube = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${Version.sonarQube}"
         const val shadow = "com.github.jengelman.gradle.plugins:shadow:${Version.shadow}"
         const val testLogger = "com.adarshr:gradle-test-logger-plugin:${Version.testLogger}"
+        const val yaml = "org.yaml:snakeyaml:${Version.yaml}"
 
         const val jooq = "nu.studer:gradle-jooq-plugin:${Version.jooq}"
-        const val testcontainers =  "org.testcontainers:cassandra:${Version.testcontainers}"
+        const val testcontainers =  "org.testcontainers:testcontainers:${Version.testcontainers}"
     }
 }
 

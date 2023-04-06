@@ -4,6 +4,7 @@ import com.github.jengelman.gradle.plugins.shadow.ShadowPlugin
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import io.zero88.gradle.OSSExtension
 import io.zero88.gradle.OSSProjectPlugin
+import io.zero88.gradle.helper.JavaProject
 import io.zero88.gradle.qwe.QWEDecoratorPlugin
 import io.zero88.gradle.qwe.QWEExtension
 import io.zero88.gradle.qwe.app.task.ConfigGeneratorTask
@@ -14,8 +15,6 @@ import io.zero88.gradle.qwe.systemd.QWESystemdGeneratorTask
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.plugins.JavaPlugin
-import org.gradle.api.plugins.JavaPluginExtension
-import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.bundling.AbstractArchiveTask
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.bundling.Tar
@@ -138,19 +137,18 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
     }
 
     private fun configureSourceSet(project: Project, layout: GeneratedLayoutExtension) {
-        val sourceSets = project.extensions.getByType<JavaPluginExtension>().sourceSets
         layout.generatedLayout.get().values.forEach {
             if (it.mode == GeneratedLayoutExtension.LayoutMode.SOURCE) {
-                sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME).java.srcDirs.add(it.directory.get().asFile)
+                JavaProject.getMainSourceSet(project).java.srcDirs.add(it.directory.get().asFile)
             }
             if (it.mode == GeneratedLayoutExtension.LayoutMode.RESOURCES) {
-                sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME).resources.srcDirs.add(it.directory.get().asFile)
+                JavaProject.getMainSourceSet(project).resources.srcDirs.add(it.directory.get().asFile)
             }
             if (it.mode == GeneratedLayoutExtension.LayoutMode.TEST_SOURCE) {
-                sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME).java.srcDirs.add(it.directory.get().asFile)
+                JavaProject.getTestSourceSet(project).java.srcDirs.add(it.directory.get().asFile)
             }
             if (it.mode == GeneratedLayoutExtension.LayoutMode.TEST_RESOURCES) {
-                sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME).resources.srcDirs.add(it.directory.get().asFile)
+                JavaProject.getTestSourceSet(project).resources.srcDirs.add(it.directory.get().asFile)
             }
         }
     }

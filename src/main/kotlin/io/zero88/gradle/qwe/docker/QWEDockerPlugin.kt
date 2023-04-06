@@ -18,7 +18,7 @@ import org.gradle.api.tasks.TaskProvider
 import org.gradle.kotlin.dsl.*
 import org.gradle.language.base.plugins.LifecycleBasePlugin
 
-@Suppress("UnstableApiUsage") class QWEDockerPlugin : QWEDecoratorPlugin<QWEDockerExtension> {
+class QWEDockerPlugin : QWEDecoratorPlugin<QWEDockerExtension> {
 
     companion object {
 

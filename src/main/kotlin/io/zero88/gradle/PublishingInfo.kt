@@ -10,7 +10,7 @@ import org.gradle.api.publish.maven.internal.publication.DefaultMavenPomLicense
 import org.gradle.api.publish.maven.internal.publication.DefaultMavenPomScm
 import org.gradle.kotlin.dsl.property
 
-@Suppress("UnstableApiUsage") class PublishingInfo(objects: ObjectFactory) {
+class PublishingInfo(objects: ObjectFactory) {
 
     val enabled = objects.property<Boolean>().convention(true)
     val projectName = objects.property<String>()

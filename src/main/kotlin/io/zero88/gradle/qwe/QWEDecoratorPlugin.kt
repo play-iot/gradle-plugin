@@ -8,7 +8,6 @@ import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.getByType
 
-@Suppress("UnstableApiUsage")
 interface QWEDecoratorPlugin<T> : Plugin<Project> {
 
     override fun apply(project: Project) {
