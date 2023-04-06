@@ -6,7 +6,7 @@ import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.mapProperty
 import org.gradle.kotlin.dsl.property
 
-@Suppress("UnstableApiUsage") open class QWESystemdExtension(objects: ObjectFactory) {
+open class QWESystemdExtension(objects: ObjectFactory) {
 
     companion object {
 

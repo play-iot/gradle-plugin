@@ -36,7 +36,6 @@ import java.time.Instant
 import java.util.jar.Attributes
 import kotlin.reflect.full.declaredMemberProperties
 
-@Suppress("UnstableApiUsage")
 class OSSProjectPlugin : Plugin<Project> {
 
     companion object {

@@ -4,7 +4,6 @@ import org.gradle.api.model.ObjectFactory
 import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.property
 
-@Suppress("UnstableApiUsage")
 open class DockerfileExtension(objects: ObjectFactory) {
 
     val image = objects.property<String>().convention("openjdk:8-jre-slim")
