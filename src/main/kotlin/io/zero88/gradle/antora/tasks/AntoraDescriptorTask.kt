@@ -1,5 +1,6 @@
 package io.zero88.gradle.antora.tasks
 
+import io.zero88.gradle.antora.AntoraPlugin
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.MapProperty
@@ -25,16 +26,16 @@ abstract class AntoraDescriptorTask : DefaultTask() {
     abstract val asciiAttributes: MapProperty<String, Any>
 
     @get:Incremental
-    @get:PathSensitive(PathSensitivity.NAME_ONLY)
     @get:InputFile
+    @get:PathSensitive(PathSensitivity.NAME_ONLY)
     abstract val inputFile: RegularFileProperty
 
     @get:OutputFile
     abstract val outputFile: RegularFileProperty
 
     init {
-        group = "documentation"
-        outputFile.convention(inputFile)
+        group = AntoraPlugin.GROUP
+        description = "Create Antora descriptor yaml file"
     }
 
     @TaskAction

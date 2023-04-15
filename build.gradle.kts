@@ -49,7 +49,7 @@ gradlePlugin {
             id = "io.github.zero88.gradle.antora"
             displayName = "Antora plugin"
             description = "This plugin adds Antora capabilities to generate Asciidoc and construct Antora documentation component"
-            implementationClass = "io.zero88.gradle.antora.AntoraDocComponentPlugin"
+            implementationClass = "io.zero88.gradle.antora.AntoraPlugin"
         }
         create("pandoc") {
             id = "io.github.zero88.gradle.pandoc"

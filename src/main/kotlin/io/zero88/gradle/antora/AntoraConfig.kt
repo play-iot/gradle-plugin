@@ -1,7 +1,7 @@
 package io.zero88.gradle.antora
 
 class AntoraConfig(
-    val ext: AntoraDocComponentExtension,
-    val srcAntora: AntoraCompLayout,
-    val destAntora: AntoraCompLayout
+    val ext: AntoraExtension,
+    val srcAntora: AntoraLayout,
+    val destAntora: AntoraLayout
 )

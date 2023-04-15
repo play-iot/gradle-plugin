@@ -1,41 +1,34 @@
 package io.zero88.gradle.antora.tasks
 
-import io.zero88.gradle.antora.AntoraCompLayout
+import io.zero88.gradle.antora.AntoraPlugin
 import io.zero88.gradle.antora.AntoraType
 import org.gradle.api.DefaultTask
-import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.*
+import org.gradle.api.tasks.CacheableTask
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.withType
-import org.gradle.work.Incremental
 
 @CacheableTask
 abstract class AntoraTask : DefaultTask() {
+
+    init {
+        group = AntoraPlugin.GROUP
+        description = "Finalize Antora document component"
+    }
+
     companion object {
 
         const val NAME = "antora"
     }
 
-    @get:Incremental
-    @get:PathSensitive(PathSensitivity.NAME_ONLY)
-    @get:InputFiles
-    @get:Optional
-    abstract val javadocDir: ConfigurableFileCollection
-
     @get:Input
     abstract val antoraType: Property<AntoraType>
 
-    @get:Input
-    abstract val antoraModule: Property<String>
-
     @get:OutputDirectory
     abstract val outputDir: DirectoryProperty
-
-    init {
-        group = "documentation"
-        description = "Finalize Antora document component"
-    }
 
     @TaskAction
     fun finalize() {
@@ -44,10 +37,6 @@ abstract class AntoraTask : DefaultTask() {
                 from(project.subprojects.flatMap { it.tasks.withType<AntoraTask>() })
                 into(outputDir)
             }
-        }
-        project.copy {
-            from(javadocDir)
-            into(AntoraCompLayout.create(outputDir.get(), antoraModule.get()).attachmentsDir().dir("javadoc"))
         }
     }
 }
