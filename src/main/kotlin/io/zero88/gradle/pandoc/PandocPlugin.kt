@@ -1,13 +1,12 @@
 package io.zero88.gradle.pandoc
 
-import io.zero88.gradle.OSSProjectPlugin
 import io.zero88.gradle.helper.checkMinGradleVersion
+import io.zero88.gradle.pandoc.tasks.PandocTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.invoke
 import org.gradle.kotlin.dsl.register
-import io.zero88.gradle.pandoc.tasks.PandocTask
 
 class PandocPlugin : Plugin<Project> {
 
@@ -20,7 +19,7 @@ class PandocPlugin : Plugin<Project> {
     @Override
     override fun apply(project: Project) {
         project.logger.info("Applying plugin '$PLUGIN_ID'")
-        checkMinGradleVersion(OSSProjectPlugin.PLUGIN_ID)
+        checkMinGradleVersion(PLUGIN_ID)
         val extension = project.extensions.create<PandocExtension>(PandocExtension.NAME)
         project.tasks {
             register<PandocTask>(PandocTask.NAME) {

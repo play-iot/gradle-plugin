@@ -1,6 +1,5 @@
 package io.zero88.gradle.antora
 
-import io.zero88.gradle.OSSProjectPlugin
 import io.zero88.gradle.antora.tasks.*
 import io.zero88.gradle.helper.JavaProject
 import io.zero88.gradle.helper.checkMinGradleVersion
@@ -25,7 +24,7 @@ class AntoraPlugin : Plugin<Project> {
 
     override fun apply(project: Project): Unit = project.run {
         project.logger.info("Applying plugin '${PLUGIN_ID}'")
-        checkMinGradleVersion(OSSProjectPlugin.PLUGIN_ID)
+        checkMinGradleVersion(PLUGIN_ID)
         val ext = project.extensions.create<AntoraExtension>(AntoraExtension.NAME)
         val srcAntora = AntoraLayout.create(project.layout.projectDirectory.dir(ext.antoraSrcDir), ext.antoraModule)
         val destAntora = AntoraLayout.create(project.layout.buildDirectory.dir(ext.antoraOutDir), ext.antoraModule)
