@@ -1,5 +1,7 @@
 package io.zero88.gradle.pandoc
 
+import io.zero88.gradle.OSSProjectPlugin
+import io.zero88.gradle.helper.checkMinGradleVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.create
@@ -12,23 +14,26 @@ class PandocPlugin : Plugin<Project> {
     companion object {
 
         const val PLUGIN_ID = "io.github.zero88.gradle.pandoc"
+        const val GROUP = "pandoc"
     }
 
     @Override
     override fun apply(project: Project) {
-        val extension = project.extensions.create<PandocExtension>(PandocExtension.NAME)
-
         project.logger.info("Applying plugin '$PLUGIN_ID'")
+        checkMinGradleVersion(OSSProjectPlugin.PLUGIN_ID)
+        val extension = project.extensions.create<PandocExtension>(PandocExtension.NAME)
         project.tasks {
             register<PandocTask>(PandocTask.NAME) {
-                image.set(extension.config.image)
-                workingDir.set(extension.config.workingDir)
-                arguments.set(extension.config.arguments)
-                from.set(extension.from)
-                to.set(extension.to)
-                inputFile.set(extension.inputFile)
-                outputFileName.set(extension.outputFileName)
-                outputFolder.set(extension.outputFolder)
+                group = GROUP
+                description = "For converting from one markup format to another"
+                image.convention(extension.config.image)
+                workingDir.convention(extension.config.workingDir)
+                arguments.convention(extension.config.arguments)
+                from.convention(extension.from)
+                to.convention(extension.to)
+                inputFile.convention(extension.inputFile)
+                outFile.convention(extension.outFile)
+                outputFolder.value(project.layout.buildDirectory.dir(extension.outDir))
             }
         }
     }
