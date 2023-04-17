@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package io.zero88.gradle.helper
 
 import org.gradle.api.Project
@@ -32,6 +34,7 @@ private fun computeProjectName(project: Project, sep: String, firstSep: String? 
 
 class JavaProject {
     companion object {
+
         @JvmStatic
         fun getMainSourceSet(project: Project): SourceSet = getSourceSet(project, SourceSet.MAIN_SOURCE_SET_NAME)
 

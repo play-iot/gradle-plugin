@@ -1,13 +1,14 @@
 package io.zero88.gradle.antora
 
-import io.zero88.gradle.antora.tasks.*
+import io.zero88.gradle.antora.tasks.AntoraCopyTask
+import io.zero88.gradle.antora.tasks.AntoraDescriptorTask
+import io.zero88.gradle.antora.tasks.AntoraInitTask
+import io.zero88.gradle.antora.tasks.AntoraTask
 import io.zero88.gradle.helper.JavaProject
 import io.zero88.gradle.helper.checkMinGradleVersion
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.file.Directory
-import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.javadoc.Javadoc
 import org.gradle.external.javadoc.StandardJavadocDocletOptions
@@ -47,28 +48,8 @@ class AntoraPlugin : Plugin<Project> {
 
     private fun TaskContainerScope.registerTasks(project: Project, config: AntoraConfig) {
         register<AntoraInitTask>(AntoraInitTask.NAME) {
-            target.convention(config.ext.antoraType.flatMap { if (it.isComponent()) config.destAntora.dir else config.destAntora.moduleDir() })
             from(config.srcAntora.dir)
-        }
-        register<AntoraAsciidocTask>(AntoraAsciidocTask.NAME) {
-            dependsOn(withType<AntoraInitTask>())
-            val dest: Provider<Directory> = config.destAntora.partialsDir()
-            val src: Provider<Directory> = when {
-                config.ext.antoraType.get().isComponent() -> config.srcAntora.pagesDir()
-                else                                      -> config.srcAntora.dir
-            }
-            val ss = JavaProject.getMainSourceSet(project)
-            source = ss.java
-            classpath = ss.compileClasspath
-            destinationDirectory.set(src)
-            options.annotationProcessorPath = ss.compileClasspath
-            options.compilerArgs = listOf(
-                "-proc:only",
-                "-processor",
-                "io.vertx.docgen.JavaDocGenProcessor",
-                "-Adocgen.output=${dest.get()}",
-                "-Adocgen.source=${src.get()}/*.adoc"
-            )
+            outDir.convention(config.ext.antoraType.flatMap { if (it.isComponent()) config.destAntora.dir else config.destAntora.moduleDir() })
         }
         withType<Javadoc> {
             onlyIf { !config.ext.javadocProjects.orNull.isNullOrEmpty() }
@@ -93,8 +74,8 @@ class AntoraPlugin : Plugin<Project> {
             register<AntoraCopyTask>("antora${name}") {
                 group = GROUP
                 description = "Copy external resources into Antora $name folder"
-                target.convention(config.destAntora.toDir(config.ext.antoraModule.orNull, it))
-
+                outDir.convention(config.destAntora.toDir(config.ext.antoraModule.orNull, it))
+                preserve { include("*") }
                 val deps = withType<AntoraInitTask>()
                 if (it == AntoraDirectory.ATTACHMENTS) {
                     deps.plus(withType<Javadoc>())
@@ -117,7 +98,6 @@ class AntoraPlugin : Plugin<Project> {
             dependsOn(
                 withType<AntoraInitTask>(),
                 withType<AntoraCopyTask>(),
-                withType<AntoraAsciidocTask>(),
                 withType<AntoraDescriptorTask>(),
                 project.subprojects.flatMap { it.tasks.withType<AntoraTask>() }
             )

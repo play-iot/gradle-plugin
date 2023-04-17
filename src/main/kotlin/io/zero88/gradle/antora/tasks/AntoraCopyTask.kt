@@ -9,15 +9,15 @@ import java.io.File
 abstract class AntoraCopyTask : Sync() {
 
     @get:OutputDirectory
-    abstract val target: DirectoryProperty
+    abstract val outDir: DirectoryProperty
 
     override fun createCopyAction(): CopyAction {
-        into(target)
+        into(outDir)
         return super.createCopyAction();
     }
 
     override fun getDestinationDir(): File {
-        return target.asFile.get()
+        return outDir.asFile.get()
     }
 
 }
