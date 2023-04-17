@@ -57,6 +57,12 @@ gradlePlugin {
             description = "This plugin adds Pandoc capabilities to convert from one markup format to another"
             implementationClass = "io.zero88.gradle.pandoc.PandocPlugin"
         }
+        create("docgen") {
+            id = "io.github.zero88.gradle.docgen"
+            displayName = "Docgen plugin"
+            description = "This plugin adds document gen capabilities"
+            implementationClass = "io.zero88.gradle.docgen.DocgenPlugin"
+        }
     }
 }
 
