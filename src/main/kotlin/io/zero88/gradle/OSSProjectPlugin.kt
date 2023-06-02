@@ -4,7 +4,7 @@ import com.adarshr.gradle.testlogger.TestLoggerExtension
 import com.adarshr.gradle.testlogger.TestLoggerExtensionProperties
 import com.adarshr.gradle.testlogger.TestLoggerPlugin
 import com.adarshr.gradle.testlogger.theme.ThemeType
-import io.zero88.gradle.helper.checkMinGradleVersion
+import io.zero88.gradle.helper.PluginConstraint
 import io.zero88.gradle.helper.computeBaseName
 import io.zero88.gradle.helper.prop
 import org.gradle.api.Plugin
@@ -36,7 +36,7 @@ import java.time.Instant
 import java.util.jar.Attributes
 import kotlin.reflect.full.declaredMemberProperties
 
-class OSSProjectPlugin : Plugin<Project> {
+class OSSProjectPlugin : Plugin<Project>, PluginConstraint {
 
     companion object {
 
@@ -45,7 +45,7 @@ class OSSProjectPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
         project.logger.info("Applying plugin '${PLUGIN_ID}'")
-        checkMinGradleVersion(PLUGIN_ID)
+        checkGradleVersion(PLUGIN_ID)
         applyExternalPlugins(project)
         val ossExt = evaluateProject(project)
         project.tasks {

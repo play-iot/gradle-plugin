@@ -6,7 +6,6 @@ import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.mapProperty
 
-@Suppress("UnstableApiUsage")
 open class GeneratedLayoutExtension(objects: ObjectFactory, layout: ProjectLayout) {
 
     companion object {

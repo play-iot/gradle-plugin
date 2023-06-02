@@ -5,7 +5,7 @@ import io.zero88.gradle.antora.tasks.AntoraDescriptorTask
 import io.zero88.gradle.antora.tasks.AntoraInitTask
 import io.zero88.gradle.antora.tasks.AntoraTask
 import io.zero88.gradle.helper.JavaProject
-import io.zero88.gradle.helper.checkMinGradleVersion
+import io.zero88.gradle.helper.PluginConstraint
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -15,7 +15,7 @@ import org.gradle.external.javadoc.StandardJavadocDocletOptions
 import org.gradle.kotlin.dsl.*
 import java.nio.file.Paths
 
-class AntoraPlugin : Plugin<Project> {
+class AntoraPlugin : Plugin<Project>, PluginConstraint {
 
     companion object {
 
@@ -25,7 +25,7 @@ class AntoraPlugin : Plugin<Project> {
 
     override fun apply(project: Project): Unit = project.run {
         project.logger.info("Applying plugin '${PLUGIN_ID}'")
-        checkMinGradleVersion(PLUGIN_ID)
+        checkGradleVersion(PLUGIN_ID)
         val ext = project.extensions.create<AntoraExtension>(AntoraExtension.NAME)
         val srcAntora = AntoraLayout.create(project.layout.projectDirectory.dir(ext.antoraSrcDir), ext.antoraModule)
         val destAntora = AntoraLayout.create(project.layout.buildDirectory.dir(ext.antoraOutDir), ext.antoraModule)

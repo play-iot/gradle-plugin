@@ -1,6 +1,6 @@
 package io.zero88.gradle
 
-import io.zero88.gradle.helper.checkMinGradleVersion
+import io.zero88.gradle.helper.PluginConstraint
 import org.barfuin.gradle.jacocolog.JacocoLogPlugin
 import org.barfuin.gradle.jacocolog.JacocoLogPlugin.JACOCO_AGG_REPORT_TASK_NAME
 import org.gradle.api.Plugin
@@ -24,7 +24,7 @@ import org.sonarqube.gradle.SonarQubePlugin
 import java.io.File
 import java.nio.charset.StandardCharsets
 
-class RootProjectPlugin : Plugin<Project> {
+class RootProjectPlugin : Plugin<Project>, PluginConstraint {
 
     companion object {
 
@@ -39,7 +39,7 @@ class RootProjectPlugin : Plugin<Project> {
             return
         }
         project.logger.info("Applying plugin '${PLUGIN_ID}'")
-        checkMinGradleVersion(PLUGIN_ID)
+        checkGradleVersion(PLUGIN_ID)
         applyExternalPlugins(project)
         configureExtension(project)
         if (isSingle(project)) {
