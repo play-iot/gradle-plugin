@@ -41,7 +41,8 @@ class JavaProject {
         @JvmStatic
         fun getTestSourceSet(project: Project): SourceSet = getSourceSet(project, SourceSet.TEST_SOURCE_SET_NAME)
 
-        private fun getSourceSet(project: Project, sourceSetName: String): SourceSet {
+        @JvmStatic
+        fun getSourceSet(project: Project, sourceSetName: String): SourceSet {
             if (GradleVersion.current() >= GradleVersion.version("7.0")) {
                 return project.the<JavaPluginExtension>().sourceSets.getByName(sourceSetName)
             }

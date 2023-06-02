@@ -61,7 +61,13 @@ gradlePlugin {
             id = "io.github.zero88.gradle.docgen"
             displayName = "Docgen plugin"
             description = "This plugin adds document gen capabilities"
-            implementationClass = "io.zero88.gradle.docgen.DocgenPlugin"
+            implementationClass = "io.zero88.gradle.generator.docgen.DocgenPlugin"
+        }
+        create("codegen") {
+            id = "io.github.zero88.gradle.codegen"
+            displayName = "Codegen plugin"
+            description = "This plugin adds code gen capabilities"
+            implementationClass = "io.zero88.gradle.generator.codegen.CodegenPlugin"
         }
     }
 }
@@ -69,7 +75,7 @@ gradlePlugin {
 pluginBundle {
     website = "https://github.com/play-iot/gradle-plugin"
     vcsUrl = "https://github.com/play-iot/gradle-plugin.git"
-    tags = listOf("qwe-application", "qwe-docker", "java-oss")
+    tags = listOf("qwe-application", "qwe-docker", "java-oss", "pandoc", "antora", "codegen", "docgen")
 
     mavenCoordinates {
         groupId = "io.github.zero88"

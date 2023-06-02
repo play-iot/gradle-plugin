@@ -1,4 +1,4 @@
-package io.zero88.gradle.docgen
+package io.zero88.gradle.generator.docgen
 
 import org.gradle.api.Action
 import org.gradle.api.model.ObjectFactory
