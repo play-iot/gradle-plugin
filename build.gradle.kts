@@ -25,49 +25,49 @@ gradlePlugin {
             id = "io.github.zero88.gradle.oss"
             displayName = "OSS Project plugin"
             description = "This plugin adds some utilities in project for build/maven distribution"
-            implementationClass = "io.zero88.gradle.OSSProjectPlugin"
+            implementationClass = "cloud.playio.gradle.OSSProjectPlugin"
         }
         create("root") {
             id = "io.github.zero88.gradle.root"
             displayName = "Root Project plugin"
             description = "This plugin adds some utilities in root project in a multi-project build"
-            implementationClass = "io.zero88.gradle.RootProjectPlugin"
+            implementationClass = "cloud.playio.gradle.RootProjectPlugin"
         }
         create("app") {
             id = "io.github.zero88.gradle.qwe.app"
             displayName = "QWE Application plugin"
             description = "This plugin adds Generator/Bundle capabilities to QWE Application"
-            implementationClass = "io.zero88.gradle.qwe.app.QWEAppPlugin"
+            implementationClass = "cloud.playio.gradle.qwe.app.QWEAppPlugin"
         }
         create("docker") {
             id = "io.github.zero88.gradle.qwe.docker"
             displayName = "QWE Docker plugin"
             description = "This plugin adds Docker capabilities to build/push Docker image for QWE application"
-            implementationClass = "io.zero88.gradle.qwe.docker.QWEDockerPlugin"
+            implementationClass = "cloud.playio.gradle.qwe.docker.QWEDockerPlugin"
         }
         create("antora") {
             id = "io.github.zero88.gradle.antora"
             displayName = "Antora plugin"
             description = "This plugin adds Antora capabilities to generate Asciidoc and construct Antora documentation component"
-            implementationClass = "io.zero88.gradle.antora.AntoraPlugin"
+            implementationClass = "cloud.playio.gradle.antora.AntoraPlugin"
         }
         create("pandoc") {
             id = "io.github.zero88.gradle.pandoc"
             displayName = "Pandoc plugin"
             description = "This plugin adds Pandoc capabilities to convert from one markup format to another"
-            implementationClass = "io.zero88.gradle.pandoc.PandocPlugin"
+            implementationClass = "cloud.playio.gradle.pandoc.PandocPlugin"
         }
         create("docgen") {
             id = "io.github.zero88.gradle.docgen"
             displayName = "Docgen plugin"
             description = "This plugin adds document gen capabilities"
-            implementationClass = "io.zero88.gradle.generator.docgen.DocgenPlugin"
+            implementationClass = "cloud.playio.gradle.generator.docgen.DocgenPlugin"
         }
         create("codegen") {
             id = "io.github.zero88.gradle.codegen"
             displayName = "Codegen plugin"
             description = "This plugin adds code gen capabilities"
-            implementationClass = "io.zero88.gradle.generator.codegen.CodegenPlugin"
+            implementationClass = "cloud.playio.gradle.generator.codegen.CodegenPlugin"
         }
     }
 }
