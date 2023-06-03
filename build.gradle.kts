@@ -75,13 +75,18 @@ gradlePlugin {
 pluginBundle {
     website = "https://github.com/play-iot/gradle-plugin"
     vcsUrl = "https://github.com/play-iot/gradle-plugin.git"
-    tags = listOf("qwe-application", "qwe-docker", "java-oss", "pandoc", "antora", "codegen", "docgen")
+    tags = listOf("playio")
 
-    mavenCoordinates {
-        groupId = "cloud.playio"
-        artifactId = "gradle-plugin"
-        version = "${rootProject.version}"
-    }
+    pluginTags = mapOf(
+        "oss" to listOf("mapOf"),
+        "root" to listOf("abc"),
+        "antora" to listOf("documentation", "antora"),
+        "pandoc" to listOf("documentation", "pandoc"),
+        "docgen" to listOf("documentation", "docgen", "asciidoc"),
+        "codegen" to listOf("codegen", "vertx-codegen"),
+        "app" to listOf(""),
+        "docker" to listOf(""),
+    )
 }
 
 dependencies {
@@ -95,6 +100,15 @@ dependencies {
 
     testImplementation(TestLibs.junit5Api)
     testImplementation(TestLibs.junit5Engine)
+
+    constraints {
+        implementation("org.apache.logging.log4j:log4j-core") {
+            version {
+                strictly("[2.17, 3[")
+            }
+            because("CVE-2021-44228, CVE-2021-45046, CVE-2021-45105: Log4j vulnerable to remote code execution and other critical security vulnerabilities")
+        }
+    }
 }
 
 sourceSets {

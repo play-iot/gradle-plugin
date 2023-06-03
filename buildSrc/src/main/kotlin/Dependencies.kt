@@ -8,7 +8,7 @@ object PluginLibs {
         const val sonarQube = "3.3"
 
         const val nexusPublish = "1.1.0"
-        const val gradlePluginPublish = "0.18.0"
+        const val gradlePluginPublish = "1.2.0"
 
         const val jacocoLogger = "2.0.0"
         const val testLogger = "3.1.0"
