@@ -48,7 +48,8 @@ gradlePlugin {
         create("antora") {
             id = "cloud.playio.gradle.antora"
             displayName = "Antora plugin"
-            description = "This plugin adds Antora capabilities to generate Asciidoc and construct Antora documentation component"
+            description =
+                "This plugin adds Antora capabilities to generate Asciidoc and construct Antora document component"
             implementationClass = "cloud.playio.gradle.antora.AntoraPlugin"
         }
         create("pandoc") {
@@ -184,22 +185,6 @@ publishing {
             }
         }
     }
-    repositories {
-        maven {
-            val path = if (project.hasProperty("github")) {
-                "${project.property("github.nexus.url")}/${project.property("nexus.username")}/${rootProject.name}"
-            } else {
-                val releasesRepoUrl = prop(project, "ossrh.release.url")
-                val snapshotsRepoUrl = prop(project, "ossrh.snapshot.url")
-                if (project.hasProperty("release")) releasesRepoUrl else snapshotsRepoUrl
-            }
-            url = uri(path)
-            credentials {
-                username = project.property("nexus.username") as String?
-                password = project.property("nexus.password") as String?
-            }
-        }
-    }
 }
 
 signing {
@@ -219,8 +204,19 @@ nexusPublishing {
     packageGroup.set("cloud.playio")
     repositories {
         sonatype {
+            val (releaseUrl, snapshotUrl) = getRepositoryUrl()
+            nexusUrl.set(uri(releaseUrl))
+            snapshotRepositoryUrl.set(uri(snapshotUrl))
             username.set(project.property("nexus.username") as String?)
             password.set(project.property("nexus.password") as String?)
         }
     }
+}
+
+fun getRepositoryUrl(): Pair<String, String> {
+    if (project.hasProperty("github")) {
+        val path = "${project.property("github.nexus.url")}/${project.property("nexus.username")}/${rootProject.name}"
+        return Pair(path, path)
+    }
+    return Pair(prop(project, "ossrh.release.url"), prop(project, "ossrh.snapshot.url"))
 }
