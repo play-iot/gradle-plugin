@@ -16,58 +16,58 @@ repositories {
     gradlePluginPortal()
 }
 
-group = "io.github.zero88"
+group = "cloud.playio"
 version = "$version${prop(project, "semanticVersion")}"
 
 gradlePlugin {
     plugins {
         create("oss") {
-            id = "io.github.zero88.gradle.oss"
+            id = "cloud.playio.gradle.oss"
             displayName = "OSS Project plugin"
             description = "This plugin adds some utilities in project for build/maven distribution"
-            implementationClass = "io.zero88.gradle.OSSProjectPlugin"
+            implementationClass = "cloud.playio.gradle.OSSProjectPlugin"
         }
         create("root") {
-            id = "io.github.zero88.gradle.root"
+            id = "cloud.playio.gradle.root"
             displayName = "Root Project plugin"
             description = "This plugin adds some utilities in root project in a multi-project build"
-            implementationClass = "io.zero88.gradle.RootProjectPlugin"
+            implementationClass = "cloud.playio.gradle.RootProjectPlugin"
         }
         create("app") {
-            id = "io.github.zero88.gradle.qwe.app"
+            id = "cloud.playio.gradle.qwe.app"
             displayName = "QWE Application plugin"
             description = "This plugin adds Generator/Bundle capabilities to QWE Application"
-            implementationClass = "io.zero88.gradle.qwe.app.QWEAppPlugin"
+            implementationClass = "cloud.playio.gradle.qwe.app.QWEAppPlugin"
         }
         create("docker") {
-            id = "io.github.zero88.gradle.qwe.docker"
+            id = "cloud.playio.gradle.qwe.docker"
             displayName = "QWE Docker plugin"
             description = "This plugin adds Docker capabilities to build/push Docker image for QWE application"
-            implementationClass = "io.zero88.gradle.qwe.docker.QWEDockerPlugin"
+            implementationClass = "cloud.playio.gradle.qwe.docker.QWEDockerPlugin"
         }
         create("antora") {
-            id = "io.github.zero88.gradle.antora"
+            id = "cloud.playio.gradle.antora"
             displayName = "Antora plugin"
             description = "This plugin adds Antora capabilities to generate Asciidoc and construct Antora documentation component"
-            implementationClass = "io.zero88.gradle.antora.AntoraPlugin"
+            implementationClass = "cloud.playio.gradle.antora.AntoraPlugin"
         }
         create("pandoc") {
-            id = "io.github.zero88.gradle.pandoc"
+            id = "cloud.playio.gradle.pandoc"
             displayName = "Pandoc plugin"
             description = "This plugin adds Pandoc capabilities to convert from one markup format to another"
-            implementationClass = "io.zero88.gradle.pandoc.PandocPlugin"
+            implementationClass = "cloud.playio.gradle.pandoc.PandocPlugin"
         }
         create("docgen") {
-            id = "io.github.zero88.gradle.docgen"
+            id = "cloud.playio.gradle.docgen"
             displayName = "Docgen plugin"
             description = "This plugin adds document gen capabilities"
-            implementationClass = "io.zero88.gradle.generator.docgen.DocgenPlugin"
+            implementationClass = "cloud.playio.gradle.generator.docgen.DocgenPlugin"
         }
         create("codegen") {
-            id = "io.github.zero88.gradle.codegen"
+            id = "cloud.playio.gradle.codegen"
             displayName = "Codegen plugin"
             description = "This plugin adds code gen capabilities"
-            implementationClass = "io.zero88.gradle.generator.codegen.CodegenPlugin"
+            implementationClass = "cloud.playio.gradle.generator.codegen.CodegenPlugin"
         }
     }
 }
@@ -75,13 +75,18 @@ gradlePlugin {
 pluginBundle {
     website = "https://github.com/play-iot/gradle-plugin"
     vcsUrl = "https://github.com/play-iot/gradle-plugin.git"
-    tags = listOf("qwe-application", "qwe-docker", "java-oss", "pandoc", "antora", "codegen", "docgen")
+    tags = listOf("playio")
 
-    mavenCoordinates {
-        groupId = "io.github.zero88"
-        artifactId = "gradle-plugin"
-        version = "${rootProject.version}"
-    }
+    pluginTags = mapOf(
+        "oss" to listOf("mapOf"),
+        "root" to listOf("abc"),
+        "antora" to listOf("documentation", "antora"),
+        "pandoc" to listOf("documentation", "pandoc"),
+        "docgen" to listOf("documentation", "docgen", "asciidoc"),
+        "codegen" to listOf("codegen", "vertx-codegen"),
+        "app" to listOf(""),
+        "docker" to listOf(""),
+    )
 }
 
 dependencies {
@@ -95,6 +100,15 @@ dependencies {
 
     testImplementation(TestLibs.junit5Api)
     testImplementation(TestLibs.junit5Engine)
+
+    constraints {
+        implementation("org.apache.logging.log4j:log4j-core") {
+            version {
+                strictly("[2.17, 3[")
+            }
+            because("CVE-2021-44228, CVE-2021-45046, CVE-2021-45105: Log4j vulnerable to remote code execution and other critical security vulnerabilities")
+        }
+    }
 }
 
 sourceSets {
@@ -154,7 +168,7 @@ publishing {
                 licenses {
                     license {
                         name.set("The Apache License, Version 2.0")
-                        url.set("https://github.com/play-iot/gradle-plugin/blob/master/LICENSE")
+                        url.set("https://github.com/play-iot/gradle-plugin/blob/main/LICENSE")
                     }
                 }
                 developers {
@@ -202,7 +216,7 @@ sonarqube {
 }
 
 nexusPublishing {
-    packageGroup.set("io.github.zero88")
+    packageGroup.set("cloud.playio")
     repositories {
         sonatype {
             username.set(project.property("nexus.username") as String?)
