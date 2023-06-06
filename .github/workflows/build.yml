@@ -133,8 +133,8 @@ jobs:
         run: |
           args=( -Pversion=${{ needs.context.outputs.version }} \
                  -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
-                 -Pnexus.username=${{ secrets.OSS_NEXUS_USER }} \
-                 -Pnexus.password=${{ secrets.OSS_NEXUS_TOKEN }} )
+                 -Pnexus.username=${{ secrets.ORG_NEXUS_USER }} \
+                 -Pnexus.password=${{ secrets.ORG_NEXUS_TOKEN }} )
           ./gradlew publish "${args[@]}"
 
   publish-release:
@@ -168,8 +168,8 @@ jobs:
                  -Psigning.gnupg.homeDir=/home/runner/.gnupg \
                  -Psigning.gnupg.keyName=${{ steps.import_gpg.outputs.keyid }} \
                  -Psigning.gnupg.passphrase=${{ secrets.OSS_GPG_PASSPHARSE }} \
-                 -Pnexus.username=${{ secrets.OSS_NEXUS_USER }} \
-                 -Pnexus.password=${{ secrets.OSS_NEXUS_TOKEN }} )
+                 -Pnexus.username=${{ secrets.ORG_NEXUS_USER }} \
+                 -Pnexus.password=${{ secrets.ORG_NEXUS_TOKEN }} )
           ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository -Prelease "${args[@]}"
 
   publish-plugin:
