@@ -25,7 +25,7 @@ class QWEDockerPlugin : QWEDecoratorPlugin<cloud.playio.gradle.qwe.docker.QWEDoc
         const val ARG_DOCKER_REGISTRY = "dockerRegistries"
         const val ARG_DOCKER_TAGS = "dockerTags"
         const val ARG_DOCKER_LABELS = "dockerLabels"
-        const val PLUGIN_ID = "io.github.zero88.gradle.qwe.docker"
+        const val PLUGIN_ID = "cloud.playio.gradle.qwe.docker"
     }
 
     override fun applyExternalPlugins(project: Project) {

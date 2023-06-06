@@ -33,7 +33,7 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
         const val FAT_JAR_CLASSIFIER = "fat"
         const val DIST_ZIP_FAT_TASK_NAME = "distZipFat"
         const val DIST_TAR_FAT_TASK_NAME = "distTarFat"
-        const val PLUGIN_ID = "io.github.zero88.gradle.qwe.app"
+        const val PLUGIN_ID = "cloud.playio.gradle.qwe.app"
     }
 
     override fun applyExternalPlugins(project: Project) {

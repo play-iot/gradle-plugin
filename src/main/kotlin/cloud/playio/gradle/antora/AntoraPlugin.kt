@@ -19,7 +19,7 @@ class AntoraPlugin : Plugin<Project>, PluginConstraint {
 
     companion object {
 
-        const val PLUGIN_ID = "io.github.zero88.gradle.antora"
+        const val PLUGIN_ID = "cloud.playio.gradle.antora"
         const val GROUP = "antora"
     }
 

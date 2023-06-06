@@ -31,7 +31,7 @@ class RootProjectPlugin : Plugin<Project>, PluginConstraint {
         const val COPY_SUB_PROJECT_ARTIFACTS_TASK_NAME = "copySubProjectsArtifacts"
         const val COPY_SUB_PROJECT_TEST_RESULTS_TASK_NAME = "copySubProjectsTestResults"
         const val ROOT_TEST_REPORT_TASK_NAME = "testRootReport"
-        const val PLUGIN_ID: String = "io.github.zero88.gradle.root"
+        const val PLUGIN_ID: String = "cloud.playio.gradle.root"
     }
 
     override fun apply(project: Project) {

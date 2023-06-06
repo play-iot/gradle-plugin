@@ -40,7 +40,7 @@ class OSSProjectPlugin : Plugin<Project>, PluginConstraint {
 
     companion object {
 
-        const val PLUGIN_ID = "io.github.zero88.gradle.oss"
+        const val PLUGIN_ID = "cloud.playio.gradle.oss"
     }
 
     override fun apply(project: Project) {
@@ -61,8 +61,8 @@ class OSSProjectPlugin : Plugin<Project>, PluginConstraint {
         project.pluginManager.apply(TestLoggerPlugin::class.java)
     }
 
-    private fun evaluateProject(project: Project): cloud.playio.gradle.OSSExtension {
-        val ossExt = project.extensions.create<cloud.playio.gradle.OSSExtension>(cloud.playio.gradle.OSSExtension.NAME)
+    private fun evaluateProject(project: Project): OSSExtension {
+        val ossExt = project.extensions.create<OSSExtension>(OSSExtension.NAME)
         ossExt.baseName.convention(computeBaseName(project))
         ossExt.title.convention(prop(project, "title", ossExt.baseName.get()))
         ossExt.description.convention(prop(project, "description"))
@@ -81,8 +81,8 @@ class OSSProjectPlugin : Plugin<Project>, PluginConstraint {
             println("- Build By:         ${prop(project, "buildBy")}")
             if (ossExt.zero88.get()) {
                 ossExt.publishingInfo.developer {
-                    id.set(cloud.playio.gradle.OSSExtension.DEV_ID)
-                    email.set(cloud.playio.gradle.OSSExtension.DEV_EMAIL)
+                    id.set(OSSExtension.DEV_ID)
+                    email.set(OSSExtension.DEV_EMAIL)
                 }
             }
             configureExtension(project, ossExt)
@@ -90,7 +90,7 @@ class OSSProjectPlugin : Plugin<Project>, PluginConstraint {
         return ossExt
     }
 
-    private fun configureExtension(project: Project, ossExt: cloud.playio.gradle.OSSExtension) {
+    private fun configureExtension(project: Project, ossExt: OSSExtension) {
         project.extensions.configure<JavaPluginExtension> {
             withJavadocJar()
             withSourcesJar()
@@ -127,7 +127,7 @@ class OSSProjectPlugin : Plugin<Project>, PluginConstraint {
         }
     }
 
-    private fun PublicationContainer.createMavenPublication(publication: String, project: Project, ext: cloud.playio.gradle.OSSExtension) {
+    private fun PublicationContainer.createMavenPublication(publication: String, project: Project, ext: OSSExtension) {
         create<MavenPublication>(publication) {
             groupId = project.group as String?
             artifactId = ext.baseName.get()
@@ -171,7 +171,7 @@ class OSSProjectPlugin : Plugin<Project>, PluginConstraint {
         }
     }
 
-    private fun TaskContainerScope.configExternalTasks(project: Project, ossExt: cloud.playio.gradle.OSSExtension) {
+    private fun TaskContainerScope.configExternalTasks(project: Project, ossExt: OSSExtension) {
         withType<JavaCompile>().configureEach {
             options.encoding = StandardCharsets.UTF_8.name()
         }

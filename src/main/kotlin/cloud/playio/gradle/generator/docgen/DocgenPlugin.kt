@@ -18,7 +18,7 @@ class DocgenPlugin : Plugin<Project>, GeneratorPlugin, PluginConstraint {
 
     companion object {
 
-        const val PLUGIN_ID = "io.github.zero88.gradle.docgen"
+        const val PLUGIN_ID = "cloud.playio.gradle.docgen"
         const val GROUP = "docgen"
         const val GENERATOR = "docGenerator"
     }

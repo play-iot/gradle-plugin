@@ -16,7 +16,7 @@ class CodegenPlugin : Plugin<Project>, GeneratorPlugin, PluginConstraint {
 
     companion object {
 
-        const val PLUGIN_ID = "io.github.zero88.gradle.codegen"
+        const val PLUGIN_ID = "cloud.playio.gradle.codegen"
         const val GROUP = "codegen"
         const val GENERATOR = "codeGenerator"
         const val PREFIX_TASK_NAME = "genVertxCode"

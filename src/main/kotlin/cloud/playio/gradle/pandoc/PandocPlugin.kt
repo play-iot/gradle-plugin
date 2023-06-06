@@ -12,7 +12,7 @@ class PandocPlugin : Plugin<Project>, PluginConstraint {
 
     companion object {
 
-        const val PLUGIN_ID = "io.github.zero88.gradle.pandoc"
+        const val PLUGIN_ID = "cloud.playio.gradle.pandoc"
         const val GROUP = "pandoc"
     }
 
