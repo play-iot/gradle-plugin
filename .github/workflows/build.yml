@@ -198,10 +198,13 @@ jobs:
         if: env.ENABLE_GRADLE_PLUGIN == 'true'
         run: |
           ./gradlew publishPlugins \
+                  -Prelease \
                   -Pversion=${{ needs.context.outputs.version }} \
                   -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
                   -PbuildBy="GitHub Action" -PbuildHash=${{ needs.context.outputs.commitId }} \
-                  -Prelease \
+                  -Psigning.gnupg.homeDir=/home/runner/.gnupg \
+                  -Psigning.gnupg.keyName=${{ steps.import_gpg.outputs.keyid }} \
+                  -Psigning.gnupg.passphrase=${{ secrets.OSS_GPG_PASSPHARSE }} \
                   -Pgradle.publish.key=${{ secrets.OSS_GRADLE_KEY }} \
                   -Pgradle.publish.secret=${{ secrets.OSS_GRADLE_SECRET }}
 
@@ -231,7 +234,7 @@ jobs:
                  -Pnexus.username=${{ github.repository_owner }} \
                  -Pnexus.password=${{ secrets.BEEIO_CI_TOKEN }} )
           args+=( -Pgithub )
-          ./gradlew publishMavenPublicationToMavenRepository -Prelease "${args[@]}"
+          ./gradlew publishToGitHub -Prelease "${args[@]}"
 
   release:
     runs-on: ubuntu-latest

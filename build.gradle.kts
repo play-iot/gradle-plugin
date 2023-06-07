@@ -144,6 +144,9 @@ tasks {
     withType<Sign>().configureEach {
         onlyIf { project.hasProperty("release") }
     }
+    register("publishToGitHub") {
+        dependsOn("publishMavenPublicationToGitHubPackagesRepository")
+    }
 }
 
 publishing {
@@ -181,6 +184,17 @@ publishing {
                 scm {
                     connection.set("scm:git:git://git@github.com:play-iot/gradle-plugin.git")
                     url.set("https://github.com/play-iot/gradle-plugin")
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("${project.property("github.nexus.url")}/${project.property("github.repo")}")
+                credentials {
+                    username = project.property("nexus.username") as String?
+                    password = project.property("nexus.password") as String?
                 }
             }
         }
