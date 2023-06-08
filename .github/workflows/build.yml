@@ -135,7 +135,7 @@ jobs:
                  -PsemanticVersion=${{ needs.context.outputs.semanticVersion }} \
                  -Pnexus.username=${{ secrets.ORG_NEXUS_USER }} \
                  -Pnexus.password=${{ secrets.ORG_NEXUS_TOKEN }} )
-          ./gradlew publish "${args[@]}"
+          ./gradlew publishToSonatype "${args[@]}"
 
   publish-release:
     name: Release to Sonatype OSSRH
