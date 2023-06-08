@@ -222,6 +222,14 @@ jobs:
           java-version: 11
           cache: 'gradle'
 
+      - name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          git_user_signingkey: true
+          gpg_private_key: ${{ secrets.OSS_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.OSS_GPG_PASSPHARSE }}
+
       - name: Publish GitHub Package
         if: env.ENABLE_GH_MAVEN == 'true'
         run: |
