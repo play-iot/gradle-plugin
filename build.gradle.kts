@@ -165,25 +165,30 @@ publishing {
                     fromResolutionResult()
                 }
             }
-            pom {
-                name.set(prop(project, "title"))
-                description.set(prop(project, "description"))
-                url.set("https://github.com/play-iot/gradle-plugin")
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("https://github.com/play-iot/gradle-plugin/blob/main/LICENSE")
-                    }
-                }
-                developers {
-                    developer {
-                        id.set("zero88")
-                        email.set("sontt246@gmail.com")
-                    }
-                }
-                scm {
-                    connection.set("scm:git:git://git@github.com:play-iot/gradle-plugin.git")
+        }
+
+        afterEvaluate {
+            withType<MavenPublication> {
+                pom {
+                    name.set(prop(project, "title"))
+                    description.set(prop(project, "description"))
                     url.set("https://github.com/play-iot/gradle-plugin")
+                    licenses {
+                        license {
+                            name.set("The Apache License, Version 2.0")
+                            url.set("https://github.com/play-iot/gradle-plugin/blob/main/LICENSE")
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set("zero88")
+                            email.set("sontt246@gmail.com")
+                        }
+                    }
+                    scm {
+                        connection.set("scm:git:git://git@github.com:play-iot/gradle-plugin.git")
+                        url.set("https://github.com/play-iot/gradle-plugin")
+                    }
                 }
             }
         }
@@ -218,19 +223,10 @@ nexusPublishing {
     packageGroup.set("cloud.playio")
     repositories {
         sonatype {
-            val (releaseUrl, snapshotUrl) = getRepositoryUrl()
-            nexusUrl.set(uri(releaseUrl))
-            snapshotRepositoryUrl.set(uri(snapshotUrl))
+            nexusUrl.set(uri(prop(project, "ossrh.release.url")))
+            snapshotRepositoryUrl.set(uri(prop(project, "ossrh.snapshot.url")))
             username.set(project.property("nexus.username") as String?)
             password.set(project.property("nexus.password") as String?)
         }
     }
-}
-
-fun getRepositoryUrl(): Pair<String, String> {
-    if (project.hasProperty("github")) {
-        val path = "${project.property("github.nexus.url")}/${project.property("nexus.username")}/${rootProject.name}"
-        return Pair(path, path)
-    }
-    return Pair(prop(project, "ossrh.release.url"), prop(project, "ossrh.snapshot.url"))
 }
