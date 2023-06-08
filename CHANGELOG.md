@@ -1,6 +1,6 @@
 # Changelog
 
-## [v0.0.1](https://github.com/play-iot/gradle-plugin/tree/v0.0.1) (2023-06-06)
+## [v0.0.1](https://github.com/play-iot/gradle-plugin/tree/v0.0.1) (2023-06-08)
 
 **Implemented enhancements:**
 
