@@ -1,14 +1,11 @@
 package cloud.playio.gradle
 
-enum class NexusConfig(val snapshotUrl: String, val releaseUrl: String) {
-    CURRENT(
-        "https://s01.oss.sonatype.org/content/repositories/snapshots/",
-        "https://s01.oss.sonatype.org/service/local/"
-    ),
-    LEGACY(
-        "https://oss.sonatype.org/content/repositories/snapshots/",
-        "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-    );
+import cloud.playio.gradle.helper.prop
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.extra
+import java.net.URI
+
+class NexusConfig {
 
     companion object {
 
@@ -16,6 +13,18 @@ enum class NexusConfig(val snapshotUrl: String, val releaseUrl: String) {
         const val SNAPSHOT_URL_KEY = "ossrh.snapshot.url"
         const val USER_KEY = "nexus.username"
         const val PASSPHRASE_KEY = "nexus.password"
+        const val NEXUS_VERSION_KEY = "nexus.version"
+
+        private fun getConfigVersion(project: Project): NexusVersion = when {
+            project.extra.has(NEXUS_VERSION_KEY) -> project.extra.get(NEXUS_VERSION_KEY) as NexusVersion
+            else                                 -> NexusVersion.AFTER_2021_02_24
+        }
+
+        fun getReleaseUrl(project: Project): URI =
+            project.uri(prop(project, RELEASE_URL_KEY, getConfigVersion(project).releaseUrl))
+
+        fun getSnapshotUrl(project: Project): URI =
+            project.uri(prop(project, SNAPSHOT_URL_KEY, getConfigVersion(project).snapshotUrl))
     }
 
 }
