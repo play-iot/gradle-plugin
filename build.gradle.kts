@@ -85,8 +85,8 @@ pluginBundle {
         "pandoc" to listOf("documentation", "pandoc"),
         "docgen" to listOf("documentation", "docgen", "asciidoc"),
         "codegen" to listOf("codegen", "vertx-codegen"),
-        "app" to listOf(""),
-        "docker" to listOf(""),
+        "app" to listOf("app", "playio-app"),
+        "docker" to listOf("docker", "playio-containerized-app"),
     )
 }
 
@@ -181,8 +181,10 @@ publishing {
                     }
                     developers {
                         developer {
-                            id.set("zero88")
-                            email.set("sontt246@gmail.com")
+                            id.set("playio-dev")
+                            email.set("dev@playio.cloud")
+                            organization.set("playio")
+                            organizationUrl.set("playio.cloud")
                         }
                     }
                     scm {
