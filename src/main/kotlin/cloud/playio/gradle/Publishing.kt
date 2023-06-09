@@ -10,9 +10,10 @@ import org.gradle.api.publish.maven.internal.publication.DefaultMavenPomLicense
 import org.gradle.api.publish.maven.internal.publication.DefaultMavenPomScm
 import org.gradle.kotlin.dsl.property
 
-class PublishingInfo(objects: ObjectFactory) {
+class Publishing(objects: ObjectFactory) {
 
     val enabled = objects.property<Boolean>().convention(true)
+    val mavenPublicationName = objects.property<String>().convention("maven")
     val projectName = objects.property<String>()
     val homepage = objects.property<String>()
     val license: MavenPomLicense = DefaultMavenPomLicense(objects)

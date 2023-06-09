@@ -43,7 +43,7 @@ class QWEDockerPlugin : QWEDecoratorPlugin<QWEDockerExtension> {
         val ext = (qweExt as ExtensionAware).extensions.create<QWEDockerExtension>(QWEDockerExtension.NAME)
         project.afterEvaluate {
             val name = ossExt.baseName.get()
-            ext.maintainer.set(DeveloperInfo.displayName(ossExt.publishingInfo.developer))
+            ext.maintainer.set(DeveloperInfo.displayName(ossExt.publishing.developer))
             val registryParams = prop(project, ARG_DOCKER_REGISTRY, true)?.split(",")?.map { "${it}/${name}" }
             val tagParams = prop(project, ARG_DOCKER_TAGS)?.split(",")?.filter { s -> s.isNotEmpty() }
             val labelParams = prop(project, ARG_DOCKER_LABELS, true)?.split(",")?.filter { s -> s.isNotEmpty() }

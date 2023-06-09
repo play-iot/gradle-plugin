@@ -31,7 +31,7 @@ open class OSSExtension(objects: ObjectFactory) {
     /**
      * Publishing info for Maven publication
      */
-    val publishingInfo = PublishingInfo(objects)
+    val publishing = Publishing(objects)
 
     /**
      * Jar manifest
@@ -49,12 +49,26 @@ open class OSSExtension(objects: ObjectFactory) {
     val playio = objects.property<Boolean>().convention(false)
 
     /**
+     * Define project is hosted by GitHub
+     */
+    val github = objects.property<Boolean>().convention(false)
+
+    /**
+     * GitHub configuration
+     */
+    val githubConfig = GitHubConfig(objects)
+
+    /**
      * Test Logger configuration
      */
     val testLogger = objects.newInstance(TestLoggerExtensionProperties::class.java)
 
-    fun publishingInfo(configuration: Action<PublishingInfo>) {
-        configuration.execute(publishingInfo)
+    fun publishing(configuration: Action<Publishing>) {
+        configuration.execute(publishing)
+    }
+
+    fun githubConfig(configuration: Action<GitHubConfig>) {
+        configuration.execute(githubConfig)
     }
 
     fun testLogger(configuration: Action<TestLoggerExtensionProperties>) {
