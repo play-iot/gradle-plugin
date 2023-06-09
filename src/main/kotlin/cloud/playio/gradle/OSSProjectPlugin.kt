@@ -9,8 +9,10 @@ import com.adarshr.gradle.testlogger.TestLoggerPlugin
 import com.adarshr.gradle.testlogger.theme.ThemeType
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.distribution.DistributionContainer
 import org.gradle.api.distribution.plugins.DistributionPlugin
+import org.gradle.api.plugins.ExtensionContainer
 import org.gradle.api.plugins.JavaLibraryDistributionPlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginExtension
@@ -30,7 +32,6 @@ import org.gradle.plugins.signing.SigningExtension
 import org.gradle.plugins.signing.SigningPlugin
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.gradle.util.GradleVersion
-import java.net.URI
 import java.nio.charset.StandardCharsets
 import java.time.Instant
 import java.util.jar.Attributes
@@ -47,27 +48,35 @@ class OSSProjectPlugin : Plugin<Project>, PluginConstraint {
         project.logger.info("Applying plugin '${PLUGIN_ID}'")
         checkGradleVersion(PLUGIN_ID)
         applyExternalPlugins(project)
-        val ossExt = evaluateProject(project)
+        val ossExt = createOSSExtension(project)
+        project.extensions.apply { configureExtension(project, ossExt) }
         project.tasks {
             configExternalTasks(project, ossExt)
+            register("publishToGitHub") {
+                group = "publishing"
+                onlyIf { ossExt.githubConfig.publishToRegistry.get() }
+                dependsOn("publishMavenPublicationToGitHubPackagesRepository")
+            }
         }
     }
 
     private fun applyExternalPlugins(project: Project) {
         project.pluginManager.apply(JavaLibraryDistributionPlugin::class.java)
-        project.pluginManager.apply(JacocoPlugin::class.java)
         project.pluginManager.apply(MavenPublishPlugin::class.java)
         project.pluginManager.apply(SigningPlugin::class.java)
+        project.pluginManager.apply(JacocoPlugin::class.java)
         project.pluginManager.apply(TestLoggerPlugin::class.java)
     }
 
-    private fun evaluateProject(project: Project): OSSExtension {
+    private fun createOSSExtension(project: Project): OSSExtension {
         val ossExt = project.extensions.create<OSSExtension>(OSSExtension.NAME)
         ossExt.baseName.convention(computeBaseName(project))
         ossExt.title.convention(prop(project, "title", ossExt.baseName.get()))
         ossExt.description.convention(prop(project, "description"))
-        ossExt.publishingInfo.projectName.convention(ossExt.baseName.get())
-        ossExt.testLogger.theme = ThemeType.STANDARD
+        ossExt.githubConfig.registryUrl.convention(prop(project, GitHubConfig.REGISTRY_URL_KEY))
+        ossExt.githubConfig.repo.convention(prop(project, GitHubConfig.GITHUB_REPO_KEY))
+        ossExt.publishing.projectName.convention(ossExt.baseName)
+
         project.extra.set("baseName", ossExt.baseName.get())
         project.version = "${project.version}${prop(project, "semanticVersion")}"
         project.afterEvaluate {
@@ -80,97 +89,118 @@ class OSSProjectPlugin : Plugin<Project>, PluginConstraint {
             println("- Build Hash:       ${prop(project, "buildHash")}")
             println("- Build By:         ${prop(project, "buildBy")}")
             if (ossExt.zero88.get()) {
-                ossExt.publishingInfo.developer(DeveloperInfo.Individual)
+                ossExt.publishing.developer(DeveloperInfo.Individual)
             }
             if (ossExt.playio.get()) {
-                ossExt.publishingInfo.developer(DeveloperInfo.Organization)
+                ossExt.publishing.developer(DeveloperInfo.Organization)
             }
-            configureExtension(project, ossExt)
+            if (ossExt.github.get()) {
+                ossExt.publishing {
+                    homepage.convention(ossExt.githubConfig.getProjectUrl())
+                    scm {
+                        url.convention(ossExt.githubConfig.getProjectUrl())
+                        connection.convention(ossExt.githubConfig.getScmUrl())
+                    }
+                }
+            }
         }
         return ossExt
     }
 
-    private fun configureExtension(project: Project, ossExt: OSSExtension) {
-        project.extensions.configure<JavaPluginExtension> {
+    private fun ExtensionContainer.configureExtension(project: Project, ossExt: OSSExtension) {
+        configure<JavaPluginExtension> {
             withJavadocJar()
             withSourcesJar()
         }
-        project.extensions.getByName<DistributionContainer>("distributions")
+
+        getByName<DistributionContainer>("distributions")
             .named(DistributionPlugin.MAIN_DISTRIBUTION_NAME)
             .configure { distributionBaseName.set(ossExt.baseName) }
-        if (ossExt.publishingInfo.enabled.get()) {
-            val publicationName = "maven"
-            project.extensions.configure<PublishingExtension> {
-                publications {
-                    createMavenPublication(publicationName, project, ossExt)
-                }
-                repositories {
-                    maven {
-                        url = computeMavenRepositoryUrl(project, ossExt)
-                        credentials {
-                            username = prop(project, "nexus.username")
-                            password = prop(project, "nexus.password")
-                        }
-                    }
-                }
-            }
-            project.extensions.configure<SigningExtension> {
-                useGpgCmd()
-                sign(project.extensions.findByType<PublishingExtension>()?.publications?.get(publicationName))
-            }
+
+        configure<PublishingExtension> {
+            publications { addMavenPublication(project, ossExt) }
+            repositories { addGitHubRegistry(project, ossExt) }
+            project.afterEvaluate { publications { withType<MavenPublication> { addPomMetadata(ossExt) } } }
         }
-        project.extensions.configure<TestLoggerExtension> {
-            val temp = TestLoggerExtension(project)
+
+        configure<SigningExtension> {
+            useGpgCmd()
+            sign(project.extensions.findByType<PublishingExtension>()?.publications)
+        }
+
+        configure<TestLoggerExtension> {
+            val default = TestLoggerExtension(project)
+            default.theme = ThemeType.STANDARD
             TestLoggerExtensionProperties::class.declaredMemberProperties.forEach {
-                this.setProperty(it.name, ossExt.testLogger.getProperty(it.name) ?: temp.getProperty(it.name))
+                this.setProperty(it.name, ossExt.testLogger.getProperty(it.name) ?: default.getProperty(it.name))
             }
         }
     }
 
-    private fun PublicationContainer.createMavenPublication(publication: String, project: Project, ext: OSSExtension) {
-        create<MavenPublication>(publication) {
-            groupId = project.group as String?
-            artifactId = ext.baseName.get()
-            version = project.version as String?
-            from(project.components["java"])
+    private fun PublicationContainer.addMavenPublication(project: Project, ossExt: OSSExtension) {
+        if (ossExt.publishing.enabled.get()) {
+            create<MavenPublication>(ossExt.publishing.mavenPublicationName.get()) {
+                groupId = project.group as String?
+                artifactId = ossExt.baseName.get()
+                version = project.version as String?
+                from(project.components["java"])
 
-            versionMapping {
-                usage("java-api") {
-                    fromResolutionOf("runtimeClasspath")
-                }
-                usage("java-runtime") {
-                    fromResolutionResult()
+                versionMapping {
+                    usage("java-api") {
+                        fromResolutionOf("runtimeClasspath")
+                    }
+                    usage("java-runtime") {
+                        fromResolutionResult()
+                    }
                 }
             }
-            pom {
-                name.set(ext.title)
-                description.set(ext.description)
-                url.set(ext.publishingInfo.homepage)
-                licenses {
-                    license {
-                        name.set(ext.publishingInfo.license.name)
-                        url.set(ext.publishingInfo.license.url)
-                        comments.set(ext.publishingInfo.license.comments)
-                        distribution.set(ext.publishingInfo.license.distribution)
+        }
+    }
+
+    private fun RepositoryHandler.addGitHubRegistry(project: Project, ossExt: OSSExtension) {
+        project.afterEvaluate {
+            if (ossExt.githubConfig.publishToRegistry.get()) {
+                maven {
+                    name = "GitHubPackages"
+                    url = project.uri(ossExt.githubConfig.getProjectRegistryUrl())
+                    credentials {
+                        username = prop(project, NexusConfig.USER_KEY)
+                        password = prop(project, NexusConfig.PASSPHRASE_KEY)
                     }
                 }
-                developers {
-                    developer {
-                        id.set(ext.publishingInfo.developer.id)
-                        name.set(ext.publishingInfo.developer.name)
-                        email.set(ext.publishingInfo.developer.email)
-                        roles.set(ext.publishingInfo.developer.roles)
-                        timezone.set(ext.publishingInfo.developer.timezone)
-                        organization.set(ext.publishingInfo.developer.organization)
-                        organizationUrl.set(ext.publishingInfo.developer.organizationUrl)
-                    }
+            }
+        }
+    }
+
+    private fun MavenPublication.addPomMetadata(ext: OSSExtension) {
+        pom {
+            name.set(ext.title)
+            description.set(ext.description)
+            url.set(ext.publishing.homepage)
+            licenses {
+                license {
+                    name.set(ext.publishing.license.name)
+                    url.set(ext.publishing.license.url)
+                    comments.set(ext.publishing.license.comments)
+                    distribution.set(ext.publishing.license.distribution)
                 }
-                scm {
-                    connection.set(ext.publishingInfo.scm.connection)
-                    developerConnection.set(ext.publishingInfo.scm.developerConnection)
-                    url.set(ext.publishingInfo.scm.url)
-                    tag.set(ext.publishingInfo.scm.tag)
+            }
+            developers {
+                developer {
+                    id.set(ext.publishing.developer.id)
+                    name.set(ext.publishing.developer.name)
+                    email.set(ext.publishing.developer.email)
+                    roles.set(ext.publishing.developer.roles)
+                    timezone.set(ext.publishing.developer.timezone)
+                    organization.set(ext.publishing.developer.organization)
+                    organizationUrl.set(ext.publishing.developer.organizationUrl)
                 }
+            }
+            scm {
+                url.set(ext.publishing.scm.url)
+                tag.set(ext.publishing.scm.tag)
+                connection.set(ext.publishing.scm.connection)
+                developerConnection.set(ext.publishing.scm.developerConnection)
             }
         }
     }
@@ -199,6 +229,7 @@ class OSSProjectPlugin : Plugin<Project>, PluginConstraint {
             archiveBaseName.set(ossExt.baseName)
         }
         withType<Sign>().configureEach {
+            group = "publishing"
             onlyIf { project.hasProperty("release") }
         }
         withType<Javadoc> {
@@ -225,16 +256,4 @@ class OSSProjectPlugin : Plugin<Project>, PluginConstraint {
         }
     }
 
-    private fun computeMavenRepositoryUrl(project: Project, oss: cloud.playio.gradle.OSSExtension): URI {
-        val path = if (project.hasProperty("github")) {
-            val ghRepoUrl = prop(project, "github.nexus.url")
-            val ghOwner = prop(project, "nexus.username")
-            "${ghRepoUrl}/${ghOwner}/${oss.publishingInfo.projectName.get()}"
-        } else {
-            val releasesRepoUrl = prop(project, "ossrh.release.url")
-            val snapshotsRepoUrl = prop(project, "ossrh.snapshot.url")
-            if (project.hasProperty("release")) releasesRepoUrl else snapshotsRepoUrl
-        }
-        return path?.let { URI(it) }!!
-    }
 }

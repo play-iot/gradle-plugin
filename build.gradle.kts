@@ -91,10 +91,11 @@ pluginBundle {
 }
 
 dependencies {
+    api(PluginLibs.Depends.nexusPublish)
+    api(PluginLibs.Depends.testLogger)
     api(PluginLibs.Depends.jacocoLogger)
     api(PluginLibs.Depends.sonarQube)
     api(PluginLibs.Depends.shadow)
-    api(PluginLibs.Depends.testLogger)
     api(PluginLibs.Depends.yaml)
     api(PluginLibs.Depends.testcontainers)
     api(PluginLibs.Depends.docker)
@@ -145,6 +146,7 @@ tasks {
         onlyIf { project.hasProperty("release") }
     }
     register("publishToGitHub") {
+        group = "publishing"
         dependsOn("publishMavenPublicationToGitHubPackagesRepository")
     }
 }
@@ -210,7 +212,7 @@ publishing {
 
 signing {
     useGpgCmd()
-    sign(publishing.publications["maven"])
+    sign(publishing.publications)
 }
 
 sonarqube {
