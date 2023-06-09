@@ -80,10 +80,10 @@ class OSSProjectPlugin : Plugin<Project>, PluginConstraint {
             println("- Build Hash:       ${prop(project, "buildHash")}")
             println("- Build By:         ${prop(project, "buildBy")}")
             if (ossExt.zero88.get()) {
-                ossExt.publishingInfo.developer {
-                    id.set(OSSExtension.DEV_ID)
-                    email.set(OSSExtension.DEV_EMAIL)
-                }
+                ossExt.publishingInfo.developer(DeveloperInfo.Individual)
+            }
+            if (ossExt.playio.get()) {
+                ossExt.publishingInfo.developer(DeveloperInfo.Organization)
             }
             configureExtension(project, ossExt)
         }
@@ -157,8 +157,12 @@ class OSSProjectPlugin : Plugin<Project>, PluginConstraint {
                 developers {
                     developer {
                         id.set(ext.publishingInfo.developer.id)
+                        name.set(ext.publishingInfo.developer.name)
                         email.set(ext.publishingInfo.developer.email)
+                        roles.set(ext.publishingInfo.developer.roles)
+                        timezone.set(ext.publishingInfo.developer.timezone)
                         organization.set(ext.publishingInfo.developer.organization)
+                        organizationUrl.set(ext.publishingInfo.developer.organizationUrl)
                     }
                 }
                 scm {

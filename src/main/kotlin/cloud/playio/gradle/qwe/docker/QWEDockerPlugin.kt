@@ -1,5 +1,7 @@
 package cloud.playio.gradle.qwe.docker
 
+import cloud.playio.gradle.DeveloperInfo
+import cloud.playio.gradle.OSSExtension
 import cloud.playio.gradle.helper.prop
 import cloud.playio.gradle.qwe.QWEDecoratorPlugin
 import cloud.playio.gradle.qwe.QWEExtension
@@ -17,7 +19,7 @@ import org.gradle.api.tasks.TaskProvider
 import org.gradle.kotlin.dsl.*
 import org.gradle.language.base.plugins.LifecycleBasePlugin
 
-class QWEDockerPlugin : QWEDecoratorPlugin<cloud.playio.gradle.qwe.docker.QWEDockerExtension> {
+class QWEDockerPlugin : QWEDecoratorPlugin<QWEDockerExtension> {
 
     companion object {
 
@@ -37,13 +39,11 @@ class QWEDockerPlugin : QWEDecoratorPlugin<cloud.playio.gradle.qwe.docker.QWEDoc
         return PLUGIN_ID
     }
 
-    override fun configureExtension(project: Project, ossExt: cloud.playio.gradle.OSSExtension, qweExt: QWEExtension): cloud.playio.gradle.qwe.docker.QWEDockerExtension {
-        val ext = (qweExt as ExtensionAware).extensions.create<cloud.playio.gradle.qwe.docker.QWEDockerExtension>(cloud.playio.gradle.qwe.docker.QWEDockerExtension.NAME)
+    override fun configureExtension(project: Project, ossExt: OSSExtension, qweExt: QWEExtension): QWEDockerExtension {
+        val ext = (qweExt as ExtensionAware).extensions.create<QWEDockerExtension>(QWEDockerExtension.NAME)
         project.afterEvaluate {
             val name = ossExt.baseName.get()
-            if (ossExt.zero88.get()) {
-                ext.maintainer.set("${cloud.playio.gradle.OSSExtension.DEV_ID} <${cloud.playio.gradle.OSSExtension.DEV_EMAIL}>")
-            }
+            ext.maintainer.set(DeveloperInfo.displayName(ossExt.publishingInfo.developer))
             val registryParams = prop(project, ARG_DOCKER_REGISTRY, true)?.split(",")?.map { "${it}/${name}" }
             val tagParams = prop(project, ARG_DOCKER_TAGS)?.split(",")?.filter { s -> s.isNotEmpty() }
             val labelParams = prop(project, ARG_DOCKER_LABELS, true)?.split(",")?.filter { s -> s.isNotEmpty() }
@@ -58,9 +58,9 @@ class QWEDockerPlugin : QWEDecoratorPlugin<cloud.playio.gradle.qwe.docker.QWEDoc
 
     override fun registerAndConfigureTask(
         project: Project,
-        ossExt: cloud.playio.gradle.OSSExtension,
+        ossExt: OSSExtension,
         qweExt: QWEExtension,
-        decoratorExt: cloud.playio.gradle.qwe.docker.QWEDockerExtension
+        decoratorExt: QWEDockerExtension
     ) {
         val appExt = (qweExt as ExtensionAware).extensions.getByType<QWEAppExtension>()
         project.tasks {
@@ -78,7 +78,7 @@ class QWEDockerPlugin : QWEDecoratorPlugin<cloud.playio.gradle.qwe.docker.QWEDoc
     private fun TaskContainerScope.registerCreateDockerfileTask(
         baseName: Property<String>,
         appExt: QWEAppExtension,
-        dockerExt: cloud.playio.gradle.qwe.docker.QWEDockerExtension
+        dockerExt: QWEDockerExtension
     ): TaskProvider<Dockerfile> {
         return register<Dockerfile>("createDockerfile") {
             group = GROUP
@@ -106,7 +106,7 @@ class QWEDockerPlugin : QWEDecoratorPlugin<cloud.playio.gradle.qwe.docker.QWEDoc
     }
 
     private fun TaskContainerScope.registerPrintDockerfile(
-        dockerExt: cloud.playio.gradle.qwe.docker.QWEDockerExtension,
+        dockerExt: QWEDockerExtension,
         provider: TaskProvider<Dockerfile>
     ) {
         register<DefaultTask>("printDockerfile") {
@@ -123,7 +123,7 @@ class QWEDockerPlugin : QWEDecoratorPlugin<cloud.playio.gradle.qwe.docker.QWEDoc
 
     private fun TaskContainerScope.registerDockerBuild(
         baseName: Property<String>,
-        qweDockerExt: cloud.playio.gradle.qwe.docker.QWEDockerExtension,
+        qweDockerExt: QWEDockerExtension,
         dockerFileProvider: TaskProvider<Dockerfile>
     ): TaskProvider<DockerBuildImage> {
         return register<DockerBuildImage>("buildDocker") {
@@ -140,7 +140,7 @@ class QWEDockerPlugin : QWEDecoratorPlugin<cloud.playio.gradle.qwe.docker.QWEDoc
     }
 
     private fun TaskContainerScope.registerDockerPushTask(
-        dockerExt: cloud.playio.gradle.qwe.docker.QWEDockerExtension,
+        dockerExt: QWEDockerExtension,
         dockerBuildProvider: TaskProvider<DockerBuildImage>
     ) {
         register<DockerMultipleRegistriesPushTask>("pushDocker") {

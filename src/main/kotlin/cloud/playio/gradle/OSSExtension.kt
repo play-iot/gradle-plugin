@@ -11,8 +11,6 @@ open class OSSExtension(objects: ObjectFactory) {
     companion object {
 
         const val NAME = "oss"
-        const val DEV_ID = "zero88"
-        const val DEV_EMAIL = "sontt246@gmail.com"
     }
 
     /**
@@ -33,7 +31,7 @@ open class OSSExtension(objects: ObjectFactory) {
     /**
      * Publishing info for Maven publication
      */
-    val publishingInfo = cloud.playio.gradle.PublishingInfo(objects)
+    val publishingInfo = PublishingInfo(objects)
 
     /**
      * Jar manifest
@@ -46,11 +44,16 @@ open class OSSExtension(objects: ObjectFactory) {
     val zero88 = objects.property<Boolean>().convention(false)
 
     /**
+     * Define developer is org:playio
+     */
+    val playio = objects.property<Boolean>().convention(false)
+
+    /**
      * Test Logger configuration
      */
     val testLogger = objects.newInstance(TestLoggerExtensionProperties::class.java)
 
-    fun publishingInfo(configuration: Action<cloud.playio.gradle.PublishingInfo>) {
+    fun publishingInfo(configuration: Action<PublishingInfo>) {
         configuration.execute(publishingInfo)
     }
 
