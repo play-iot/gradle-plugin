@@ -1,17 +1,17 @@
 package cloud.playio.gradle.generator.docgen
 
+import cloud.playio.gradle.shared.Documentation
 import org.gradle.api.Action
+import org.gradle.api.Project
 import org.gradle.api.model.ObjectFactory
-import org.gradle.api.provider.Property
-import org.gradle.kotlin.dsl.property
 
-open class DocgenExtension(objects: ObjectFactory) {
+open class DocgenExtension(objects: ObjectFactory) : Documentation.DocumentationBranch(objects, DocgenPlugin.GROUP) {
     companion object {
 
-        const val NAME = DocgenPlugin.GROUP
+        fun create(project: Project): DocgenExtension =
+            Documentation.get(project).createBranch(DocgenExtension::class.java, DocgenPlugin.GROUP)
     }
 
-    val outDir: Property<String> = objects.property<String>().convention(DocgenPlugin.GROUP)
     val ascii: AsciidocExtension = AsciidocExtension(objects)
 
     fun ascii(configuration: Action<AsciidocExtension>) {

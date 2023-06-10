@@ -26,9 +26,9 @@ class AntoraPlugin : Plugin<Project>, PluginConstraint {
     override fun apply(project: Project): Unit = project.run {
         project.logger.info("Applying plugin '${PLUGIN_ID}'")
         checkGradleVersion(PLUGIN_ID)
-        val ext = project.extensions.create<AntoraExtension>(AntoraExtension.NAME)
+        val ext = AntoraExtension.create(project)
         val srcAntora = AntoraLayout.create(project.layout.projectDirectory.dir(ext.antoraSrcDir), ext.antoraModule)
-        val destAntora = AntoraLayout.create(project.layout.buildDirectory.dir(ext.antoraOutDir), ext.antoraModule)
+        val destAntora = AntoraLayout.create(project.layout.buildDirectory.dir(ext.outDir), ext.antoraModule)
         val config = AntoraConfig(ext, srcAntora, destAntora)
         project.afterEvaluate { evaluateProject(project, ext) }
         project.tasks { registerTasks(project, config) }
@@ -40,7 +40,7 @@ class AntoraPlugin : Plugin<Project>, PluginConstraint {
         }
         if (!project.findProperty("antoraOutDir")?.toString().isNullOrBlank()) {
             val p = Paths.get(project.findProperty("antoraOutDir").toString())
-            ext.antoraOutDir.convention(
+            ext.outDir.convention(
                 if (p.isAbsolute) p.toString() else project.rootDir.toPath().resolve(p).toString()
             )
         }

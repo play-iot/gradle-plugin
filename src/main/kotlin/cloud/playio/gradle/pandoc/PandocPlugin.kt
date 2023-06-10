@@ -4,7 +4,6 @@ import cloud.playio.gradle.pandoc.tasks.PandocTask
 import cloud.playio.gradle.shared.PluginConstraint
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.invoke
 import org.gradle.kotlin.dsl.register
 
@@ -20,7 +19,7 @@ class PandocPlugin : Plugin<Project>, PluginConstraint {
     override fun apply(project: Project) {
         project.logger.info("Applying plugin '$PLUGIN_ID'")
         checkGradleVersion(PLUGIN_ID)
-        val extension = project.extensions.create<PandocExtension>(PandocExtension.NAME)
+        val extension = PandocExtension.create(project)
         project.tasks {
             register<PandocTask>(PandocTask.NAME) {
                 group = GROUP

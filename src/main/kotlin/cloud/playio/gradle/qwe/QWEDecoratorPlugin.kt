@@ -1,5 +1,6 @@
 package cloud.playio.gradle.qwe
 
+import cloud.playio.gradle.OSSExtension
 import cloud.playio.gradle.shared.PluginConstraint
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -13,7 +14,7 @@ interface QWEDecoratorPlugin<T> : Plugin<Project>, PluginConstraint {
         project.logger.info("Applying plugin '${pluginId()}'")
         checkGradleVersion(pluginId())
         applyExternalPlugins(project)
-        val ossExt = project.extensions.getByType<cloud.playio.gradle.OSSExtension>()
+        val ossExt = project.extensions.getByType<OSSExtension>()
         val qweExt = project.extensions.findByType<QWEExtension>() ?: project.extensions.create(QWEExtension.NAME)
         registerAndConfigureTask(project, ossExt, qweExt, configureExtension(project, ossExt, qweExt))
     }
@@ -22,7 +23,7 @@ interface QWEDecoratorPlugin<T> : Plugin<Project>, PluginConstraint {
 
     fun applyExternalPlugins(project: Project)
 
-    fun configureExtension(project: Project, ossExt: cloud.playio.gradle.OSSExtension, qweExt: QWEExtension): T
+    fun configureExtension(project: Project, ossExt: OSSExtension, qweExt: QWEExtension): T
 
-    fun registerAndConfigureTask(project: Project, ossExt: cloud.playio.gradle.OSSExtension, qweExt: QWEExtension, decoratorExt: T)
+    fun registerAndConfigureTask(project: Project, ossExt: OSSExtension, qweExt: QWEExtension, decoratorExt: T)
 }
