@@ -1,7 +1,7 @@
 package cloud.playio.gradle.pandoc
 
-import cloud.playio.gradle.helper.PluginConstraint
 import cloud.playio.gradle.pandoc.tasks.PandocTask
+import cloud.playio.gradle.shared.PluginConstraint
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.create

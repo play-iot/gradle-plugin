@@ -1,7 +1,7 @@
 package cloud.playio.gradle.generator.codegen
 
 import cloud.playio.gradle.generator.GeneratorTask
-import cloud.playio.gradle.helper.JavaProject
+import cloud.playio.gradle.shared.JavaProject
 
 abstract class VertxCodegenTask : GeneratorTask() {
     init {

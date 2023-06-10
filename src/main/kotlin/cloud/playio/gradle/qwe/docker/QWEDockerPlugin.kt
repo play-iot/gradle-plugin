@@ -2,12 +2,12 @@ package cloud.playio.gradle.qwe.docker
 
 import cloud.playio.gradle.DeveloperInfo
 import cloud.playio.gradle.OSSExtension
-import cloud.playio.gradle.helper.prop
 import cloud.playio.gradle.qwe.QWEDecoratorPlugin
 import cloud.playio.gradle.qwe.QWEExtension
 import cloud.playio.gradle.qwe.app.QWEAppExtension
 import cloud.playio.gradle.qwe.app.QWEAppPlugin
 import cloud.playio.gradle.qwe.docker.task.DockerMultipleRegistriesPushTask
+import cloud.playio.gradle.shared.prop
 import com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile

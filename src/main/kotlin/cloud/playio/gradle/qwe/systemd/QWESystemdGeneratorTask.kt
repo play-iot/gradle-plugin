@@ -1,9 +1,9 @@
 package cloud.playio.gradle.qwe.systemd
 
-import cloud.playio.gradle.helper.getPluginResource
-import cloud.playio.gradle.helper.readResourceProperties
 import cloud.playio.gradle.qwe.app.GeneratedLayoutExtension
 import cloud.playio.gradle.qwe.app.task.QWEGeneratorTask
+import cloud.playio.gradle.shared.getPluginResource
+import cloud.playio.gradle.shared.readResourceProperties
 import org.gradle.api.file.RelativePath
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Nested

@@ -1,6 +1,6 @@
 package cloud.playio.gradle.qwe.app.task
 
-import cloud.playio.gradle.helper.getPluginResource
+import cloud.playio.gradle.shared.getPluginResource
 import org.gradle.api.file.RelativePath
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Nested

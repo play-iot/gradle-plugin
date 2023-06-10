@@ -1,8 +1,8 @@
 package cloud.playio.gradle
 
-import cloud.playio.gradle.helper.PluginConstraint
-import cloud.playio.gradle.helper.computeBaseName
-import cloud.playio.gradle.helper.prop
+import cloud.playio.gradle.shared.PluginConstraint
+import cloud.playio.gradle.shared.computeBaseName
+import cloud.playio.gradle.shared.prop
 import com.adarshr.gradle.testlogger.TestLoggerExtension
 import com.adarshr.gradle.testlogger.TestLoggerExtensionProperties
 import com.adarshr.gradle.testlogger.TestLoggerPlugin

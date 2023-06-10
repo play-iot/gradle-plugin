@@ -1,7 +1,7 @@
 package cloud.playio.gradle.generator.codegen
 
 import cloud.playio.gradle.generator.GeneratorSource
-import cloud.playio.gradle.helper.JavaProject
+import cloud.playio.gradle.shared.JavaProject
 import org.gradle.api.Project
 import org.gradle.api.tasks.SourceSet
 

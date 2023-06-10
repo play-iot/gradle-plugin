@@ -1,4 +1,4 @@
-package cloud.playio.gradle.helper
+package cloud.playio.gradle.shared
 
 import org.gradle.tooling.UnsupportedVersionException
 import org.gradle.util.GradleVersion

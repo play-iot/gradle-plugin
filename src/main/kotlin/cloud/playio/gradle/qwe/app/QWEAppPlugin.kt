@@ -1,7 +1,6 @@
 package cloud.playio.gradle.qwe.app
 
 import cloud.playio.gradle.OSSProjectPlugin
-import cloud.playio.gradle.helper.JavaProject
 import cloud.playio.gradle.qwe.QWEDecoratorPlugin
 import cloud.playio.gradle.qwe.QWEExtension
 import cloud.playio.gradle.qwe.app.task.ConfigGeneratorTask
@@ -9,6 +8,7 @@ import cloud.playio.gradle.qwe.app.task.LoggingGeneratorTask
 import cloud.playio.gradle.qwe.app.task.ManifestGeneratorTask
 import cloud.playio.gradle.qwe.systemd.QWESystemdExtension
 import cloud.playio.gradle.qwe.systemd.QWESystemdGeneratorTask
+import cloud.playio.gradle.shared.JavaProject
 import com.github.jengelman.gradle.plugins.shadow.ShadowPlugin
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.api.Project

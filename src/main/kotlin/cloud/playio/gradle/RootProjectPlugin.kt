@@ -1,7 +1,7 @@
 package cloud.playio.gradle
 
-import cloud.playio.gradle.helper.PluginConstraint
-import cloud.playio.gradle.helper.prop
+import cloud.playio.gradle.shared.PluginConstraint
+import cloud.playio.gradle.shared.prop
 import io.github.gradlenexus.publishplugin.NexusPublishExtension
 import io.github.gradlenexus.publishplugin.NexusPublishPlugin
 import org.barfuin.gradle.jacocolog.JacocoLogPlugin

@@ -4,8 +4,8 @@ import cloud.playio.gradle.antora.tasks.AntoraCopyTask
 import cloud.playio.gradle.antora.tasks.AntoraDescriptorTask
 import cloud.playio.gradle.antora.tasks.AntoraInitTask
 import cloud.playio.gradle.antora.tasks.AntoraTask
-import cloud.playio.gradle.helper.JavaProject
-import cloud.playio.gradle.helper.PluginConstraint
+import cloud.playio.gradle.shared.JavaProject
+import cloud.playio.gradle.shared.PluginConstraint
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
