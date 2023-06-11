@@ -3,13 +3,12 @@ package cloud.playio.gradle.generator.docgen
 import cloud.playio.gradle.generator.GeneratorPlugin
 import cloud.playio.gradle.generator.GeneratorSource
 import cloud.playio.gradle.generator.GeneratorTool
-import cloud.playio.gradle.helper.PluginConstraint
+import cloud.playio.gradle.shared.PluginConstraint
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.provider.Property
 import org.gradle.kotlin.dsl.TaskContainerScope
-import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.invoke
 import org.gradle.kotlin.dsl.register
 import java.nio.file.Paths
@@ -26,7 +25,7 @@ class DocgenPlugin : Plugin<Project>, GeneratorPlugin, PluginConstraint {
     override fun apply(project: Project) {
         project.logger.info("Applying plugin '$PLUGIN_ID'")
         checkGradleVersion(PLUGIN_ID)
-        val extension = project.extensions.create<DocgenExtension>(DocgenExtension.NAME)
+        val extension = DocgenExtension.create(project)
         val runtimeClasspath = createGeneratorConfiguration(project, GENERATOR, extension.ascii)
         extension.ascii.sources.configureEach {
             val source = this

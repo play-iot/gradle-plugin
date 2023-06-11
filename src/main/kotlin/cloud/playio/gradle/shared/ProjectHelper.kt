@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package cloud.playio.gradle.helper
+package cloud.playio.gradle.shared
 
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginConvention

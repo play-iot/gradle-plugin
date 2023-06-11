@@ -1,6 +1,6 @@
 package cloud.playio.gradle.generator
 
-import cloud.playio.gradle.helper.JavaProject
+import cloud.playio.gradle.shared.JavaProject
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input

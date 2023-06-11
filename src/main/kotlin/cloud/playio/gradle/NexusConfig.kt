@@ -1,6 +1,6 @@
 package cloud.playio.gradle
 
-import cloud.playio.gradle.helper.prop
+import cloud.playio.gradle.shared.prop
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.extra
 import java.net.URI

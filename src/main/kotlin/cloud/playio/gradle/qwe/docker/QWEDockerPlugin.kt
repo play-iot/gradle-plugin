@@ -2,12 +2,12 @@ package cloud.playio.gradle.qwe.docker
 
 import cloud.playio.gradle.DeveloperInfo
 import cloud.playio.gradle.OSSExtension
-import cloud.playio.gradle.helper.prop
 import cloud.playio.gradle.qwe.QWEDecoratorPlugin
 import cloud.playio.gradle.qwe.QWEExtension
 import cloud.playio.gradle.qwe.app.QWEAppExtension
 import cloud.playio.gradle.qwe.app.QWEAppPlugin
 import cloud.playio.gradle.qwe.docker.task.DockerMultipleRegistriesPushTask
+import cloud.playio.gradle.shared.prop
 import com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile
@@ -40,7 +40,7 @@ class QWEDockerPlugin : QWEDecoratorPlugin<QWEDockerExtension> {
     }
 
     override fun configureExtension(project: Project, ossExt: OSSExtension, qweExt: QWEExtension): QWEDockerExtension {
-        val ext = (qweExt as ExtensionAware).extensions.create<QWEDockerExtension>(QWEDockerExtension.NAME)
+        val ext = qweExt.createBranch(QWEDockerExtension::class.java, QWEDockerExtension.NAME)
         project.afterEvaluate {
             val name = ossExt.baseName.get()
             ext.maintainer.set(DeveloperInfo.displayName(ossExt.publishing.developer))

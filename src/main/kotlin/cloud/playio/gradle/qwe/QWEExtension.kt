@@ -1,6 +1,8 @@
 package cloud.playio.gradle.qwe
 
-open class QWEExtension {
+import cloud.playio.gradle.shared.TreeExtension
+
+abstract class QWEExtension : TreeExtension {
 
     companion object {
 
