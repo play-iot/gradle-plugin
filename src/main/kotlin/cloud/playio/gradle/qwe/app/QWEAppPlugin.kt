@@ -1,5 +1,6 @@
 package cloud.playio.gradle.qwe.app
 
+import cloud.playio.gradle.OSSExtension
 import cloud.playio.gradle.OSSProjectPlugin
 import cloud.playio.gradle.qwe.QWEDecoratorPlugin
 import cloud.playio.gradle.qwe.QWEExtension
@@ -44,17 +45,16 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
         return PLUGIN_ID
     }
 
-    override fun configureExtension(project: Project, ossExt: cloud.playio.gradle.OSSExtension, qweExt: QWEExtension): QWEAppExtension {
-        val extensionAware = qweExt as ExtensionAware
-        extensionAware.extensions.create<QWESystemdExtension>(QWESystemdExtension.NAME)
-        val appExt = extensionAware.extensions.create<QWEAppExtension>(QWEAppExtension.NAME)
+    override fun configureExtension(project: Project, ossExt: OSSExtension, qweExt: QWEExtension): QWEAppExtension {
+        qweExt.createBranch(QWESystemdExtension::class.java, QWESystemdExtension.NAME)
+        val appExt = qweExt.createBranch(QWEAppExtension::class.java, QWEAppExtension.NAME)
         appExt.appName.convention(ossExt.baseName)
         return appExt
     }
 
     override fun registerAndConfigureTask(
         project: Project,
-        ossExt: cloud.playio.gradle.OSSExtension,
+        ossExt: OSSExtension,
         qweExt: QWEExtension,
         decoratorExt: QWEAppExtension
     ) {
@@ -115,7 +115,7 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
         }
     }
 
-    private fun AbstractArchiveTask.distFat(ossExt: cloud.playio.gradle.OSSExtension, appExt: QWEAppExtension) {
+    private fun AbstractArchiveTask.distFat(ossExt: OSSExtension, appExt: QWEAppExtension) {
         group = "distribution"
         archiveBaseName.set(ossExt.baseName)
         archiveClassifier.set(FAT_JAR_CLASSIFIER)
@@ -126,7 +126,7 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
         from(project.tasks.withType<ShadowJar>().map { it.outputs })
     }
 
-    private fun AbstractArchiveTask.bundleArchive(ossExt: cloud.playio.gradle.OSSExtension, appExt: QWEAppExtension) {
+    private fun AbstractArchiveTask.bundleArchive(ossExt: OSSExtension, appExt: QWEAppExtension) {
         into("${ossExt.baseName.get()}-${project.version}/${GeneratedLayoutExtension.CONF}") {
             from(appExt.layout.find(GeneratedLayoutExtension.CONF)!!.directory)
         }

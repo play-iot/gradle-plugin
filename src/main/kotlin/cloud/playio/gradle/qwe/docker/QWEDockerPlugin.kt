@@ -40,7 +40,7 @@ class QWEDockerPlugin : QWEDecoratorPlugin<QWEDockerExtension> {
     }
 
     override fun configureExtension(project: Project, ossExt: OSSExtension, qweExt: QWEExtension): QWEDockerExtension {
-        val ext = (qweExt as ExtensionAware).extensions.create<QWEDockerExtension>(QWEDockerExtension.NAME)
+        val ext = qweExt.createBranch(QWEDockerExtension::class.java, QWEDockerExtension.NAME)
         project.afterEvaluate {
             val name = ossExt.baseName.get()
             ext.maintainer.set(DeveloperInfo.displayName(ossExt.publishing.developer))
