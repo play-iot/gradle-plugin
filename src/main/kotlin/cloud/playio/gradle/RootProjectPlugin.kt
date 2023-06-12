@@ -43,7 +43,7 @@ class RootProjectPlugin : Plugin<Project>, PluginConstraint {
             return
         }
         project.logger.info("Applying plugin '${PLUGIN_ID}'")
-        checkGradleVersion(PLUGIN_ID)
+        checkPlugin(PLUGIN_ID)
         applyExternalPlugins(project)
         project.extensions.apply { configureExtension(project) }
         project.tasks { configureTasks(project) }

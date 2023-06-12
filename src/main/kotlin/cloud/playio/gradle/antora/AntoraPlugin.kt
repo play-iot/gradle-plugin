@@ -25,7 +25,7 @@ class AntoraPlugin : Plugin<Project>, PluginConstraint {
 
     override fun apply(project: Project): Unit = project.run {
         project.logger.info("Applying plugin '${PLUGIN_ID}'")
-        checkGradleVersion(PLUGIN_ID)
+        checkPlugin(PLUGIN_ID)
         val ext = AntoraExtension.create(project)
         val srcAntora = AntoraLayout.create(project.layout.projectDirectory.dir(ext.antoraSrcDir), ext.antoraModule)
         val destAntora = AntoraLayout.create(project.layout.buildDirectory.dir(ext.outDir), ext.antoraModule)
@@ -46,6 +46,7 @@ class AntoraPlugin : Plugin<Project>, PluginConstraint {
         }
     }
 
+    @SuppressWarnings("kotlin:S3776")
     private fun TaskContainerScope.registerTasks(project: Project, config: AntoraConfig) {
         register<AntoraInitTask>(AntoraInitTask.NAME) {
             from(config.srcAntora.dir)

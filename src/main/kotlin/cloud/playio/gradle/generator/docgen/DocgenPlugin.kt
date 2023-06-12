@@ -24,7 +24,7 @@ class DocgenPlugin : Plugin<Project>, GeneratorPlugin, PluginConstraint {
 
     override fun apply(project: Project) {
         project.logger.info("Applying plugin '$PLUGIN_ID'")
-        checkGradleVersion(PLUGIN_ID)
+        checkPlugin(PLUGIN_ID)
         val extension = DocgenExtension.create(project)
         val runtimeClasspath = createGeneratorConfiguration(project, GENERATOR, extension.ascii)
         extension.ascii.sources.configureEach {
