@@ -17,7 +17,7 @@ object PluginLibs {
         const val docker = "7.4.0"
         const val shadow = "6.1.0"
         const val testcontainers = "1.17.3"
-        const val yaml = "1.30"
+        const val yaml = "2.0"
     }
 
     const val sonarQube = "org.sonarqube"
