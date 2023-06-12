@@ -46,6 +46,7 @@ class AntoraPlugin : Plugin<Project>, PluginConstraint {
         }
     }
 
+    @SuppressWarnings("kotlin:S3776")
     private fun TaskContainerScope.registerTasks(project: Project, config: AntoraConfig) {
         register<AntoraInitTask>(AntoraInitTask.NAME) {
             from(config.srcAntora.dir)
