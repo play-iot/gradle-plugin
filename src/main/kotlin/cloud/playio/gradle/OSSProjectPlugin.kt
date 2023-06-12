@@ -1,6 +1,7 @@
 package cloud.playio.gradle
 
 import cloud.playio.gradle.shared.PluginConstraint
+import cloud.playio.gradle.shared.ProjectConstraint
 import cloud.playio.gradle.shared.computeBaseName
 import cloud.playio.gradle.shared.prop
 import com.adarshr.gradle.testlogger.TestLoggerExtension
@@ -37,7 +38,7 @@ import java.time.Instant
 import java.util.jar.Attributes
 import kotlin.reflect.full.declaredMemberProperties
 
-class OSSProjectPlugin : Plugin<Project>, PluginConstraint {
+class OSSProjectPlugin : Plugin<Project>, PluginConstraint, ProjectConstraint {
 
     companion object {
 
@@ -46,8 +47,9 @@ class OSSProjectPlugin : Plugin<Project>, PluginConstraint {
 
     override fun apply(project: Project) {
         project.logger.info("Applying plugin '${PLUGIN_ID}'")
-        checkGradleVersion(PLUGIN_ID)
+        checkPlugin(PLUGIN_ID)
         applyExternalPlugins(project)
+        verifyProject(project)
         val ossExt = createOSSExtension(project)
         project.extensions.apply { configureExtension(project, ossExt) }
         project.tasks {

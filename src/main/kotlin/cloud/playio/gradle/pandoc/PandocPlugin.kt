@@ -18,7 +18,7 @@ class PandocPlugin : Plugin<Project>, PluginConstraint {
     @Override
     override fun apply(project: Project) {
         project.logger.info("Applying plugin '$PLUGIN_ID'")
-        checkGradleVersion(PLUGIN_ID)
+        checkPlugin(PLUGIN_ID)
         val extension = PandocExtension.create(project)
         project.tasks {
             register<PandocTask>(PandocTask.NAME) {

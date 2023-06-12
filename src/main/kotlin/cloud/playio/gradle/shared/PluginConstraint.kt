@@ -5,6 +5,10 @@ import org.gradle.util.GradleVersion
 
 interface PluginConstraint {
 
+    fun checkPlugin(pluginId: String) {
+        checkGradleVersion(pluginId)
+    }
+
     fun minGradleVersion(): GradleVersion = GradleVersion.version("6.5")
 
     @Throws(UnsupportedVersionException::class)

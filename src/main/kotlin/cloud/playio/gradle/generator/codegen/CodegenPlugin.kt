@@ -24,7 +24,7 @@ class CodegenPlugin : Plugin<Project>, GeneratorPlugin, PluginConstraint {
 
     override fun apply(project: Project) {
         project.logger.info("Applying plugin '$PLUGIN_ID'")
-        checkGradleVersion(PLUGIN_ID)
+        checkPlugin(PLUGIN_ID)
         val extension = project.extensions.create<CodegenExtension>(CodegenExtension.NAME)
         val configurations = SourceSetName.values().associateBy({ it }, {
             createGeneratorConfiguration(project, SourceSetName.createGenerator(it, GENERATOR), extension.vertx)
