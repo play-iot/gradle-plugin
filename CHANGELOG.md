@@ -1,5 +1,34 @@
 # Changelog
 
+## [v0.0.2](https://github.com/play-iot/gradle-plugin/tree/v0.0.2) (2023-06-13)
+
+[Full Changelog](https://github.com/play-iot/gradle-plugin/compare/v0.0.1...v0.0.2)
+
+**Implemented enhancements:**
+
+- Add org dev info [\#37](https://github.com/play-iot/gradle-plugin/issues/37)
+- OSS plugin supports pushing maven artifact to GitHub maven registry [\#36](https://github.com/play-iot/gradle-plugin/issues/36)
+- Categorize docgen/antora/pandoc under documentation extension  [\#35](https://github.com/play-iot/gradle-plugin/issues/35)
+- Upgrade shadow jar plugin [\#15](https://github.com/play-iot/gradle-plugin/issues/15)
+- Upgrade gradle-docker-plugin [\#14](https://github.com/play-iot/gradle-plugin/issues/14)
+
+**Fixed bugs:**
+
+- Vulnerabilities [\#34](https://github.com/play-iot/gradle-plugin/issues/34)
+
+**Closed issues:**
+
+- Oss plugin dealing with the Critical Log4j2 Vulnerability [\#39](https://github.com/play-iot/gradle-plugin/issues/39)
+
+**Merged pull requests:**
+
+- Upgrade gradle-docker-plugin to v8 [\#46](https://github.com/play-iot/gradle-plugin/pull/46) ([zero88](https://github.com/zero88))
+- Upgrade shadow jar plugin to v7 [\#45](https://github.com/play-iot/gradle-plugin/pull/45) ([zero88](https://github.com/zero88))
+- Bugfix/vulnerabilities [\#44](https://github.com/play-iot/gradle-plugin/pull/44) ([zero88](https://github.com/zero88))
+- Feature/refactor and organize documentation plugin [\#41](https://github.com/play-iot/gradle-plugin/pull/41) ([zero88](https://github.com/zero88))
+- Feature/add publish to GitHub [\#40](https://github.com/play-iot/gradle-plugin/pull/40) ([zero88](https://github.com/zero88))
+- Update maven pom info [\#38](https://github.com/play-iot/gradle-plugin/pull/38) ([zero88](https://github.com/zero88))
+
 ## [v0.0.1](https://github.com/play-iot/gradle-plugin/tree/v0.0.1) (2023-06-08)
 
 **Implemented enhancements:**
