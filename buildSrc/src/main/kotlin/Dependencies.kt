@@ -14,7 +14,7 @@ object PluginLibs {
         const val testLogger = "3.1.0"
 
         const val jooq = "5.2.1"
-        const val docker = "7.4.0"
+        const val docker = "8.1.0"
         const val shadow = "7.1.2"
         const val testcontainers = "1.17.3"
         const val yaml = "2.0"
