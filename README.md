@@ -25,11 +25,11 @@
     - [x] Create `Dockerfile`
     - [x] Build `Docker image`
     - [x] Push `Docker image` to multiple registries
-- [x] `Codegen` plugin [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/cloud/playio/gradle-plugin/maven-metadata.xml.svg?colorB=007ec6&label=docker)](https://plugins.gradle.org/plugin/cloud.playio.gradle.codegen)
+- [x] `Codegen` plugin [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/cloud/playio/gradle-plugin/maven-metadata.xml.svg?colorB=007ec6&label=codegen)](https://plugins.gradle.org/plugin/cloud.playio.gradle.codegen)
     - [x] Generate code based on vertx-codegen
-- [x] `Docgen` plugin [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/cloud/playio/gradle-plugin/maven-metadata.xml.svg?colorB=007ec6&label=docker)](https://plugins.gradle.org/plugin/cloud.playio.gradle.docgen)
+- [x] `Docgen` plugin [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/cloud/playio/gradle-plugin/maven-metadata.xml.svg?colorB=007ec6&label=docgen)](https://plugins.gradle.org/plugin/cloud.playio.gradle.docgen)
   - [x] Generate `asciidoc` from source code, based on vertx-docgen
-- [x] `Antora` plugin [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/cloud/playio/gradle-plugin/maven-metadata.xml.svg?colorB=007ec6&label=docker)](https://plugins.gradle.org/plugin/cloud.playio.gradle.antora)
+- [x] `Antora` plugin [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/cloud/playio/gradle-plugin/maven-metadata.xml.svg?colorB=007ec6&label=antora)](https://plugins.gradle.org/plugin/cloud.playio.gradle.antora)
     - [x] Create `Antora` documentation component
-- [x] `Pandoc` plugin [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/cloud/playio/gradle-plugin/maven-metadata.xml.svg?colorB=007ec6&label=docker)](https://plugins.gradle.org/plugin/cloud.playio.gradle.pandoc)
+- [x] `Pandoc` plugin [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/cloud/playio/gradle-plugin/maven-metadata.xml.svg?colorB=007ec6&label=pandoc)](https://plugins.gradle.org/plugin/cloud.playio.gradle.pandoc)
     - [x] To convert from one markup format to another
