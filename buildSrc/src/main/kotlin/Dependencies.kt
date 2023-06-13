@@ -15,7 +15,7 @@ object PluginLibs {
 
         const val jooq = "5.2.1"
         const val docker = "7.4.0"
-        const val shadow = "6.1.0"
+        const val shadow = "7.1.2"
         const val testcontainers = "1.17.3"
         const val yaml = "2.0"
     }
@@ -31,7 +31,7 @@ object PluginLibs {
         const val jacocoLogger = "gradle.plugin.org.barfuin.gradle.jacocolog:gradle-jacoco-log:${Version.jacocoLogger}"
         const val nexusPublish = "io.github.gradle-nexus:publish-plugin:${Version.nexusPublish}"
         const val sonarQube = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${Version.sonarQube}"
-        const val shadow = "com.github.jengelman.gradle.plugins:shadow:${Version.shadow}"
+        const val shadow = "com.github.johnrengelman.shadow:com.github.johnrengelman.shadow.gradle.plugin:${Version.shadow}"
         const val testLogger = "com.adarshr:gradle-test-logger-plugin:${Version.testLogger}"
         const val yaml = "org.yaml:snakeyaml:${Version.yaml}"
 
