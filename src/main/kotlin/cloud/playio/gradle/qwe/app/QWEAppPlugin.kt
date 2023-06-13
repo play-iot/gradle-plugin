@@ -46,8 +46,8 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
     }
 
     override fun configureExtension(project: Project, ossExt: OSSExtension, qweExt: QWEExtension): QWEAppExtension {
-        qweExt.createBranch(QWESystemdExtension::class.java, QWESystemdExtension.NAME)
         val appExt = qweExt.createBranch(QWEAppExtension::class.java, QWEAppExtension.NAME)
+        qweExt.createBranch(QWESystemdExtension::class.java, QWESystemdExtension.NAME)
         appExt.appName.convention(ossExt.baseName)
         return appExt
     }
@@ -96,12 +96,10 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
                 if (decoratorExt.fatJar.get()) {
                     project.plugins.apply(ShadowPlugin::class.java)
                     withType<ShadowJar> {
+                        onlyIf { decoratorExt.fatJar.get() }
                         group = "build"
-                        archiveBaseName.set(ossExt.baseName)
-                        archiveClassifier.set(FAT_JAR_CLASSIFIER)
-                        onlyIf {
-                            decoratorExt.fatJar.get()
-                        }
+                        archiveBaseName.convention(ossExt.baseName)
+                        archiveClassifier.convention(FAT_JAR_CLASSIFIER)
                         mustRunAfter(named<Jar>(JavaPlugin.JAR_TASK_NAME))
                         from(decoratorExt.layout.find(GeneratedLayoutExtension.RESOURCES)!!.directory)
                     }
@@ -116,12 +114,10 @@ class QWEAppPlugin : QWEDecoratorPlugin<QWEAppExtension> {
     }
 
     private fun AbstractArchiveTask.distFat(ossExt: OSSExtension, appExt: QWEAppExtension) {
+        onlyIf { appExt.fatJar.get() }
         group = "distribution"
         archiveBaseName.set(ossExt.baseName)
         archiveClassifier.set(FAT_JAR_CLASSIFIER)
-        onlyIf {
-            appExt.fatJar.get()
-        }
         dependsOn(project.tasks.withType<ShadowJar>())
         from(project.tasks.withType<ShadowJar>().map { it.outputs })
     }
