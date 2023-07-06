@@ -26,9 +26,9 @@ jobs:
       branch: ${{ steps.context.outputs.branch }}
       shouldBuild: ${{ steps.context.outputs.decision_build }}
       shouldPublish: ${{ steps.context.outputs.decision_publish }}
-      isRelease: ${{ steps.context.outputs.isTag }}
+      isRelease: ${{ steps.context.outputs.isTag && steps.context.outputs.isRelease }}
       version: ${{ steps.context.outputs.version }}
-      commitId: ${{ steps.context.outputs.shortCommitId }}
+      commitId: ${{ steps.context.outputs.commitShortId }}
       semanticVersion: ${{ steps.semantic.outputs.semanticVersion }}
 
     steps:
@@ -48,12 +48,12 @@ jobs:
 
       - name: Project context
         id: context
-        uses: zero88/gh-project-context@v1.2
+        uses: zero88/gh-project-context@v2
         with:
+          changelog: true
           mustSign: true
           nextVerMode: PATCH
-          changelog: true
-          changelogToken: ${{ secrets.BEEIO_CI_TOKEN }}
+          token: ${{ secrets.BEEIO_CI_TOKEN }}
 
       - name: Find semantic version
         id: semantic
