@@ -1,6 +1,8 @@
 name: build-release
 
 on:
+  create:
+    branches: [ 'release/**' ] ## To create a release PR
   push:
     branches: [ main ]
     tags: [ 'v*' ]
