@@ -54,7 +54,7 @@ jobs:
         with:
           changelog: true
           mustSign: true
-          nextVerMode: PATCH
+          nextVerMode: MINOR
           token: ${{ secrets.BEEIO_CI_TOKEN }}
 
       - name: Find semantic version
