@@ -6,12 +6,11 @@ import cloud.playio.gradle.antora.tasks.AntoraInitTask
 import cloud.playio.gradle.antora.tasks.AntoraTask
 import cloud.playio.gradle.shared.JavaProject
 import cloud.playio.gradle.shared.PluginConstraint
-import org.gradle.api.JavaVersion
+import cloud.playio.gradle.shared.createOptions
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.javadoc.Javadoc
-import org.gradle.external.javadoc.StandardJavadocDocletOptions
 import org.gradle.kotlin.dsl.*
 import java.nio.file.Paths
 
@@ -62,12 +61,7 @@ class AntoraPlugin : Plugin<Project>, PluginConstraint {
                 source = ss.map { it.java.asFileTree }.reduceOrNull { acc, fileTree -> acc.plus(fileTree) }!!
                 classpath = project.files(ss.map { it.compileClasspath })
                 setDestinationDir(project.buildDir.resolve("docs").resolve("javadoc"))
-                options {
-                    this as StandardJavadocDocletOptions
-                    if (JavaVersion.current().majorVersion <= JavaVersion.VERSION_11.majorVersion) {
-                        this.addBooleanOption("-no-module-directories", true)
-                    }
-                }
+                options { createOptions() }
             }
         }
         AntoraDirectory.values().forEach {

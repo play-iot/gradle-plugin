@@ -1,9 +1,6 @@
 package cloud.playio.gradle
 
-import cloud.playio.gradle.shared.PluginConstraint
-import cloud.playio.gradle.shared.ProjectConstraint
-import cloud.playio.gradle.shared.computeBaseName
-import cloud.playio.gradle.shared.prop
+import cloud.playio.gradle.shared.*
 import com.adarshr.gradle.testlogger.TestLoggerExtension
 import com.adarshr.gradle.testlogger.TestLoggerExtensionProperties
 import com.adarshr.gradle.testlogger.TestLoggerPlugin
@@ -25,7 +22,6 @@ import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.javadoc.Javadoc
 import org.gradle.api.tasks.testing.Test
-import org.gradle.external.javadoc.StandardJavadocDocletOptions
 import org.gradle.internal.jvm.Jvm
 import org.gradle.kotlin.dsl.*
 import org.gradle.plugins.signing.Sign
@@ -236,21 +232,7 @@ class OSSProjectPlugin : Plugin<Project>, PluginConstraint, ProjectConstraint {
         }
         withType<Javadoc> {
             title = "${ossExt.title.get()} ${project.version} API"
-            options {
-                encoding(StandardCharsets.UTF_8.name())
-                charset(StandardCharsets.UTF_8.name())
-                this as StandardJavadocDocletOptions
-                this.addBooleanOption("Xdoclint:none", true)
-                if (Jvm.current().javaVersion?.isJava11Compatible == true) {
-                    // https://bugs.openjdk.java.net/browse/JDK-8215291
-                    // https://bugs.openjdk.java.net/browse/JDK-8215582
-                    this.addBooleanOption("-no-module-directories", true)
-                }
-                tags = mutableListOf(
-                    "apiNote:a:API Note:", "implSpec:a:Implementation Requirements:",
-                    "implNote:a:Implementation Note:"
-                )
-            }
+            options { createOptions() }
         }
         withType<Test> {
             useJUnitPlatform()
