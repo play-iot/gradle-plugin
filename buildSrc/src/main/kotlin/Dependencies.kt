@@ -13,7 +13,7 @@ object PluginLibs {
         const val jacocoLogger = "2.0.0"
         const val testLogger = "3.1.0"
 
-        const val jooq = "5.2.1"
+        const val jooq = "3.14.13"
         const val docker = "8.1.0"
         const val shadow = "7.1.2"
         const val testcontainers = "1.17.3"
@@ -35,7 +35,7 @@ object PluginLibs {
         const val testLogger = "com.adarshr:gradle-test-logger-plugin:${Version.testLogger}"
         const val yaml = "org.yaml:snakeyaml:${Version.yaml}"
 
-        const val jooq = "nu.studer:gradle-jooq-plugin:${Version.jooq}"
+        const val jooq = "org.jooq:jooq-meta:${Version.jooq}"
         const val testcontainers =  "org.testcontainers:testcontainers:${Version.testcontainers}"
     }
 }

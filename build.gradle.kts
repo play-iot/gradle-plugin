@@ -99,6 +99,7 @@ dependencies {
     api(PluginLibs.Depends.yaml)
     api(PluginLibs.Depends.testcontainers)
     api(PluginLibs.Depends.docker)
+    compileOnly(PluginLibs.Depends.jooq)
 
     testImplementation(TestLibs.junit5Api)
     testImplementation(TestLibs.junit5Engine)
