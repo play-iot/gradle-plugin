@@ -1,5 +1,20 @@
 # Changelog
 
+## [v0.1.0](https://github.com/play-iot/gradle-plugin/tree/v0.1.0) (2023-07-09)
+
+[Full Changelog](https://github.com/play-iot/gradle-plugin/compare/v0.0.2...v0.1.0)
+
+**Implemented enhancements:**
+
+- Support build java17 [\#49](https://github.com/play-iot/gradle-plugin/issues/49)
+- jooq helper [\#4](https://github.com/play-iot/gradle-plugin/issues/4)
+
+**Merged pull requests:**
+
+- Add jOOQ and TestContainer helper [\#51](https://github.com/play-iot/gradle-plugin/pull/51) ([zero88](https://github.com/zero88))
+- Resolve \#49 [\#50](https://github.com/play-iot/gradle-plugin/pull/50) ([zero88](https://github.com/zero88))
+- \[gha\] Update gh-project-context@v2 [\#48](https://github.com/play-iot/gradle-plugin/pull/48) ([zero88](https://github.com/zero88))
+
 ## [v0.0.2](https://github.com/play-iot/gradle-plugin/tree/v0.0.2) (2023-06-13)
 
 [Full Changelog](https://github.com/play-iot/gradle-plugin/compare/v0.0.1...v0.0.2)
