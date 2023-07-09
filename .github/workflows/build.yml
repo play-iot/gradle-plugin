@@ -1,6 +1,8 @@
 name: build-release
 
 on:
+  create:
+    branches: [ 'release/**' ] ## To create a release PR
   push:
     branches: [ main ]
     tags: [ 'v*' ]
@@ -26,7 +28,7 @@ jobs:
       branch: ${{ steps.context.outputs.branch }}
       shouldBuild: ${{ steps.context.outputs.decision_build }}
       shouldPublish: ${{ steps.context.outputs.decision_publish }}
-      isRelease: ${{ steps.context.outputs.isTag && steps.context.outputs.isRelease }}
+      isRelease: ${{ steps.context.outputs.isTag && steps.context.outputs.onRelease }}
       version: ${{ steps.context.outputs.version }}
       commitId: ${{ steps.context.outputs.commitShortId }}
       semanticVersion: ${{ steps.semantic.outputs.semanticVersion }}
