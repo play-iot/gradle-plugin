@@ -11,8 +11,8 @@ class GitHubConfig(objects: ObjectFactory) {
         const val GITHUB_REPO_KEY = "github.repo"
     }
 
-    val url = objects.property<String>().convention("https://github.com")
     val repo = objects.property<String>()
+    val url = objects.property<String>().convention("https://github.com")
     val registryUrl = objects.property<String>().convention("https://maven.pkg.github.com")
     val scmConnection = objects.property<String>().convention("scm:git:git://git@github.com")
 
