@@ -1,5 +1,20 @@
 # Changelog
 
+## [v0.2.0](https://github.com/play-iot/gradle-plugin/tree/v0.2.0) (2023-07-10)
+
+[Full Changelog](https://github.com/play-iot/gradle-plugin/compare/v0.1.0...v0.2.0)
+
+**Closed issues:**
+
+- Upgrade gradle version 7.6.2 [\#58](https://github.com/play-iot/gradle-plugin/issues/58)
+- Rename `antora` task [\#57](https://github.com/play-iot/gradle-plugin/issues/57)
+- Add project default license with GitHub enabled [\#55](https://github.com/play-iot/gradle-plugin/issues/55)
+
+**Merged pull requests:**
+
+- Feature/make compatible with antora webdoc [\#59](https://github.com/play-iot/gradle-plugin/pull/59) ([zero88](https://github.com/zero88))
+- Add project license default value in GitHub [\#56](https://github.com/play-iot/gradle-plugin/pull/56) ([zero88](https://github.com/zero88))
+
 ## [v0.1.0](https://github.com/play-iot/gradle-plugin/tree/v0.1.0) (2023-07-09)
 
 [Full Changelog](https://github.com/play-iot/gradle-plugin/compare/v0.0.2...v0.1.0)
