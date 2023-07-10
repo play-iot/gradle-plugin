@@ -12,7 +12,7 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.withType
 
 @CacheableTask
-abstract class AntoraTask : DefaultTask() {
+abstract class AntoraDocTask : DefaultTask() {
 
     init {
         group = AntoraPlugin.GROUP
@@ -21,7 +21,7 @@ abstract class AntoraTask : DefaultTask() {
 
     companion object {
 
-        const val NAME = "antora"
+        const val NAME = "antoraDoc"
     }
 
     @get:Input
@@ -34,7 +34,7 @@ abstract class AntoraTask : DefaultTask() {
     fun finalize() {
         if (antoraType.get().isComponent()) {
             project.copy {
-                from(project.subprojects.flatMap { it.tasks.withType<AntoraTask>() })
+                from(project.subprojects.flatMap { it.tasks.withType<AntoraDocTask>() })
                 into(outputDir)
             }
         }
