@@ -2,8 +2,8 @@ package cloud.playio.gradle.antora
 
 import cloud.playio.gradle.antora.tasks.AntoraCopyTask
 import cloud.playio.gradle.antora.tasks.AntoraDescriptorTask
+import cloud.playio.gradle.antora.tasks.AntoraDocTask
 import cloud.playio.gradle.antora.tasks.AntoraInitTask
-import cloud.playio.gradle.antora.tasks.AntoraTask
 import cloud.playio.gradle.shared.JavaProject
 import cloud.playio.gradle.shared.PluginConstraint
 import cloud.playio.gradle.shared.createOptions
@@ -89,18 +89,18 @@ class AntoraPlugin : Plugin<Project>, PluginConstraint {
             docVersion.convention(config.ext.docVersion)
             asciiAttributes.convention(config.ext.asciiAttributes)
         }
-        register<AntoraTask>(AntoraTask.NAME) {
+        register<AntoraDocTask>(AntoraDocTask.NAME) {
             dependsOn(
                 withType<AntoraInitTask>(),
                 withType<AntoraCopyTask>(),
                 withType<AntoraDescriptorTask>(),
-                project.subprojects.flatMap { it.tasks.withType<AntoraTask>() }
+                project.subprojects.flatMap { it.tasks.withType<AntoraDocTask>() }
             )
             antoraType.convention(config.ext.antoraType)
             outputDir.convention(config.destAntora.dir)
         }
         named("assemble") {
-            dependsOn(AntoraTask.NAME)
+            dependsOn(AntoraDocTask.NAME)
         }
     }
 
