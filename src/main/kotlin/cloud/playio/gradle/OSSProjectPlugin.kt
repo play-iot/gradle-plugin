@@ -99,6 +99,10 @@ class OSSProjectPlugin : Plugin<Project>, PluginConstraint, ProjectConstraint {
                         url.convention(ossExt.githubConfig.getProjectUrl())
                         connection.convention(ossExt.githubConfig.getScmUrl())
                     }
+                    license {
+                        name.convention(prop(project, "projectLicense"))
+                        url.convention(ossExt.githubConfig.getProjectUrl().map { "${it}/blob/main/LICENSE" })
+                    }
                 }
             }
         }

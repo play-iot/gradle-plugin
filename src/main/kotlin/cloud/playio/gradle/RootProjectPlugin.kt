@@ -121,6 +121,7 @@ class RootProjectPlugin : Plugin<Project>, PluginConstraint {
             into(project.buildDir.resolve("distributions"))
         }
         named(LifecycleBasePlugin.ASSEMBLE_TASK_NAME) {
+            onlyIf { !isSingle(project) }
             finalizedBy(COPY_SUB_PROJECT_ARTIFACTS_TASK_NAME)
         }
     }
