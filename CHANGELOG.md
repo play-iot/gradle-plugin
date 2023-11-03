@@ -1,5 +1,17 @@
 # Changelog
 
+## [v0.2.1](https://github.com/play-iot/gradle-plugin/tree/v0.2.1) (2023-11-03)
+
+[Full Changelog](https://github.com/play-iot/gradle-plugin/compare/v0.2.0...v0.2.1)
+
+**Fixed bugs:**
+
+- Maven publication publish wrong artifact name [\#63](https://github.com/play-iot/gradle-plugin/issues/63)
+
+**Merged pull requests:**
+
+- fix\(maven-publication\): Fix artifactId from base name [\#64](https://github.com/play-iot/gradle-plugin/pull/64) ([zero88](https://github.com/zero88))
+
 ## [v0.2.0](https://github.com/play-iot/gradle-plugin/tree/v0.2.0) (2023-07-10)
 
 [Full Changelog](https://github.com/play-iot/gradle-plugin/compare/v0.1.0...v0.2.0)
