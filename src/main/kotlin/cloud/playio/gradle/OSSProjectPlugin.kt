@@ -120,9 +120,15 @@ class OSSProjectPlugin : Plugin<Project>, PluginConstraint, ProjectConstraint {
             .configure { distributionBaseName.set(ossExt.baseName) }
 
         configure<PublishingExtension> {
-            publications { addMavenPublication(project, ossExt) }
-            repositories { addGitHubRegistry(project, ossExt) }
-            project.afterEvaluate { publications { withType<MavenPublication> { addPomMetadata(ossExt) } } }
+            project.afterEvaluate {
+                publications {
+                    if (ossExt.publishing.enabled.get()) {
+                        addMavenPublication(project, ossExt)
+                        withType<MavenPublication> { addPomMetadata(ossExt) }
+                    }
+                }
+                repositories { addGitHubRegistry(project, ossExt) }
+            }
         }
 
         configure<SigningExtension> {
@@ -140,35 +146,31 @@ class OSSProjectPlugin : Plugin<Project>, PluginConstraint, ProjectConstraint {
     }
 
     private fun PublicationContainer.addMavenPublication(project: Project, ossExt: OSSExtension) {
-        if (ossExt.publishing.enabled.get()) {
-            create<MavenPublication>(ossExt.publishing.mavenPublicationName.get()) {
-                groupId = project.group as String?
-                artifactId = ossExt.baseName.get()
-                version = project.version as String?
-                from(project.components["java"])
+        create<MavenPublication>(ossExt.publishing.mavenPublicationName.get()) {
+            groupId = project.group as String?
+            artifactId = ossExt.baseName.get()
+            version = project.version as String?
+            from(project.components["java"])
 
-                versionMapping {
-                    usage("java-api") {
-                        fromResolutionOf("runtimeClasspath")
-                    }
-                    usage("java-runtime") {
-                        fromResolutionResult()
-                    }
+            versionMapping {
+                usage("java-api") {
+                    fromResolutionOf("runtimeClasspath")
+                }
+                usage("java-runtime") {
+                    fromResolutionResult()
                 }
             }
         }
     }
 
     private fun RepositoryHandler.addGitHubRegistry(project: Project, ossExt: OSSExtension) {
-        project.afterEvaluate {
-            if (ossExt.githubConfig.publishToRegistry.get()) {
-                maven {
-                    name = "GitHubPackages"
-                    url = project.uri(ossExt.githubConfig.getProjectRegistryUrl())
-                    credentials {
-                        username = prop(project, NexusConfig.USER_KEY)
-                        password = prop(project, NexusConfig.PASSPHRASE_KEY)
-                    }
+        if (ossExt.githubConfig.publishToRegistry.get()) {
+            maven {
+                name = "GitHubPackages"
+                url = project.uri(ossExt.githubConfig.getProjectRegistryUrl())
+                credentials {
+                    username = prop(project, NexusConfig.USER_KEY)
+                    password = prop(project, NexusConfig.PASSPHRASE_KEY)
                 }
             }
         }
