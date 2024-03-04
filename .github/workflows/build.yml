@@ -78,7 +78,7 @@ jobs:
           cache: 'gradle'
 
       - name: Cache Gradle packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -96,7 +96,7 @@ jobs:
                           --no-daemon
 
       - name: Cache SonarCloud packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         if: env.ENABLE_TEST == 'true'
         with:
           path: ~/.sonar/cache
