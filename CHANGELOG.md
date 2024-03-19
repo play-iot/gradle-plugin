@@ -1,5 +1,28 @@
 # Changelog
 
+## [v0.3.0](https://github.com/play-iot/gradle-plugin/tree/v0.3.0) (2024-03-19)
+
+[Full Changelog](https://github.com/play-iot/gradle-plugin/compare/v0.2.1...v0.3.0)
+
+**Implemented enhancements:**
+
+- Add capability to enable stop gradle execution if test fails [\#70](https://github.com/play-iot/gradle-plugin/issues/70)
+
+**Fixed bugs:**
+
+- nexus release link is not correct [\#68](https://github.com/play-iot/gradle-plugin/issues/68)
+
+**Merged pull requests:**
+
+- chore\(deps\): update dependency gradle to v7.6.4 [\#73](https://github.com/play-iot/gradle-plugin/pull/73) ([renovate[bot]](https://github.com/apps/renovate))
+- chore: Configure Renovate [\#72](https://github.com/play-iot/gradle-plugin/pull/72) ([renovate[bot]](https://github.com/apps/renovate))
+- feat\(\#70\): add capability to stop gradle execution if test fails [\#71](https://github.com/play-iot/gradle-plugin/pull/71) ([zero88](https://github.com/zero88))
+- Bugfix/fix nexus link [\#69](https://github.com/play-iot/gradle-plugin/pull/69) ([zero88](https://github.com/zero88))
+- Bump actions/cache from 3 to 4 [\#67](https://github.com/play-iot/gradle-plugin/pull/67) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump actions/setup-java from 3 to 4 [\#66](https://github.com/play-iot/gradle-plugin/pull/66) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump crazy-max/ghaction-import-gpg from 5 to 6 [\#62](https://github.com/play-iot/gradle-plugin/pull/62) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump actions/checkout from 3 to 4 [\#61](https://github.com/play-iot/gradle-plugin/pull/61) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v0.2.1](https://github.com/play-iot/gradle-plugin/tree/v0.2.1) (2023-11-03)
 
 [Full Changelog](https://github.com/play-iot/gradle-plugin/compare/v0.2.0...v0.2.1)
