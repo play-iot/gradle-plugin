@@ -155,8 +155,9 @@ class RootProjectPlugin : Plugin<Project>, PluginConstraint {
             }
         }
         named<Test>("test") {
+            val stopOnTestFailure = prop(project, "stopOnTestFailure", "false").toBoolean()
             finalizedBy(ROOT_TEST_REPORT_TASK_NAME)
-            ignoreFailures = true
+            ignoreFailures = !stopOnTestFailure
             val handler =
                 KotlinClosure2<TestDescriptor, TestResult, Any>(
                     { descriptor, result ->
@@ -166,7 +167,7 @@ class RootProjectPlugin : Plugin<Project>, PluginConstraint {
                     })
             project.subprojects.map {
                 it.tasks.withType<Test> {
-                    ignoreFailures = true
+                    ignoreFailures = !stopOnTestFailure
                     afterTest(handler)
                 }
             }
