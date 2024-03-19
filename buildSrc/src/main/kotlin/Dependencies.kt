@@ -11,7 +11,7 @@ object PluginLibs {
         const val gradlePluginPublish = "1.2.0"
 
         const val jacocoLogger = "2.0.0"
-        const val testLogger = "3.2.0"
+        const val testLogger = "4.0.0"
 
         const val jooq = "3.14.13"
         const val docker = "8.1.0"
