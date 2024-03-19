@@ -13,7 +13,7 @@ object PluginLibs {
         const val jacocoLogger = "2.0.0"
         const val testLogger = "3.1.0"
 
-        const val jooq = "3.14.13"
+        const val jooq = "3.19.6"
         const val docker = "8.1.0"
         const val shadow = "7.1.2"
         const val testcontainers = "1.17.3"
