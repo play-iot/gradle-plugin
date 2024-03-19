@@ -1,7 +1,7 @@
 # QWE Gradle plugin
 
 ![build](https://github.com/play-iot/gradle-plugin/workflows/build-release/badge.svg?branch=main)
-[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/play-iot/gradle-plugin?sort=semver)](https://github.com/play-iot/gradle-plugin/releases/latest)
+[![GitHub Release](https://img.shields.io/github/v/release/play-iot/gradle-plugin?include_prereleases&sort=date)](https://github.com/play-iot/gradle-plugin/releases/latest)
 [![Sonatype Nexus (Releases)](https://img.shields.io/nexus/r/cloud.playio/gradle-plugin?server=https%3A%2F%2Fs01.oss.sonatype.org%2F)](https://search.maven.org/artifact/cloud.playio/gradle-plugin)
 ![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/cloud.playio/gradle-plugin?server=https%3A%2F%2Fs01.oss.sonatype.org%2F)
 
