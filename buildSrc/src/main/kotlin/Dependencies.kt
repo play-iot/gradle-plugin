@@ -5,7 +5,7 @@ object PluginLibs {
     object Version {
 
         const val jvm = "1.5.31"
-        const val sonarQube = "3.3"
+        const val sonarQube = "3.5.0.2730"
 
         const val nexusPublish = "1.3.0"
         const val gradlePluginPublish = "1.2.0"
