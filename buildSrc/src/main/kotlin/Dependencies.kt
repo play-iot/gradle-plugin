@@ -44,7 +44,7 @@ object TestLibs {
 
     object Version {
 
-        const val junit5 = "5.10.2"
+        const val junit5 = "5.10.3"
     }
 
     const val junit5Api = "org.junit.jupiter:junit-jupiter-api:${Version.junit5}"
